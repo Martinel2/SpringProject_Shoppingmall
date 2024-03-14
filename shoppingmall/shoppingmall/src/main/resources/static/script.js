@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const productsSection = document.getElementById("products");
     const userMenu = document.getElementById("user-menu");
+    const categoryMenu = document.getElementById("category-menu");
+    const category = document.getElementById("category");
+    const parentMenu = document.createElement("div");
+    let detailMenu = document.getElementById("detail-menu");
 
     // Dummy user data (Assuming not logged in initially)
     let isLoggedIn = false;
@@ -87,8 +91,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (xhr.status === 200) {
                     // 서버에서 성공적으로 데이터를 받았을 때 처리합니다.
                     const categories = JSON.parse(xhr.responseText);
+                    //console.log(categories);
                     ////파싱된 카테고리 데이터를 처리하기 위해 renderCategories() 함수에 전달합니다
-                    console.log(categories);
                     renderCategories(categories);
                 } else {
                     // 서버에서 오류가 발생했을 때 처리합니다.
@@ -96,31 +100,86 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         };
-        xhr.open("GET", 'categories.json', true);
+        xhr.open("GET", "categories.json", true);
         xhr.send();
     }
+    // 페이지 로드 시 카테고리 데이터 가져오기
+    fetchCategories();
 
     function renderCategories(categories) {
         // 카테고리 메뉴 요소 가져오기
-        const categoryMenu = document.getElementById("category-menu");
+        parentMenu.classList.add("parent-menu");
+
+        // 카테고리 메뉴와 세부 카테고리 메뉴를 부모 요소에 추가
+        parentMenu.appendChild(category);
+        categoryMenu.appendChild(parentMenu);
 
         // 카테고리 데이터를 동적으로 HTML에 추가
-        categories.forEach(category => {
+        categories.forEach(ajaxCategory => {
             const categoryItem = document.createElement("div");
-            categoryItem.textContent = category;
-            categoryItem.classList.add("category-item");
+            categoryItem.textContent = JSON.stringify(ajaxCategory.name).replace(/"/g, '');
+            categoryItem.classList.add("ajaxCategory-item");
+
+            // 마우스가 카테고리에 올라갔을 때 세부 카테고리 표시
+            categoryItem.addEventListener("mouseenter", () => {
+                showDetails(ajaxCategory.detail, categoryItem);
+            });
+
+            // 마우스가 카테고리에서 벗어났을 때 세부 카테고리 숨기기
+            categoryMenu.addEventListener("mouseleave", () => {
+                hideDetails();
+            });
+
+
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                redirectSearchResult(category);
+                redirectSearchResult(ajaxCategory);
             });
-            categoryMenu.appendChild(categoryItem);
+            category.appendChild(categoryItem);
         });
+    }
+
+    // 세부 카테고리를 표시하는 함수
+    // 세부 카테고리를 표시하는 함수
+    function showDetails(details) {
+        if (!detailMenu) {
+            detailMenu = document.createElement("div");
+            detailMenu.id = "detail-menu";
+            category.appendChild(detailMenu);
+        } else {
+            detailMenu.innerHTML = ""; // 기존 세부 카테고리 지우기
+        }
+
+        details.forEach(detail => {
+            const detailItem = document.createElement("div");
+            detailItem.textContent = detail;
+            detailItem.classList.add("detail-item");
+            detailMenu.appendChild(detailItem);
+
+            detailItem.addEventListener("click", () => {
+                // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
+                redirectSearchResult(details);
+            });
+        });
+
+        // 부모 요소 위치에 따라 세부 카테고리 메뉴 위치 조정
+        const parentRect = parentMenu.getBoundingClientRect();
+        detailMenu.style.top = `${parentRect.top}px`;
+        detailMenu.style.left = `${parentRect.right}px`;
+        detailMenu.style.display = "block";
+    }
+
+
+    // 세부 카테고리를 숨기는 함수
+    function hideDetails() {
+        const detailMenu = document.getElementById("detail-menu");
+        if (detailMenu) {
+            detailMenu.style.display = "none";
+        }
     }
 
     function redirectSearchResult(category) {
         window.location.href = "searchResult.html";
     }
 
-    // 페이지 로드 시 카테고리 데이터 가져오기
-    fetchCategories();
 });

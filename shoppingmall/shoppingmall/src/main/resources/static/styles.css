@@ -38,6 +38,30 @@ header {
     font-size: 16px;
 }
 
+#category-menu{
+    height: 80%;
+    width: 90%;
+    background-color: beige;
+    margin-top: 3px;
+    margin-left: 50px;
+    margin-bottom: 10px;
+}
+
+.parent-menu{
+    height: 30%;
+    width: 10%;
+    background-color: white;
+    text-align: center;
+}
+
+#detail-menu {
+    /* 기존 스타일 유지 */
+    position: absolute; /* 절대 위치 설정 */
+    top: 0; /* 위쪽 여백 0으로 설정 */
+    left: 0; /* 왼쪽 여백 0으로 설정 */
+    z-index: 999; /* 다른 요소보다 낮은 우선순위로 설정 */
+}
+
 /*배너 위치 조정*/
 #banner_margin{
     height: 100%;
