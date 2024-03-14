@@ -78,4 +78,49 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     updateUserMenu();
+
+    function fetchCategories() {
+        // AJAX를 사용하여 서버에서 카테고리 데이터를 가져오는 요청을 보냅니다.
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // 서버에서 성공적으로 데이터를 받았을 때 처리합니다.
+                    const categories = JSON.parse(xhr.responseText);
+                    ////파싱된 카테고리 데이터를 처리하기 위해 renderCategories() 함수에 전달합니다
+                    console.log(categories);
+                    renderCategories(categories);
+                } else {
+                    // 서버에서 오류가 발생했을 때 처리합니다.
+                    console.error("Failed to fetch categories:", xhr.status);
+                }
+            }
+        };
+        xhr.open("GET", 'categories.json', true);
+        xhr.send();
+    }
+
+    function renderCategories(categories) {
+        // 카테고리 메뉴 요소 가져오기
+        const categoryMenu = document.getElementById("category-menu");
+
+        // 카테고리 데이터를 동적으로 HTML에 추가
+        categories.forEach(category => {
+            const categoryItem = document.createElement("div");
+            categoryItem.textContent = category;
+            categoryItem.classList.add("category-item");
+            categoryItem.addEventListener("click", () => {
+                // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
+                redirectSearchResult(category);
+            });
+            categoryMenu.appendChild(categoryItem);
+        });
+    }
+
+    function redirectSearchResult(category) {
+        window.location.href = "searchResult.html";
+    }
+
+    // 페이지 로드 시 카테고리 데이터 가져오기
+    fetchCategories();
 });
