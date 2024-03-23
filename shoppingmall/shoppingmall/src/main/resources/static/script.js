@@ -19,11 +19,10 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     const productsSection = document.getElementById("products");
-    const userMenu = document.getElementById("user-menu");
-    const categoryMenu = document.getElementById("category-menu");
-    const category = document.getElementById("category");
-    const parentMenu = document.createElement("div");
-    let detailMenu = document.getElementById("detail-menu");
+    const userMenu = document.getElementById("user_menu");
+    const category_box = document.getElementById("category_box");
+    const category_1depth = document.getElementById("category_1depth");
+    const category_div = document.createElement("div");
 
     // Dummy user data (Assuming not logged in initially)
     let isLoggedIn = false;
@@ -33,14 +32,14 @@ document.addEventListener("DOMContentLoaded", function() {
         userMenu.innerHTML = "";
         if (isLoggedIn) {
             const userIcon = document.createElement("div");
-            userIcon.classList.add("user-icon");
+            userIcon.classList.add("user_icon");
             userIcon.textContent = "User";
             userIcon.addEventListener("click", toggleUserOptions);
             userMenu.appendChild(userIcon);
         } else {
             const loginButton = document.createElement("button");
-            loginButton.classList.add("login-button");
-            loginButton.textContent = "로그인";
+            loginButton.classList.add("login_button");
+            loginButton.innerHTML = "<img src='images/icons/login.png'>";
             loginButton.addEventListener("click", redirectToLoginPage);
             userMenu.appendChild(loginButton);
         }
@@ -53,9 +52,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to toggle user options dropdown
     function toggleUserOptions() {
-        const userOptions = document.getElementById("user-options");
+        const userOptions = document.getElementById("user_options");
         userOptions.classList.toggle("show");
     }
+
+
+
+
+    function submitSearch() {
+        // 입력된 검색어 가져오기
+        document.getElementById("search_form").addEventListener("submit", function(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 방지
+
+            // 입력된 검색어 가져오기
+            var searchQuery = document.getElementById("search_input").value.trim();
+
+            // 검색어가 비어있는지 확인
+            if (searchQuery === "") {
+                alert("검색어를 입력하세요.");
+                return;
+            }
+
+            // 검색 결과 페이지로 이동
+            window.location.href = "searchResult.html?query=" + encodeURIComponent(searchQuery);
+        });
+    }
+    submitSearch();
 
     // Render products
     products.forEach((product, index) => {
@@ -73,8 +95,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Add event listener to document to close user options dropdown when clicked outside
     document.addEventListener("click", function(event) {
-        if (!event.target.matches(".user-icon")) {
-            const userOptions = document.getElementById("user-options");
+        if (!event.target.matches(".user_icon")) {
+            const userOptions = document.getElementById("user_options");
             if (userOptions.classList.contains("show")) {
                 userOptions.classList.remove("show");
             }
@@ -91,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (xhr.status === 200) {
                     // 서버에서 성공적으로 데이터를 받았을 때 처리합니다.
                     const categories = JSON.parse(xhr.responseText);
-                    //console.log(categories);
                     ////파싱된 카테고리 데이터를 처리하기 위해 renderCategories() 함수에 전달합니다
                     renderCategories(categories);
                 } else {
@@ -108,75 +129,80 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function renderCategories(categories) {
         // 카테고리 메뉴 요소 가져오기
-        parentMenu.classList.add("parent-menu");
+        category_div.classList.add("category_all_layer");
 
         // 카테고리 메뉴와 세부 카테고리 메뉴를 부모 요소에 추가
-        parentMenu.appendChild(category);
-        categoryMenu.appendChild(parentMenu);
-
+        category_div.appendChild(category_1depth);
+        category_box.appendChild(category_div);
+        console.log(categories);
         // 카테고리 데이터를 동적으로 HTML에 추가
         categories.forEach(ajaxCategory => {
-            const categoryItem = document.createElement("div");
+            const categoryItem = document.createElement("li");
             categoryItem.textContent = JSON.stringify(ajaxCategory.name).replace(/"/g, '');
-            categoryItem.classList.add("ajaxCategory-item");
+            categoryItem.classList.add("category_item");
+
+            const category_2depth = document.createElement("div");
+            category_2depth.id = "category_2depth";
+            categoryItem.appendChild(category_2depth);
+
+            ajaxCategory.detail.forEach(detail => {
+                const detailItem = document.createElement("li");
+                detailItem.textContent = detail;
+                detailItem.classList.add("detail_item");
+                category_2depth.appendChild(detailItem);
+
+                detailItem.addEventListener("click", () => {
+                    // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
+                    redirectSearchResult(ajaxCategory.detail);
+                });
+            });
 
             // 마우스가 카테고리에 올라갔을 때 세부 카테고리 표시
             categoryItem.addEventListener("mouseenter", () => {
-                showDetails(ajaxCategory.detail, categoryItem);
+                categoryItem.id = "category_item_active";
+                categoryItem.addEventListener("mouseenter", () => {
+                    category_2depth.style.display = "inline-block";
+                });
+                categoryItem.addEventListener("mouseleave", () => {
+                    category_2depth.style.display = "none";
+                    categoryItem.id = "category_item";
+                });
             });
 
             // 마우스가 카테고리에서 벗어났을 때 세부 카테고리 숨기기
-            categoryMenu.addEventListener("mouseleave", () => {
-                hideDetails();
+            category_box.addEventListener("mouseleave", () => {
+                category_2depth.style.display = "none";
             });
+
+
 
 
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
                 redirectSearchResult(ajaxCategory);
             });
-            category.appendChild(categoryItem);
+            category_1depth.appendChild(categoryItem);
         });
     }
 
     // 세부 카테고리를 표시하는 함수
-    // 세부 카테고리를 표시하는 함수
-    function showDetails(details) {
-        if (!detailMenu) {
-            detailMenu = document.createElement("div");
-            detailMenu.id = "detail-menu";
-            category.appendChild(detailMenu);
-        } else {
-            detailMenu.innerHTML = ""; // 기존 세부 카테고리 지우기
-        }
-
-        details.forEach(detail => {
-            const detailItem = document.createElement("div");
-            detailItem.textContent = detail;
-            detailItem.classList.add("detail-item");
-            detailMenu.appendChild(detailItem);
-
-            detailItem.addEventListener("click", () => {
-                // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                redirectSearchResult(details);
-            });
-        });
-
+   /* function showDetails(details, categoryItem) {
         // 부모 요소 위치에 따라 세부 카테고리 메뉴 위치 조정
-        const parentRect = parentMenu.getBoundingClientRect();
-        detailMenu.style.top = `${parentRect.top}px`;
-        detailMenu.style.left = `${parentRect.right}px`;
-        detailMenu.style.display = "block";
+        const parentRect = category_1depth.getBoundingClientRect();
+        category_2depth.style.top = `${parentRect.top}px`;
+        category_2depth.style.left = `${parentRect.right}px`;
+        category_2depth.style.display = "inline-block";
     }
-
+    */
 
     // 세부 카테고리를 숨기는 함수
-    function hideDetails() {
-        const detailMenu = document.getElementById("detail-menu");
+    /*function hideDetails() {
+        const detailMenu = document.getElementById("category_2depth");
         if (detailMenu) {
             detailMenu.style.display = "none";
         }
     }
+    */
 
     function redirectSearchResult(category) {
         window.location.href = "searchResult.html";
