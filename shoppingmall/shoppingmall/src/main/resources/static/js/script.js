@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             const loginButton = document.createElement("button");
             loginButton.classList.add("login_button");
-            loginButton.innerHTML = "<img src='images/icons/login.png'>";
+            loginButton.innerHTML = "<img src='/images/icons/login.png'>";
             loginButton.addEventListener("click", redirectToLoginPage);
             userMenu.appendChild(loginButton);
         }
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to redirect to login page
     function redirectToLoginPage() {
-        window.location.href = "login.html";
+        window.location.href = "/user/login";
     }
 
     // Function to toggle user options dropdown
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // 검색 결과 페이지로 이동
-            window.location.href = "searchResult.html?query=" + encodeURIComponent(searchQuery);
+            window.location.href = "/search?query=" + encodeURIComponent(searchQuery);
         });
     }
     submitSearch();
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         };
-        xhr.open("GET", "categories.json", true);
+        xhr.open("GET", "/json/categories.json", true);
         xhr.send();
     }
     // 페이지 로드 시 카테고리 데이터 가져오기
@@ -153,7 +153,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 detailItem.addEventListener("click", () => {
                     // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                    redirectSearchResult(ajaxCategory.detail);
+                    redirectSearchResult(detail);
+                    event.stopPropagation();
                 });
             });
 
@@ -174,12 +175,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 category_2depth.style.display = "none";
             });
 
-
-
-
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                redirectSearchResult(ajaxCategory);
+                redirectSearchResult(ajaxCategory.name);
             });
             category_1depth.appendChild(categoryItem);
         });
@@ -204,8 +202,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     */
 
-    function redirectSearchResult(category) {
-        window.location.href = "searchResult.html";
+    function redirectSearchResult(search) {
+        window.location.href = "/search?query=" + encodeURIComponent(search);
     }
 
 });

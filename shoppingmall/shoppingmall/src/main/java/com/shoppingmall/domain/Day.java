@@ -1,4 +1,4 @@
-package com.shoppingmall.Day;
+package com.shoppingmall.domain;
 
 public class Day {
     int year;

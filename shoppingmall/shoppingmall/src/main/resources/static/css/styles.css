@@ -41,8 +41,9 @@ body {
     height: 44px;
     padding-top: 3px;
     border-radius: 10px;
-    border: 3px solid royalblue;
+    border: 3px solid #3a86b8f0;
     background-color: #333333;
+    color: #fff;
 }
 
 .search_button{
@@ -114,7 +115,7 @@ body {
     left: 130px;
     width: 1200px;
     height: 320px;
-    background-color: gainsboro;
+    background-color: #e0e6eb;
     color: #fff;
     box-sizing: border-box;
 }
@@ -127,7 +128,7 @@ body {
     padding: 20px 0 0 10px;
     letter-spacing: -1px;
     color: #fff;
-    background-color: dimgray;
+    background-color: #346fb6d4;
     text-indent: 12px;
     line-height: 42px;
     cursor: pointer;
@@ -207,7 +208,7 @@ article{
 
 /*장바구니 버튼*/
 .product button {
-    background-color: #4CAF50;
+    background-color: #3180d1;
     border: none;
     padding: 10px 20px;
     text-align: center;
@@ -224,5 +225,5 @@ article{
 
 /*버튼이 눌릴 시 색 변화*/
 .product button:hover {
-    background-color: #45a049;
+    background-color: #2d6eaf;
 }

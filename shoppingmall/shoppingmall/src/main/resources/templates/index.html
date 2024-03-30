@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Fast Mall</title>
-    <link href="styles.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
 </head>
 <body>
     <div class="header">
         <div id="home_logo">
-            <img src="images/icons/logo.png" />
+            <img src="/images/icons/logo.png" />
         </div>
         <!-- 입력창과 검색 버튼 -->
-        <form id="search_form">
+        <form id="search_form" action="/search" method="get">
             <input type="text" id="search_input" placeholder="검색어를 입력하세요">
             <button type="submit" class="search_button">
-                <img src="images/icons/search.png"/>
+                <img src="/images/icons/search.png"/>
             </button>
         </form>
         <div id="user_menu" class="user_menu">
@@ -29,7 +29,7 @@
         </div>
         <div id="banner_margin">
             <div id="banner">
-                <img src="images/banners/banner1.jpg" />
+                <img src="/images/banners/banner1.jpg" />
             </div>
         </div>
         <article>
@@ -41,6 +41,6 @@
             </div>
         </article>
     </div>
-    <script src="script.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 </html>

@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // If authentication is successful, set isLoggedIn to true and redirect to market.html
         // For simplicity, let's assume the login is successful always
         isLoggedIn = true;
-        window.location.href = "market.html";
+        window.location.href = "/";
+    });
+
+    document.getElementById("sign_up").addEventListener("click", function (){
+        window.location.href = "/user/new";
     });
 });

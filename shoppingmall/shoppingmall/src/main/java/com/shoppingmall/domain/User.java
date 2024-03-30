@@ -1,15 +1,28 @@
-package com.shoppingmall.User;
-
-import com.shoppingmall.Day.Day;
+package com.shoppingmall.domain;
 
 public class User {
-    final String id;
+
+    private long num;
+
+    public long getNum() {
+        return num;
+    }
+
+    public void setNum(long num) {
+        this.num = num;
+    }
+
+    private String id;
     private String pw;
 
     private String name;
     private String place;
     private Day birthday;
 
+    Level level; //등급
+    private int total; // 총 구매액
+
+    public void setId(String id) { this.id = id;}
     public String getId() {
         return id;
     }
@@ -46,13 +59,15 @@ public class User {
         this.birthday = birthday;
     }
 
-    User(String id, String pw, String name, String place, String d){
-        this.id = id;
-        this.pw = pw;
-        this.name = name;
-        this.place = place;
-
-        String[] sp = d.split(" ");
-        this.birthday = new Day(sp);
+    public Level getLevel() {
+        return level;
     }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public User(){}
+
+
 }
