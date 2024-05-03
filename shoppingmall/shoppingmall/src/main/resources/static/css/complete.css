@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+}
+
+span{
+    position: relative;
+    font-size: 20px;
+    color: #cccccc;
+    top: 3px;
+}
+
+h2{
+    position: relative;
+    left: 540px;
+    bottom: 45px;
+    font-size: 30px;
+}
+
+h2 span{
+    position: relative;
+    font-size: 35px;
+}
+
+/*상단 바*/
+.header {
+    background-color: #333;
+    color: #fff;
+    height: 130px;
+    display: flex;
+    position: relative;
+    min-width: 1200px;
+}
+
+/*로고가 좌측 상단에 위치하도록 조정*/
+#home_logo {
+    display: inline-block;
+    width: 270px;
+    height: 90px;
+}
+
+/*선택자를 이용해 로고의 크기 조정*/
+#home_logo > img {
+    width: 270px;
+    height: 90px;
+}

@@ -27,6 +27,15 @@ document.addEventListener("DOMContentLoaded", function() {
         xhr.open("POST", "/user/new", true);
         xhr.setRequestHeader("Content-Type", "application/json"); // 요청 헤더를 JSON으로 설정
         xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) { // 요청 완료
+                if (xhr.status === 200) { // 요청 성공
+                    // 여기에서 리다이렉션을 수행
+                    window.location.href = "/user/complete?id="+encodeURIComponent(id);
+                } else {
+                    // 요청이 실패한 경우에 대한 처리
+                    console.error("Request failed with status: " + xhr.status);
+                }
+            }
             if(xhr.status === 500){
                 document.getElementById("label1").style.color = "red";
                 document.getElementById("label1").innerText = "사용 불가능한 ID 입니다.";
