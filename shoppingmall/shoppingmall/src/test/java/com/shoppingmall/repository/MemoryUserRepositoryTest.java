@@ -2,13 +2,20 @@ package com.shoppingmall.repository;
 
 import com.shoppingmall.domain.Level;
 import com.shoppingmall.domain.User;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MemoryUserRepositoryTest {
-    MemoryUserRepository repository = new MemoryUserRepository();
+
+    private final EntityManager em;
+    MemoryUserRepository repository = new MemoryUserRepository(em);
+
+    public MemoryUserRepositoryTest(EntityManager em) {
+        this.em = em;
+    }
 
     @AfterEach
     public void afterEach(){

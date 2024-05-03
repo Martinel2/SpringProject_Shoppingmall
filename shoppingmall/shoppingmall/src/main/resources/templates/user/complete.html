@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Fast Mall - 검색결과</title>
+  <link href="/css/sign_up_style.css" rel="stylesheet" />
+</head>
+<body>
+<div class="header">
+  <a href="/" id="home_logo">
+    <img src="/images/icons/logo.png" />
+  </a>
+</div>
+<h2><span style="color: #3180d1">회원가입</span>이 완료되었습니다!</h2>
+<form action="/user/complete" method="get">
+  <h1><span th:text="${id}"></span>님 환영합니다!</h1>
+</form>
+</body>
+</html>

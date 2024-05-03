@@ -1,28 +1,56 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<title>Fast Mall - 회원가입</title>
 <meta charset="UTF-8">
+<link href="/css/sign_up_style.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/signup.js"></script>
 <body>
+<div class="header">
+  <a href="/" id="home_logo">
+    <img src="/images/icons/logo.png" />
+  </a>
+</div>
+<h2><span style="color: #3180d1">회원가입</span>을 위해 정보를 입력해주세요!</h2>
 <div class="container">
-  <form action="/user/new" method="post">
-    <div class="form-group">
-      <label for="id">아이디</label>
-      <input type="text" id="id" name="id" placeholder="아이디를
-입력하세요">
-      <label for="pw">비밀번호</label>
-      <input type="text" id="pw" name="pw" placeholder="비밀번호를
-입력하세요">
-      <label for="name">이름</label>
-      <input type="text" id="name" name="name" placeholder="이름을
-입력하세요">
-      <label for="place">주소</label>
-      <input type="text" id="place" name="place" placeholder="주소를
-입력하세요">
-      <label for="birth">생일</label>
-      <input type="text" id="birth" name="birth" placeholder="생일을
-입력하세요">
+    <div class="form-group" action="/user/new" method="post">
+      <div class="box">
+        <label for="id">아이디 :</label>
+        <input type="text" id="id" name="id" placeholder="아이디를 입력하세요" required>
+        <label id="label1"></label>
+      </div>
+      <div class="box">
+        <label for="pw" class="pw" >비밀번호 :</label>
+        <input type="text" class="pw" id="pw" name="pw" placeholder="비밀번호를 입력하세요" required>
+        <label id="pw_case">영문자,숫자,특수문자를 섞어 최소 8자리 이상</label>
+      </div>
+      <div class="box">
+        <label for="name" class="name" >이름 :</label>
+        <input type="text" class="name" id="name" name="name" placeholder="ex) 홍길동" required>
+      </div>
+      <div class="box">
+        <label for="birth" class="birth">생일 :</label>
+        <input type="text" class="birth" id="birth" name="birth" placeholder="ex) 20240405" required>
+      </div>
+      <div class="box">
+        <label class="phone">휴대폰 번호 : </label>
+        <select id="phone1" class="phone" name="phone">
+          <option value="010">010</option>
+          <option value="011">011</option>
+        </select><span class="phone"> - </span>
+        <input type="tel" id="phone2" class="phone" name="phone" pattern="[0-9]{4}" required><span class="phone"> - </span>
+        <input type="tel" id="phone3" class="phone" name="phone" pattern="[0-9]{4}" required>
+      </div>
+      <div class="box">
+        <label for="email" class="email">이메일 :</label>
+        <input type="email" class="email" id="email" name="email" placeholder="" required>
+      </div>
+      <div class="box">
+      <label for="place" class="place">주소 : </label>
+      <input type="text" class="place" id="place" name="place" placeholder="주소를 입력하세요">
+      </div>
     </div>
-    <button type="submit">등록</button>
-  </form>
+    <button type="button" class="complete" id="signB">등록</button>
 </div> <!-- /container -->
 </body>
 </html>

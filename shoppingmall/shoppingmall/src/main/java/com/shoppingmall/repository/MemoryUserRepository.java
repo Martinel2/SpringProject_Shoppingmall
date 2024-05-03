@@ -2,17 +2,22 @@ package com.shoppingmall.repository;
 
 import com.shoppingmall.domain.Level;
 import com.shoppingmall.domain.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryUserRepository implements UserRepository {
-    private Map<Long, User> store = new ConcurrentHashMap<>();
-    private static long seq = 0L;
+    @PersistenceContext
+    private final EntityManager em;
+
+    public MemoryUserRepository(EntityManager em){
+        this.em = em;
+    }
 
     @Override
     public User add(User user) { //사용자가 잘 들어갔는지 확인용
-        user.setNum(++seq);
-        store.put(user.getNum(),user);
+        em.persist(user);
         return user;
     }
 
@@ -28,13 +33,10 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(String id) {
-        return store.values().stream()
-                .filter(user -> user.getId().equals(id))
-                .findAny();
+    public User findById(String id) {
+        User user = em.find(User.class, id);
+        return user;
     }
 
-    public void clearStore() {
-        store.clear();
-    }
+
 }

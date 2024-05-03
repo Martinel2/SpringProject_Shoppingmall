@@ -11,6 +11,6 @@ public interface UserRepository {
 
     Level valueOf(int value);
 
-    Optional<User> findById(String id);
+    User findById(String id);
 
 }

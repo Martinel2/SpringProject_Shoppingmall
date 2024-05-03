@@ -2,6 +2,7 @@ package com.shoppingmall.service;
 
 import com.shoppingmall.domain.User;
 import com.shoppingmall.repository.MemoryUserRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,15 @@ public class UserServiceTest {
 
     UserService userService;
     MemoryUserRepository userRepository;
+    private final EntityManager em;
+
+    public UserServiceTest(EntityManager em) {
+        this.em = em;
+    }
 
     @BeforeEach
     public void beforeEach() {
-        userRepository = new MemoryUserRepository();
+        userRepository = new MemoryUserRepository(em);
         userService = new UserService(userRepository);
     }
 

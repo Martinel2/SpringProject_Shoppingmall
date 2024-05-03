@@ -2,9 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>검색결과</title>
+    <title>Fast Mall - 검색결과</title>
 </head>
 <body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" />
+    </a>
+</div>
 <form action="/search">
     <!--타임리프를 통해 query값을 매핑해서 화면에 보여주기-->
     <h1><span th:text="${query}"></span>검색결과 페이지 입니다</h1>
