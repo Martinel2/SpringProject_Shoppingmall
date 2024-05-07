@@ -24,10 +24,13 @@ public class UserService {
     }
 
     public boolean isIdExists(String id) {
-        // MemberRepository의 메서드를 사용하여 아이디가 존재하는지 확인합니다.
-        // Member 엔티티 클래스의 필드 이름과 테이블 컬럼 이름이 같다고 가정합니다.
         User user = userRepository.findById(id);
         return user != null;
     }
 
+    public boolean Login(String id, String password){
+        User user = userRepository.findById(id);
+        if(user.getPassword().equals(password)) return true;
+        else return false;
+    }
 }

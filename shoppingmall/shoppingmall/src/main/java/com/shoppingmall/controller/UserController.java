@@ -27,6 +27,19 @@ public class UserController {
         return "user/login";
     }
 
+    @PostMapping(value = "/user/login")
+    public String handleLogin(String id, String password){
+        if(userService.Login(id,password)) return "redirect:/";
+        else return "아이디가 존재하지 않습니다.";
+    }
+
+    // 회원가입 완료 페이지 매핑
+    @GetMapping(value = "/user/complete")
+    public String complete(@RequestParam(value = "id", required = false) String id, Model model) {
+        model.addAttribute("id", id);
+        return "user/complete";
+    }
+
     // 회원가입 처리
     @PostMapping(value = "/user/new")
     public String handleRequest(@RequestBody User user, RedirectAttributes redirectAttributes) {
@@ -38,10 +51,8 @@ public class UserController {
         return "redirect:/";
     }
 
-    // 회원가입 완료 페이지 매핑
-    @GetMapping(value = "/user/complete")
-    public String complete(@RequestParam(value = "id", required = false) String id, Model model) {
-        model.addAttribute("id", id);
-        return "user/complete";
+    @GetMapping(value = "/user/status")
+    public String gotoStatusPage(){
+        return "/user/status";
     }
 }

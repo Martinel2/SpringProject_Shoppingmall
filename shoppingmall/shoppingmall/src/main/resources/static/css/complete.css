@@ -8,21 +8,21 @@ body {
 
 span{
     position: relative;
-    font-size: 20px;
+    font-size: 45px;
     color: #cccccc;
     top: 3px;
 }
 
 h2{
     position: relative;
-    left: 540px;
+    left: 510px;
     bottom: 45px;
-    font-size: 30px;
+    font-size: 40px;
 }
 
 h2 span{
     position: relative;
-    font-size: 35px;
+    font-size: 45px;
 }
 
 /*상단 바*/
@@ -46,4 +46,18 @@ h2 span{
 #home_logo > img {
     width: 270px;
     height: 90px;
+}
+
+#login{
+    display: block;
+    position: relative;
+    top: 200px;
+    left: 597px;
+    width: 256px;
+    height: 80px;
+    margin-bottom: 70px;
+    font-size: 16px;
+    background-color: #3180d1;
+    color: #e0e6eb;
+    border-radius: 5px;
 }
