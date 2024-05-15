@@ -21,16 +21,24 @@
       </div>
       <div class="box">
         <label for="pw" class="pw" >비밀번호 :</label>
-        <input type="text" class="pw" id="pw" name="pw" placeholder="비밀번호를 입력하세요" required>
+        <input type="password" class="pw" id="pw" name="pw" placeholder="비밀번호를 입력하세요" required>
         <label id="pw_case">영문자,숫자,특수문자를 섞어 최소 8자리 이상</label>
+        <label id="label2"></label>
+      </div>
+      <div class="box">
+        <label for="pw" class="pw" >비밀번호 :</label>
+        <input type="password" class="pw" id="pw_check" name="pw" placeholder="비밀번호를 재입력하세요" required>
+        <label id="label3"></label>
       </div>
       <div class="box">
         <label for="name" class="name" >이름 :</label>
         <input type="text" class="name" id="name" name="name" placeholder="ex) 홍길동" required>
+        <label id="label4"></label>
       </div>
       <div class="box">
         <label for="birth" class="birth">생일 :</label>
         <input type="text" class="birth" id="birth" name="birth" placeholder="ex) 20240405" required>
+        <label id="label5"></label>
       </div>
       <div class="box">
         <label class="phone">휴대폰 번호 : </label>
@@ -40,6 +48,7 @@
         </select><span class="phone"> - </span>
         <input type="tel" id="phone2" class="phone" name="phone" pattern="[0-9]{4}" required><span class="phone"> - </span>
         <input type="tel" id="phone3" class="phone" name="phone" pattern="[0-9]{4}" required>
+        <label id="label6"></label>
       </div>
       <div class="box">
         <label for="email" class="email">이메일 :</label>
@@ -48,6 +57,7 @@
       <div class="box">
       <label for="place" class="place">주소 : </label>
       <input type="text" class="place" id="place" name="place" placeholder="주소를 입력하세요">
+        <label id="label8"></label>
       </div>
     </div>
     <button type="button" class="complete" id="signB">등록</button>

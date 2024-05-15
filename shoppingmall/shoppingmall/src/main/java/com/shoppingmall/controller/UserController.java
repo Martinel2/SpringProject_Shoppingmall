@@ -1,5 +1,6 @@
 package com.shoppingmall.controller;
 
+import com.shoppingmall.domain.LoginRequest;
 import com.shoppingmall.domain.User;
 import com.shoppingmall.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -21,16 +22,10 @@ public class UserController {
         return "user/createUserForm";
     }
 
-    // 회원가입 창 매핑
+    // 로그인 창 매핑
     @GetMapping(value = "/user/login")
     public String login() {
         return "user/login";
-    }
-
-    @PostMapping(value = "/user/login")
-    public String handleLogin(String id, String password){
-        if(userService.Login(id,password)) return "redirect:/";
-        else return "아이디가 존재하지 않습니다.";
     }
 
     // 회원가입 완료 페이지 매핑
@@ -38,17 +33,6 @@ public class UserController {
     public String complete(@RequestParam(value = "id", required = false) String id, Model model) {
         model.addAttribute("id", id);
         return "user/complete";
-    }
-
-    // 회원가입 처리
-    @PostMapping(value = "/user/new")
-    public String handleRequest(@RequestBody User user, RedirectAttributes redirectAttributes) {
-        if (!userService.isIdExists(user.getId())) {
-            userService.join(user);
-            redirectAttributes.addAttribute("id", user.getId());
-            return "redirect:/user/complete";
-        }
-        return "redirect:/";
     }
 
     @GetMapping(value = "/user/status")

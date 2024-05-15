@@ -39,7 +39,7 @@ body {
     padding: 100px;
 }
 
-#username {
+#id_box {
     display: block;
     position: relative;
     right: 50px;
@@ -47,7 +47,7 @@ body {
     width: 300px;
 }
 
-#password{
+#password_box{
     display: block;
     position: relative;
     right: 65px;

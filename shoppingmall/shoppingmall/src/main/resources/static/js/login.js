@@ -1,11 +1,23 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const loginForm = document.getElementById("login-form");
+    /////////////////////////login page///////////////////////////////
+    const login = document.getElementById("login");
 
-    loginForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        const id = document.getElementById("username").value;
+    login.addEventListener("click", function(event) {
+        const id = document.getElementById("id").value;
         const password = document.getElementById("password").value;
 
+        if(id == '' || id.length == 0) {
+            document.getElementById("label1").style.color = "red";
+            document.getElementById("label1").innerText = "아이디를 입력하세요.";
+            document.getElementById("label1").focus();
+            return false;
+        }
+        if(password == '' || password.length == 0) {
+            document.getElementById("label2").style.color = "red";
+            document.getElementById("label2").innerText = "비밀번호를 입력하세요.";
+            document.getElementById("label2").focus();
+            return false;
+        }
         const data = {
             id: id,
             password: password
@@ -17,8 +29,18 @@ document.addEventListener("DOMContentLoaded", function() {
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) { // 요청 완료
                 if (xhr.status === 200) { // 요청 성공
-                    // 여기에서 리다이렉션을 수행
-                    window.location.href = "/";
+                    //console.log(xhr.responseText);
+                    if(xhr.responseText === "success"){
+                        localStorage.setItem(id,password);
+                        // 여기에서 리다이렉션을 수행
+                        window.location.href = "/";
+                    }
+                    else{
+                        document.getElementById("label1").style.color = "red";
+                        document.getElementById("label1").innerText = xhr.responseText;
+                        document.getElementById("id").value = ""; // 아이디 입력란 비우기
+                        document.getElementById("password").value = ""; //비밀번호 입력란 비우기
+                    }
                 } else {
                     // 요청이 실패한 경우에 대한 처리
                     document.getElementById("label1").style.color = "red";
@@ -30,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         xhr.send(JSON.stringify(data));
     });
+
 
     document.getElementById("sign_up").addEventListener("click", function (){
         window.location.href = "/user/new";

@@ -1,5 +1,6 @@
 package com.shoppingmall.service;
 
+import com.shoppingmall.domain.LoginRequest;
 import com.shoppingmall.domain.User;
 import com.shoppingmall.repository.MemoryUserRepository;
 import com.shoppingmall.repository.UserRepository;
@@ -17,19 +18,24 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    //회원가입
+    //사용자 추가 코드
     public String join(User user){
         userRepository.add(user);
         return user.getId();
     }
 
+    //중복 id 검사 코드
     public boolean isIdExists(String id) {
         User user = userRepository.findById(id);
         return user != null;
     }
 
-    public boolean Login(String id, String password){
+    //로그인 절차 확인 코드
+    public boolean Login(LoginRequest loginRequest){
+        String id = loginRequest.getId();
+        String password = loginRequest.getPassword();
         User user = userRepository.findById(id);
+        if(user==null) return false;
         if(user.getPassword().equals(password)) return true;
         else return false;
     }

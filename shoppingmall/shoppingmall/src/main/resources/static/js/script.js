@@ -1,5 +1,3 @@
-var isLoggedIn = false;
-var id;
 document.addEventListener("DOMContentLoaded", function() {
     // Dummy product data
     const products = [
@@ -25,11 +23,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const category_box = document.getElementById("category_box");
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");
-
+    let isLogin = false;
     // Function to update user menu
     function updateUserMenu() {
         userMenu.innerHTML = "";
-        if (isLoggedIn) {
+        if (isLogin) {
             const userIcon = document.createElement("div");
             userIcon.classList.add("user_icon");
             userIcon.textContent = "User";
@@ -38,12 +36,12 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             const loginButton = document.createElement("button");
             loginButton.classList.add("login_button");
-            loginButton.innerHTML = "<img src='/images/icons/login.png'>";
-            if(!isLoggedIn)
+            loginButton.innerHTML = "<img alt='user' src='/images/icons/login.png'>";
+            if(!isLogin)
                 loginButton.addEventListener("click", redirectToLoginPage);
             else{
                 loginButton.addEventListener("click", function () {
-                    window.location.href = "/user/status?id=" + encodeURIComponent(id);
+                    window.location.href = "/user/status";
                 });
             }
             userMenu.appendChild(loginButton);
@@ -82,7 +80,8 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.href = "/search?query=" + encodeURIComponent(searchQuery);
         });
     }
-    submitSearch();
+
+    document.getElementById("search_button").addEventListener("click", submitSearch());
 
     // Render products
     products.forEach((product, index) => {
@@ -139,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // 카테고리 메뉴와 세부 카테고리 메뉴를 부모 요소에 추가
         category_div.appendChild(category_1depth);
         category_box.appendChild(category_div);
-        console.log(categories);
+        //console.log(categories);
         // 카테고리 데이터를 동적으로 HTML에 추가
         categories.forEach(ajaxCategory => {
             const categoryItem = document.createElement("li");
@@ -210,43 +209,4 @@ document.addEventListener("DOMContentLoaded", function() {
     function redirectSearchResult(search) {
         window.location.href = "/search?query=" + encodeURIComponent(search);
     }
-
-    /////////////////////////login page///////////////////////////////
-    const loginForm = document.getElementById("login-form");
-
-    loginForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        id = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        const data = {
-            id: id,
-            password: password
-        };
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/user/login", true);
-        xhr.setRequestHeader("Content-Type", "application/json"); // 요청 헤더를 JSON으로 설정
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) { // 요청 완료
-                if (xhr.status === 200) { // 요청 성공
-                    isLoggedIn=true;
-                    // 여기에서 리다이렉션을 수행
-                    window.location.href = "/";
-                } else {
-                    // 요청이 실패한 경우에 대한 처리
-                    document.getElementById("label1").style.color = "red";
-                    document.getElementById("label1").innerText = xhr.responseText;
-                    document.getElementById("id").value = ""; // 아이디 입력란 비우기
-                    document.getElementById("password").value = ""; //비밀번호 입력란 비우기
-                }
-            }
-        };
-        xhr.send(JSON.stringify(data));
-    });
-
-    document.getElementById("sign_up").addEventListener("click", function (){
-        window.location.href = "/user/new";
-    });
-
 });

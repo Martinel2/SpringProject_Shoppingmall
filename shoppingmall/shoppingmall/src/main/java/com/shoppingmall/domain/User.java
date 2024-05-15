@@ -24,11 +24,6 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "level")
-    private Level level = Level.BASIC; //등급
-    @Column(name = "total")
-    private int total=0; // 총 구매액
-
     public void setId(String id) { this.id = id;}
     @Id
     public String getId() {
@@ -67,14 +62,6 @@ public class User {
         this.birth = birthday;
     }
 
-    public Level getLevel() {
-        return level;
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -89,14 +76,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
     }
 
 
