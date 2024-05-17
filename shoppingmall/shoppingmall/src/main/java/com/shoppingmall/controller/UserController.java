@@ -3,10 +3,15 @@ package com.shoppingmall.controller;
 import com.shoppingmall.domain.LoginRequest;
 import com.shoppingmall.domain.User;
 import com.shoppingmall.service.UserService;
+import com.shoppingmall.session.SessionConst;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -36,7 +41,27 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/status")
-    public String gotoStatusPage(){
-        return "/user/status";
+    public String gotoStatusPage(HttpServletRequest request, Model model){
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            return "user/login";
+        }
+        String id = (String)session.getAttribute(SessionConst.sessionId);
+        Optional<User> findUserOptional = Optional.ofNullable(userService.isIdExists(id));
+        User user = findUserOptional.orElse(null);
+        if(user == null)
+            return "user/login";
+        model.addAttribute("user", user);
+        return "user/status";
+    }
+
+    @PostMapping("logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session == null) {
+            return "redirect:/";
+        }
+        session.invalidate(); //세션종료
+        return "redirect:/";
     }
 }

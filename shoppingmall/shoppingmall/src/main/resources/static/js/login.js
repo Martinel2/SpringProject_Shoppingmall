@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (xhr.status === 200) { // 요청 성공
                     //console.log(xhr.responseText);
                     if(xhr.responseText === "success"){
-                        localStorage.setItem(id,password);
+                        localStorage.setItem("id",id);
                         // 여기에서 리다이렉션을 수행
                         window.location.href = "/";
                     }

@@ -24,28 +24,22 @@ document.addEventListener("DOMContentLoaded", function() {
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");
     let isLogin = false;
+
+    if(localStorage.getItem("id") != null) isLogin = true;
     // Function to update user menu
     function updateUserMenu() {
         userMenu.innerHTML = "";
-        if (isLogin) {
-            const userIcon = document.createElement("div");
-            userIcon.classList.add("user_icon");
-            userIcon.textContent = "User";
-            userIcon.addEventListener("click", toggleUserOptions);
-            userMenu.appendChild(userIcon);
-        } else {
-            const loginButton = document.createElement("button");
-            loginButton.classList.add("login_button");
-            loginButton.innerHTML = "<img alt='user' src='/images/icons/login.png'>";
-            if(!isLogin)
-                loginButton.addEventListener("click", redirectToLoginPage);
-            else{
-                loginButton.addEventListener("click", function () {
-                    window.location.href = "/user/status";
-                });
-            }
-            userMenu.appendChild(loginButton);
+        const loginButton = document.createElement("button");
+        loginButton.classList.add("login_button");
+        loginButton.innerHTML = "<img alt='user' src='/images/icons/login.png'>";
+        if(!isLogin)
+            loginButton.addEventListener("click", redirectToLoginPage);
+        else{
+            loginButton.addEventListener("click", function () {
+                window.location.href = "/user/status";
+            });
         }
+        userMenu.appendChild(loginButton);
     }
 
     // Function to redirect to login page
@@ -53,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "/user/login";
     }
 
+    /*
     // Function to toggle user options dropdown
     function toggleUserOptions() {
         const userOptions = document.getElementById("user_options");
@@ -60,6 +55,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
+    // Add event listener to document to close user options dropdown when clicked outside
+    document.addEventListener("click", function(event) {
+        if (!event.target.matches(".user_icon")) {
+            const userOptions = document.getElementById("user_options");
+            if (userOptions.classList.contains("show")) {
+                userOptions.classList.remove("show");
+            }
+        }
+    });
+    */
+    updateUserMenu();
 
 
     function submitSearch() {
@@ -96,18 +102,6 @@ document.addEventListener("DOMContentLoaded", function() {
     `;
         productsSection.appendChild(productElement);
     });
-
-    // Add event listener to document to close user options dropdown when clicked outside
-    document.addEventListener("click", function(event) {
-        if (!event.target.matches(".user_icon")) {
-            const userOptions = document.getElementById("user_options");
-            if (userOptions.classList.contains("show")) {
-                userOptions.classList.remove("show");
-            }
-        }
-    });
-
-    updateUserMenu();
 
     function fetchCategories() {
         // AJAX를 사용하여 서버에서 카테고리 데이터를 가져오는 요청을 보냅니다.

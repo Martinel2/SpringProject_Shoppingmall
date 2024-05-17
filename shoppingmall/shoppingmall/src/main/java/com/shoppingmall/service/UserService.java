@@ -25,18 +25,18 @@ public class UserService {
     }
 
     //중복 id 검사 코드
-    public boolean isIdExists(String id) {
+    public User isIdExists(String id) {
         User user = userRepository.findById(id);
-        return user != null;
+        return user;
     }
 
     //로그인 절차 확인 코드
-    public boolean Login(LoginRequest loginRequest){
+    public User Login(LoginRequest loginRequest){
         String id = loginRequest.getId();
         String password = loginRequest.getPassword();
         User user = userRepository.findById(id);
-        if(user==null) return false;
-        if(user.getPassword().equals(password)) return true;
-        else return false;
+        if(user==null) return null;
+        else if(user.getPassword().equals(password)) return user;
+        return null;
     }
 }
