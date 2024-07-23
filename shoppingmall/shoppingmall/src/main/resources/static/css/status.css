@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+}
+
+/*상단 바*/
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    height: 130px;
+    display: flex;
+    position: relative;
+    min-width: 1200px;
+}
+
+/*로고가 좌측 상단에 위치하도록 조정*/
+#home_logo {
+    display: inline-block;
+    width: 270px;
+    height: 90px;
+}
+
+/*선택자를 이용해 로고의 크기 조정*/
+#home_logo > img {
+    width: 270px;
+    height: 90px;
+}
+
+h1{
+    display:block;
+    position: relative;
+    left: 422px;
+}
+
+.form-group{
+    display: block;
+    position: relative;
+    width: 800px;
+    left: 360px;
+    bottom: 20px;
+    background-color: #2d6eaf;
+    border: #e0e6eb solid 3px;
+    border-radius: 5px;
+}
+label{
+    position: relative;
+    margin-left:20px;
+}
+.box{
+    display:inline-block;
+    padding-top: 30px;
+    padding-bottom:30px;
+    margin-left:10px;
+}
+hr{
+    color: #e0e6eb;
+}
+#logout{
+    display: block;
+    position: relative;
+    width: 120px;
+    height: 60px;
+    top: 12px;
+    left: 800px;
+    font-size: 17px;
+    background-color: #3180d1;
+    color: #e0e6eb;
+    border-radius: 5px;
+}
+
+#mod{
+    display: block;
+    position: relative;
+    width: 180px;
+    height: 60px;
+    top: 12px;
+    left: 680px;
+    font-size: 17px;
+    background-color: #3180d1;
+    color: #e0e6eb;
+    border-radius: 5px;
+}

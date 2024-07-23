@@ -1,16 +1,16 @@
 package com.shoppingmall.repository;
 
 import com.shoppingmall.domain.Level;
-import com.shoppingmall.domain.User;
+import com.shoppingmall.domain.Users;
 
 import java.util.Optional;
 
 public interface UserRepository {
 
-    User add(User user);
+    Users add(Users user);
 
     Level valueOf(int value);
 
-    User findById(String id);
+    Users findById(String id);
 
 }

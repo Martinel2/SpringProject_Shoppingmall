@@ -4,12 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <title>회원정보</title>
+    <script src="/js/status.js"></script>
+    <link href="/css/status.css" rel="stylesheet" />
 </head>
 <body>
-<h1>회원정보</h1>
-<div th:text="|${user.id}님 환영합니다.|"></div>
-<form th:action="@{/logout}" method="post">
-    <button type="submit">로그아웃</button>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" />
+    </a>
+    <h1>회원정보</h1>
+    <form th:action="@{/logout}" method="post">
+        <button id="logout" type="submit">로그아웃</button>
+    </form>
+</div>
+<div class="container">
+    <div class="form-group">
+        <label>아이디 : </label>
+        <div class="box" id="id" th:text="|${user.id}|"></div>
+        <hr>
+        <label>이름 : </label>
+        <div class="box" id="name" th:text="|${user.name}|"></div>
+        <hr>
+        <label>생년월일 : </label>
+        <div class="box" id="birth" th:text="|${user.birth}|"></div>
+        <hr>
+        <label>휴대폰 번호 : </label>
+        <div class="box" id="phone" th:text="|${user.phone}|"></div>
+        <hr>
+        <label>이메일 : </label>
+        <div class="box" id="email" th:text="|${user.email}|"></div>
+        <hr>
+        <label>주소 : </label>
+        <div class="box" id="place" th:text="|${user.place}|"></div>
+    </div>
+</div> <!-- /container -->
+<form th:action="@{/modify}" method="get">
+    <button id="mod" type="submit">회원정보 수정</button>
 </form>
 </body>
 </html>

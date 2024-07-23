@@ -1,6 +1,8 @@
 package com.shoppingmall;
 
+import com.shoppingmall.repository.MemoryProductRepository;
 import com.shoppingmall.repository.MemoryUserRepository;
+import com.shoppingmall.repository.ProductRepository;
 import com.shoppingmall.repository.UserRepository;
 import com.shoppingmall.service.UserService;
 
@@ -19,6 +21,8 @@ public class SpringConfig {
         this.em = em;
     }
 
+    @Bean
+    public ProductRepository productRepository() { return new MemoryProductRepository(em); };
 
     @Bean
     public UserRepository userRepository(){

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/productAdd.js"></script>
+<script>
+    const categoryDetails = {
+        1: {
+            "상의": 1,
+            "하의": 2,
+            "속옷": 3,
+            "양말": 4
+        },
+        2: {
+            "운동화": 5,
+            "스니커즈": 6,
+            "구두": 7,
+            "슬리퍼": 8
+        },
+        3: {
+            "백팩": 9,
+            "캐리어": 10,
+            "크로스백": 11
+        },
+        4: {
+            "목걸이": 12,
+            "반지": 13,
+            "귀걸이": 14,
+            "선글라스": 15
+        }
+    };
+
+    function updateDetails() {
+        const categorySelect = document.getElementById('category');
+        const detailSelect = document.getElementById('detail');
+
+        detailSelect.innerHTML = '';
+
+        const selectedCategoryId = categorySelect.value;
+        const details = categoryDetails[selectedCategoryId];
+
+        if (details) {
+            Object.keys(details).forEach(detail => {
+                const option = document.createElement('option');
+                option.value = details[detail];
+                option.textContent = detail;
+                detailSelect.appendChild(option);
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateDetails();
+    });
+</script>
+<body>
+<form id="productForm" action="/products/add" method="post" enctype="multipart/form-data">
+  <input id="name" type="text" name="name" placeholder="Product Name" required>
+  <textarea id="description" name="description" placeholder="Product Description" required></textarea>
+  <input id="price" type="number" name="price" placeholder="Product Price" step="1" required>
+  <input id="image" type="file" name="file" required>
+    <label for="category">Category:</label>
+    <select id="category" onchange="updateDetails()">
+        <option value="1">의류</option>
+        <option value="2">신발</option>
+        <option value="3">가방</option>
+        <option value="4">액세서리</option>
+    </select>
+
+    <!-- Detail Select Box -->
+    <label for="detail">Detail:</label>
+    <select id="detail" name="categoryId">
+        <!-- Options will be populated based on selected category -->
+    </select>
+  <button type="submit">Add Product</button>
+</form>
+</body>
+</html>

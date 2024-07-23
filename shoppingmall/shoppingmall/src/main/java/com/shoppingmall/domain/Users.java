@@ -3,7 +3,7 @@ package com.shoppingmall.domain;
 import jakarta.persistence.*;
 
 @Entity
-public class User {
+public class Users {
 
     @Id
     private String id;
@@ -79,7 +79,7 @@ public class User {
     }
 
 
-    public User(){}
+    public Users(){}
 
 
 }

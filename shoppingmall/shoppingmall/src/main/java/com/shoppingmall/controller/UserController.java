@@ -1,7 +1,7 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.LoginRequest;
-import com.shoppingmall.domain.User;
+import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.UserService;
 import com.shoppingmall.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +20,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
 
     // 회원가입 창 매핑
     @GetMapping(value = "/user/new")
@@ -47,8 +48,8 @@ public class UserController {
             return "user/login";
         }
         String id = (String)session.getAttribute(SessionConst.sessionId);
-        Optional<User> findUserOptional = Optional.ofNullable(userService.isIdExists(id));
-        User user = findUserOptional.orElse(null);
+        Optional<Users> findUserOptional = Optional.ofNullable(userService.isIdExists(id));
+        Users user = findUserOptional.orElse(null);
         if(user == null)
             return "user/login";
         model.addAttribute("user", user);

@@ -1,7 +1,7 @@
 package com.shoppingmall.repository;
 
 import com.shoppingmall.domain.Level;
-import com.shoppingmall.domain.User;
+import com.shoppingmall.domain.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -16,7 +16,7 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User add(User user) { //사용자가 잘 들어갔는지 확인용
+    public Users add(Users user) { //사용자가 잘 들어갔는지 확인용
         em.persist(user);
         return user;
     }
@@ -33,8 +33,8 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findById(String id) {
-        User user = em.find(User.class, id);
+    public Users findById(String id) {
+        Users user = em.find(Users.class, id);
         return user;
     }
 
