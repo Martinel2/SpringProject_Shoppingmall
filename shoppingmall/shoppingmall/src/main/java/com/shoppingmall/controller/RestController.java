@@ -35,7 +35,7 @@ public class RestController {
         Users user = userService.Login(loginRequest);
         if(user != null){
             HttpSession session = request.getSession();
-            session.setAttribute(SessionConst.sessionId, user.getId());
+            session.setAttribute("userId", user.getId());
             return "success";
         }
         else return "fail";
@@ -52,15 +52,17 @@ public class RestController {
         return "fail";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/products/add")
     public String addProduct(
-            @RequestParam String name,
-            @RequestParam String description,
-            @RequestParam int price,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam int categoryId
+            @RequestParam(name = "name") String name,
+            @RequestParam(name = "description") String description,
+            @RequestParam(name = "price") int price,
+            @RequestParam(name = "file") MultipartFile file,
+            @RequestParam(name = "category") int category,
+            HttpSession session
     ) {
-        productService.saveProduct(name, description, price, file, categoryId,SessionConst.sessionId);
+        String userId = (String) session.getAttribute("userId");
+        productService.saveProduct(name, description, price, file, category,userId);
         return "success";
     }
 

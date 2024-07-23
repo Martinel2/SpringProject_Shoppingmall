@@ -9,9 +9,10 @@ public class Products {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private int category;
     @OneToOne
-    @JoinColumn(name = "id")
-    private Category category;
+    @JoinColumn(name = "category", insertable = false, updatable = false)
+    private Category cat;
 
     // Foreign key field
     private String seller_id;
@@ -33,6 +34,13 @@ public class Products {
     @Column(name = "photo")
     private String photo;  // 사진 파일 경로 또는 URL
 
+    public int getCategory() {
+        return category;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
 
     public String getDescription() {
         return description;
@@ -58,12 +66,12 @@ public class Products {
         this.id = id;
     }
 
-    public Category getCategory() {
-        return category;
+    public Category getCat() {
+        return cat;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCat(Category cat) {
+        this.cat = cat;
     }
 
     public String getProduct_name() {
