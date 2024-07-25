@@ -17,7 +17,7 @@ public class Products {
     // Foreign key field
     private String seller_id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "seller_id", insertable = false, updatable = false)
     private Users user;
 

@@ -10,9 +10,56 @@
         <img src="/images/icons/logo.png" />
     </a>
 </div>
+<script>
+    const categoryDetails = {
+        1: {
+            "상의": 1,
+            "하의": 2,
+            "속옷": 3,
+            "양말": 4
+        },
+        2: {
+            "운동화": 5,
+            "스니커즈": 6,
+            "구두": 7,
+            "슬리퍼": 8
+        },
+        3: {
+            "백팩": 9,
+            "캐리어": 10,
+            "크로스백": 11
+        },
+        4: {
+            "목걸이": 12,
+            "반지": 13,
+            "귀걸이": 14,
+            "선글라스": 15
+        }
+    };
+</script>
 <form action="/search">
     <!--타임리프를 통해 query값을 매핑해서 화면에 보여주기-->
     <h1><span style="color: #3180d1" th:text="${query}"></span>검색결과 페이지 입니다</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>판매자</th>
+            <th>상품이름</th>
+            <th>사진</th>
+            <th>설명</th>
+            <th>가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.seller_id}"></td>
+            <td th:text="${product.product_name}"></td>
+            <td><img th:src="@{${product.photo}}" alt="Product Photo" width="100" height="100"/></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.price}"></td>
+        </tr>
+        </tbody>
+    </table>
 </form>
 </body>
 </html>

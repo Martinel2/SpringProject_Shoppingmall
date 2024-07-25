@@ -4,6 +4,8 @@ import com.shoppingmall.repository.MemoryProductRepository;
 import com.shoppingmall.repository.MemoryUserRepository;
 import com.shoppingmall.repository.ProductRepository;
 import com.shoppingmall.repository.UserRepository;
+import com.shoppingmall.service.FileStorageService;
+import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
 
 import jakarta.persistence.PersistenceContext;
@@ -24,6 +26,8 @@ public class SpringConfig {
     @Bean
     public ProductRepository productRepository() { return new MemoryProductRepository(em); };
 
+    public FileStorageService fileStorageService;
+
     @Bean
     public UserRepository userRepository(){
         return new MemoryUserRepository(em);
@@ -32,4 +36,7 @@ public class SpringConfig {
     public UserService userService(){
         return new UserService(userRepository());
     }
+
+    @Bean
+    public ProductService productService() { return new ProductService(productRepository(), fileStorageService); }
 }

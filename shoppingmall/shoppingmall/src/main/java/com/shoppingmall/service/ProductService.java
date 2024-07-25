@@ -1,15 +1,15 @@
 package com.shoppingmall.service;
 
-import com.shoppingmall.domain.Category;
 import com.shoppingmall.domain.Products;
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.repository.ProductRepository;
 import com.shoppingmall.repository.UserRepository;
-import com.shoppingmall.session.SessionConst;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,12 +17,14 @@ public class ProductService {
 
     @Autowired
     private UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final FileStorageService fileStorageService;  // 파일 저장 서비스
 
-    @Autowired
-    private ProductRepository productRepository;
+    public ProductService(ProductRepository productRepository, FileStorageService fileStorageService) {
+        this.productRepository = productRepository;
+        this.fileStorageService = fileStorageService;
+    }
 
-    @Autowired
-    private FileStorageService fileStorageService;  // 파일 저장 서비스
 
     public Products saveProduct(String product_name, String description, int price, MultipartFile file, int category, String seller_id) {
         // 파일 저장
@@ -42,5 +44,9 @@ public class ProductService {
 
         // 상품 저장
         return productRepository.save(product);
+    }
+
+    public List<Products> searchByName(String name){
+        return productRepository.findByName(name);
     }
 }
