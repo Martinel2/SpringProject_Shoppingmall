@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 detailItem.addEventListener("click", () => {
                     // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                    redirectSearchResult(detail);
+                    redirectSearchCategory(detail);
                     event.stopPropagation();
                 });
             });
@@ -175,16 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "/search?category=" + encodeURIComponent(ajaxCategory), true);
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        document.open();
-                        document.write(xhr.responseText);
-                        document.close();
-                    }
-                };
-                xhr.send();
+                redirectSearchCategory(ajaxCategory);
             });
             category_1depth.appendChild(categoryItem);
         });
@@ -211,5 +202,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function redirectSearchResult(search) {
         window.location.href = "/search?query=" + encodeURIComponent(search);
+    }
+
+    function redirectSearchCategory(category) {
+        window.location.href = "/search?category=" + encodeURIComponent(category);
     }
 });
