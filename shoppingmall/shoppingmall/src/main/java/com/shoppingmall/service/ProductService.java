@@ -56,10 +56,10 @@ public class ProductService {
     }
 
     public List<Products> searchByCategory(String category){
-        int[] id = categoryRepository.findIdByTitle(category);
+        List<Integer> id = categoryRepository.findIdByTitle(category);
         List<Products> products = new ArrayList<>();
-        for(int i = 0; i< id.length; i++){
-            products.addAll(productRepository.findByCategory(id[i]));
+        for(int categoryId : id){
+            products.addAll(productRepository.findByCategory(categoryId));
         }
         return products;
     }
