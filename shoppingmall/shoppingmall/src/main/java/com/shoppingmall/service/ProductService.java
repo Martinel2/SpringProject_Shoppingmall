@@ -2,6 +2,7 @@ package com.shoppingmall.service;
 
 import com.shoppingmall.domain.Products;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.repository.CategoryRepository;
 import com.shoppingmall.repository.ProductRepository;
 import com.shoppingmall.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,9 +22,12 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FileStorageService fileStorageService;  // 파일 저장 서비스
 
-    public ProductService(ProductRepository productRepository, FileStorageService fileStorageService) {
+    private final CategoryRepository categoryRepository;
+
+    public ProductService(ProductRepository productRepository, FileStorageService fileStorageService, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.fileStorageService = fileStorageService;
+        this.categoryRepository = categoryRepository;
     }
 
 
@@ -48,5 +53,18 @@ public class ProductService {
 
     public List<Products> searchByName(String name){
         return productRepository.findByName(name);
+    }
+
+    public List<Products> searchByCategory(String category){
+        int[] id = categoryRepository.findIdByTitle(category);
+        List<Products> products = new ArrayList<>();
+        for(int i = 0; i< id.length; i++){
+            products.addAll(productRepository.findByCategory(id[i]));
+        }
+        return products;
+    }
+
+    public List<Products> searchBySellerId(String seller_id){
+        return productRepository.findBySellerId(seller_id);
     }
 }

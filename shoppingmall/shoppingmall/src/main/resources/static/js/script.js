@@ -175,7 +175,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                redirectSearchResult(ajaxCategory.name);
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/search?category=" + encodeURIComponent(ajaxCategory), true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        document.open();
+                        document.write(xhr.responseText);
+                        document.close();
+                    }
+                };
+                xhr.send();
             });
             category_1depth.appendChild(categoryItem);
         });

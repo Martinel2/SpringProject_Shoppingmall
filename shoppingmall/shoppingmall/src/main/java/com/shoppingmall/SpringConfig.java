@@ -1,9 +1,6 @@
 package com.shoppingmall;
 
-import com.shoppingmall.repository.MemoryProductRepository;
-import com.shoppingmall.repository.MemoryUserRepository;
-import com.shoppingmall.repository.ProductRepository;
-import com.shoppingmall.repository.UserRepository;
+import com.shoppingmall.repository.*;
 import com.shoppingmall.service.FileStorageService;
 import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
@@ -26,7 +23,11 @@ public class SpringConfig {
     @Bean
     public ProductRepository productRepository() { return new MemoryProductRepository(em); };
 
-    public FileStorageService fileStorageService;
+    @Bean
+    public FileStorageService fileStorageService() { return new FileStorageService(); };
+
+    @Bean
+    public CategoryRepository categoryRepository() { return  new CategoryRepository(em); };
 
     @Bean
     public UserRepository userRepository(){
@@ -38,5 +39,5 @@ public class SpringConfig {
     }
 
     @Bean
-    public ProductService productService() { return new ProductService(productRepository(), fileStorageService); }
+    public ProductService productService() { return new ProductService(productRepository(), fileStorageService(), categoryRepository()); }
 }

@@ -24,8 +24,8 @@ public class MemoryProductRepository implements ProductRepository{
 
     @Override
     public List<Products> findByName(String name){
-        TypedQuery<Products> query = em.createQuery("SELECT u FROM Products u WHERE u.product_name = :name", Products.class);
-        query.setParameter("name", name);
+        TypedQuery<Products> query = em.createQuery("SELECT u FROM Products u WHERE u.product_name LIKE :name", Products.class);
+        query.setParameter("name", "%" + name + "%");
         List<Products> productsList = query.getResultList();
         return productsList;
     }
@@ -40,8 +40,8 @@ public class MemoryProductRepository implements ProductRepository{
 
     @Override
     public List<Products> findBySellerId(String seller_id) {
-        TypedQuery<Products> query = em.createQuery("SELECT u FROM Products u WHERE u.seller_id = :seller_id", Products.class);
-        query.setParameter("seller_id", seller_id);
+        TypedQuery<Products> query = em.createQuery("SELECT u FROM Products u WHERE u.seller_id like :seller_id", Products.class);
+        query.setParameter("seller_id",  "%" + seller_id + "%");
         List<Products> productsList = query.getResultList();
         return productsList;
     }

@@ -2,7 +2,18 @@ document.addEventListener("DOMContentLoaded", function() {
     /////////////////////////login page///////////////////////////////
     const login = document.getElementById("login");
 
+    function handleEnterKey(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // 폼 제출을 방지
+            loginCheck();
+        }
+    }
+
+    handleEnterKey();
     login.addEventListener("click", function(event) {
+        loginCheck();
+    });
+    function loginCheck() {
         const id = document.getElementById("id").value;
         const password = document.getElementById("password").value;
 
@@ -51,8 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
         xhr.send(JSON.stringify(data));
-    });
-
+    }
 
     document.getElementById("sign_up").addEventListener("click", function (){
         window.location.href = "/user/new";
