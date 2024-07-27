@@ -1,6 +1,5 @@
 package com.shoppingmall.controller;
 
-import com.shoppingmall.domain.LoginRequest;
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.UserService;
 import com.shoppingmall.session.SessionConst;
@@ -9,8 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.Optional;
 
 @Controller

@@ -5,8 +5,6 @@ import com.shoppingmall.domain.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import java.util.*;
-
 public class MemoryUserRepository implements UserRepository {
     @PersistenceContext
     private final EntityManager em;
@@ -23,19 +21,18 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public Level valueOf(int value) {
-        switch (value){
-            case 1: return Level.BASIC;
-            case 2: return Level.NORMAL;
-            case 3: return Level.VIP;
-            case 4: return Level.VVIP;
-            default: throw new AssertionError("Unknown value: " + value);
-        }
+        return switch (value) {
+            case 1 -> Level.BASIC;
+            case 2 -> Level.NORMAL;
+            case 3 -> Level.VIP;
+            case 4 -> Level.VVIP;
+            default -> throw new AssertionError("Unknown value: " + value);
+        };
     }
 
     @Override
     public Users findById(String id) {
-        Users user = em.find(Users.class, id);
-        return user;
+        return em.find(Users.class, id);
     }
 
 

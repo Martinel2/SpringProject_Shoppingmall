@@ -10,14 +10,14 @@ public class Products {
     private int id;
 
     private int category;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category", insertable = false, updatable = false)
     private Category cat;
 
     // Foreign key field
     private String seller_id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "seller_id", insertable = false, updatable = false)
     private Users user;
 

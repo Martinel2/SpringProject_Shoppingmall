@@ -2,6 +2,7 @@ package com.shoppingmall.repository;
 
 import com.shoppingmall.domain.Level;
 import com.shoppingmall.domain.User;
+import com.shoppingmall.domain.Users;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -24,12 +25,12 @@ public class MemoryUserRepositoryTest {
 
     @Test
     public void add() { //사용자가 잘 들어갔는지 확인용
-        User user = new User();
+        Users user = new Users();
         user.setId("test1");
 
         repository.add(user);
 
-        User res = repository.findById(user.getId()).get();
+        Users res = repository.findById(user.getId());
         assertThat(res).isEqualTo(user);
     }
 

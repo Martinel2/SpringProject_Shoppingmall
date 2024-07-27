@@ -3,61 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Fast Mall - 검색결과</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* 행에 커서를 올릴 때 시각적 피드백을 주기 위한 스타일 추가 */
+        tr.clickable-row {
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 모든 테이블 행에 대해 클릭 이벤트를 추가
+            const rows = document.querySelectorAll('.clickable-row');
+            rows.forEach(row => {
+                row.addEventListener('click', function () {
+                    const productId = this.dataset.productId;
+                    // 상품 상세 페이지로 이동
+                    window.location.href = `/products/${productId}`;
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="header">
     <a href="/" id="home_logo">
-        <img src="/images/icons/logo.png" />
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
     </a>
 </div>
-<script>
-    const categoryDetails = {
-        1: {
-            "상의": 1,
-            "하의": 2,
-            "속옷": 3,
-            "양말": 4
-        },
-        2: {
-            "운동화": 5,
-            "스니커즈": 6,
-            "구두": 7,
-            "슬리퍼": 8
-        },
-        3: {
-            "백팩": 9,
-            "캐리어": 10,
-            "크로스백": 11
-        },
-        4: {
-            "목걸이": 12,
-            "반지": 13,
-            "귀걸이": 14,
-            "선글라스": 15
-        }
-    };
-</script>
 <form action="/search">
-    <!--타임리프를 통해 query값을 매핑해서 화면에 보여주기-->
-    <h1><span style="color: #3180d1" th:text="${query}"></span>검색결과 페이지 입니다</h1>
+    <!-- 타임리프를 통해 query값을 매핑해서 화면에 보여주기 -->
+    <h1><span style="color: #3180d1" th:text="${query}">
+    </span><span style="color: #3180d1" th:text="${category}">
+    </span><span style="color: #3180d1" th:text="${sellerId}"></span> 검색결과</h1>
     <table>
         <thead>
         <tr>
-            <th>판매자</th>
             <th>상품이름</th>
             <th>사진</th>
-            <th>설명</th>
             <th>가격</th>
+            <th>판매자</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.seller_id}"></td>
+        <tr class="clickable-row" th:each="product : ${products}" th:data-product-id="${product.id}">
             <td th:text="${product.product_name}"></td>
-            <td><img th:src="@{${'/images/uploads/' + product.photo}}" alt="Product Image" height="200" width="200"></td>
-            <td th:text="${product.description}"></td>
+            <td><img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="200" width="200"></td>
             <td th:text="${product.price}"></td>
-            <td><img src=""></td>
+            <td th:text="${product.seller_id}"></td>
         </tr>
         </tbody>
     </table>

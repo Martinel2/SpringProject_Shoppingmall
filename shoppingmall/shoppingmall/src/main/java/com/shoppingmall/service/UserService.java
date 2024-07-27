@@ -2,12 +2,8 @@ package com.shoppingmall.service;
 
 import com.shoppingmall.domain.LoginRequest;
 import com.shoppingmall.domain.Users;
-import com.shoppingmall.repository.MemoryUserRepository;
 import com.shoppingmall.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.Console;
 
 @Transactional
 public class UserService {
@@ -26,8 +22,7 @@ public class UserService {
 
     //중복 id 검사 코드
     public Users isIdExists(String id) {
-        Users user = userRepository.findById(id);
-        return user;
+        return userRepository.findById(id);
     }
 
     //로그인 절차 확인 코드

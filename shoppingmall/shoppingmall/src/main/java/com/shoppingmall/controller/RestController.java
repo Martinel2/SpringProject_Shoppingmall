@@ -1,33 +1,31 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.LoginRequest;
-import com.shoppingmall.domain.Products;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
-import com.shoppingmall.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.http.HttpRequest;
-
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
     private final UserService userService;
 
-    public RestController(UserService userService) {
+    private final CartService cartService;
+    private final ProductService productService;
+    public RestController(UserService userService, CartService cartService, ProductService productService) {
         this.userService = userService;
+        this.cartService = cartService;
+        this.productService = productService;
     }
 
-    @Autowired
-    private ProductService productService;
 
     //로그인 처리
     @PostMapping(value = "/user/login")
@@ -63,6 +61,18 @@ public class RestController {
     ) {
         String userId = (String) session.getAttribute("userId");
         productService.saveProduct(name, description, price, file, category,userId);
+        return "success";
+    }
+
+    @PostMapping("/cart/add")
+    public String addToCart(@RequestParam("productId") int productId, @RequestParam("quantity") int quantity, HttpSession httpSession) {
+        // 로그인 여부 확인
+        if (httpSession.getAttribute("userId") == null) {
+            return "not_logged_in"; // 로그인되지 않은 경우
+        }
+
+        String userId = (String) httpSession.getAttribute("userId");
+        cartService.addCart(userId, productId, quantity); // 장바구니에 상품 추가
         return "success";
     }
 

@@ -13,5 +13,6 @@ public interface ProductRepository {
 
     List<Products> findBySellerId(String seller_id);
 
+    Products findById(int productId);
 }
 

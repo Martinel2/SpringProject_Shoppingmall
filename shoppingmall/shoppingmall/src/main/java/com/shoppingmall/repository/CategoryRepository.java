@@ -1,7 +1,6 @@
 package com.shoppingmall.repository;
 
 import com.shoppingmall.domain.Category;
-import com.shoppingmall.domain.Products;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -22,8 +21,8 @@ public class CategoryRepository {
         query.setParameter("title", "%" + title + "%");
         List<Category> category = query.getResultList();
         List<Integer> id = new ArrayList<>();
-        for(int i = 0; i<category.size(); i++){
-            id.add(category.get(i).getId());
+        for (Category value : category) {
+            id.add(value.getId());
         }
         return id;
     }

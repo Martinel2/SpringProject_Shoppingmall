@@ -1,19 +1,12 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Products;
-import com.shoppingmall.service.FileStorageService;
 import com.shoppingmall.service.ProductService;
-import com.shoppingmall.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +14,6 @@ import java.util.List;
 public class SearchController {
 
     private final ProductService productService;
-    public FileStorageService fileStorageService;
     public SearchController(ProductService productService) { this.productService = productService; }
 
     @GetMapping("/search")

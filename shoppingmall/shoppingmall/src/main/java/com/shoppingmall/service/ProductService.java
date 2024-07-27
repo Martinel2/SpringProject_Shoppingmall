@@ -31,7 +31,7 @@ public class ProductService {
     }
 
 
-    public Products saveProduct(String product_name, String description, int price, MultipartFile file, int category, String seller_id) {
+    public void saveProduct(String product_name, String description, int price, MultipartFile file, int category, String seller_id) {
         // 파일 저장
         String photoPath = fileStorageService.storeFile(file);
 
@@ -48,7 +48,7 @@ public class ProductService {
         product.setCategory(category);
 
         // 상품 저장
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
     public List<Products> searchByName(String name){
@@ -67,4 +67,6 @@ public class ProductService {
     public List<Products> searchBySellerId(String seller_id){
         return productRepository.findBySellerId(seller_id);
     }
+
+    public Products findById(int id) { return productRepository.findById(id); }
 }
