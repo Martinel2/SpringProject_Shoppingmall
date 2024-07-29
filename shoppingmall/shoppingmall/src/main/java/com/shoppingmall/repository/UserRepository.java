@@ -3,8 +3,6 @@ package com.shoppingmall.repository;
 import com.shoppingmall.domain.Level;
 import com.shoppingmall.domain.Users;
 
-import java.util.Optional;
-
 public interface UserRepository {
 
     Users add(Users user);
@@ -12,5 +10,7 @@ public interface UserRepository {
     Level valueOf(int value);
 
     Users findById(String id);
+
+    Users findByEmail(String email);
 
 }

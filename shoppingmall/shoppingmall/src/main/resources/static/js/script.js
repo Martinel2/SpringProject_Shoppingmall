@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const category_box = document.getElementById("category_box");
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");
-    let isLogin = false;
+    //let isLogin = false;
 
-    if(localStorage.getItem("id") != null) isLogin = true;
+    /*if(localStorage.getItem("id") != null) isLogin = true;
     // Function to update user menu
     function updateUserMenu() {
         userMenu.innerHTML = "";
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         userMenu.appendChild(loginButton);
     }
-
+*/
     // Function to redirect to login page
     function redirectToLoginPage() {
         window.location.href = "/user/login";
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
     */
-    updateUserMenu();
+    //updateUserMenu();
 
 
     function submitSearch() {

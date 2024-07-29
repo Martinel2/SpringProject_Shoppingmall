@@ -29,20 +29,15 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("label2").focus();
             return false;
         }
-        const data = {
-            id: id,
-            password: password
-        };
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/user/login", true);
+        xhr.open("POST", "/login-process", true);
         xhr.setRequestHeader("Content-Type", "application/json"); // 요청 헤더를 JSON으로 설정
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) { // 요청 완료
                 if (xhr.status === 200) { // 요청 성공
                     //console.log(xhr.responseText);
                     if(xhr.responseText === "success"){
-                        localStorage.setItem("id",id);
                         // 여기에서 리다이렉션을 수행
                         window.location.href = "/";
                     }
@@ -61,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         };
-        xhr.send(JSON.stringify(data));
+        xhr.send(JSON.stringify(id,password));
     }
 
     document.getElementById("sign_up").addEventListener("click", function (){

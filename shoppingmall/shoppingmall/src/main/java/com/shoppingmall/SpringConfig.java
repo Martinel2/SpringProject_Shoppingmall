@@ -5,12 +5,10 @@ import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.FileStorageService;
 import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
-
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import jakarta.persistence.EntityManager;
 
 @Configuration
 public class SpringConfig {

@@ -2,13 +2,15 @@ package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.UserService;
-import com.shoppingmall.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
@@ -38,6 +40,14 @@ public class UserController {
         return "user/complete";
     }
 
+    @GetMapping("/user/status")
+    public String dashboardPage(@AuthenticationPrincipal User user, Model model) {
+        Users users = userService.findById(user.getUsername());
+        model.addAttribute("user", users);
+        return "/user/status";
+    }
+
+    /*
     @GetMapping(value = "/user/status")
     public String gotoStatusPage(HttpServletRequest request, Model model){
         HttpSession session = request.getSession(false);
@@ -45,14 +55,14 @@ public class UserController {
             return "user/login";
         }
         String id = (String)session.getAttribute(SessionConst.sessionId);
-        Optional<Users> findUserOptional = Optional.ofNullable(userService.isIdExists(id));
+        Optional<Users> findUserOptional = Optional.ofNullable(userService.findById(id));
         Users user = findUserOptional.orElse(null);
         if(user == null)
             return "user/login";
         model.addAttribute("user", user);
         return "user/status";
     }
-
+    */
     @PostMapping("logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

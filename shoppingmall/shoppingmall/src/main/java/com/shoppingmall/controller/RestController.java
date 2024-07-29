@@ -5,7 +5,6 @@ import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,21 +28,32 @@ public class RestController {
 
 
     //로그인 처리
+/*
     @PostMapping(value = "/user/login")
-    public String handleLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request){
-        Users user = userService.Login(loginRequest);
-        if(user != null){
-            HttpSession session = request.getSession();
-            session.setAttribute("userId", user.getId());
-            return "success";
+    public ResponseEntity<String> handleLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request){
+        try {
+            userService.Login(loginRequest);
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        else return "fail";
     }
+*/
+    //LoginController의 이하 부분 삭제! 필요없어짐.
+
+    @PostMapping("/login-process")
+    public String login(LoginRequest loginRequest) {
+        Users users = userService.Login(loginRequest);
+        if (users != null)
+            return "success";
+        return "login";
+    }
+
 
     // 회원가입 처리
     @PostMapping(value = "/user/new")
     public String handleRequest(@RequestBody Users user, RedirectAttributes redirectAttributes) {
-        if (userService.isIdExists(user.getId()) == null) {
+        if (userService.findById(user.getId()) == null) {
             userService.join(user);
             redirectAttributes.addAttribute("id", user.getId());
             return "success";

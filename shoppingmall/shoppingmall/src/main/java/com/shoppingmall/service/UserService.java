@@ -21,11 +21,12 @@ public class UserService {
     }
 
     //중복 id 검사 코드
-    public Users isIdExists(String id) {
+    public Users findById(String id) {
         return userRepository.findById(id);
     }
 
     //로그인 절차 확인 코드
+
     public Users Login(LoginRequest loginRequest){
         String id = loginRequest.getId();
         String password = loginRequest.getPassword();
@@ -34,4 +35,6 @@ public class UserService {
         else if(user.getPassword().equals(password)) return user;
         return null;
     }
+
+
 }

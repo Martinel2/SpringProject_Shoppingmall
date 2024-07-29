@@ -1,6 +1,8 @@
 package com.shoppingmall.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class Users {
@@ -23,6 +25,17 @@ public class Users {
 
     @Column(name = "email")
     private String email;
+
+    private Users(String id, String password, String name, String place, String phone, String birth, String email){
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.place = place;
+        this.phone = phone;
+        this.birth = birth;
+        this.email = email;
+    }
+
 
     public void setId(String id) { this.id = id;}
     @Id

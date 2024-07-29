@@ -4,6 +4,7 @@ import com.shoppingmall.domain.Level;
 import com.shoppingmall.domain.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 public class MemoryUserRepository implements UserRepository {
     @PersistenceContext
@@ -35,5 +36,10 @@ public class MemoryUserRepository implements UserRepository {
         return em.find(Users.class, id);
     }
 
-
+    @Override
+    public Users findByEmail(String email){
+        TypedQuery<Users> query = em.createQuery("SELECT u FROM Users u WHERE u.email = :email", Users.class);
+        query.setParameter("email", email);
+        return query.getSingleResult();
+    }
 }
