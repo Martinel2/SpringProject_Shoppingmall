@@ -9,6 +9,7 @@ import com.shoppingmall.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 public class CartService {
@@ -38,5 +39,14 @@ public class CartService {
 
     public List<Cart> getCart(String userId){
         return cartRepository.getCart(userId);
+    }
+
+    public void updateCartItemQuantity(int cartItemId, int quantity) {
+        Optional<Cart> cartItemOpt = Optional.ofNullable(cartRepository.findById(cartItemId));
+        if (cartItemOpt.isPresent()) {
+            Cart cartItem = cartItemOpt.get();
+            cartItem.setQuantity(quantity);
+            cartRepository.addCart(cartItem);
+        }
     }
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <style>
+        .clickable-row {
+            cursor: pointer;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-controls button {
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .quantity-controls span {
+            padding: 0 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>장바구니</h2>
+<table>
+    <thead>
+    <tr>
+        <th>상품이름</th>
+        <th>사진</th>
+        <th>가격</th>
+        <th>갯수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="clickable-row" th:each="cart, iterStat : ${carts}">
+        <td th:text="${cart.products.product_name}"></td>
+        <td>
+            <img th:src="@{'/images/uploads/' + ${cart.products.photo}}" alt="Product Image" height="200" width="200">
+        </td>
+        <td>
+            <div class="quantity-controls">
+                <button type="button" class="decrease-quantity" th:data-cart-item-id="${cart.id}">-</button>
+                <span class="quantity" th:text="${cart.quantity}"></span>
+                <button type="button" class="increase-quantity" th:data-cart-item-id="${cart.id}">+</button>
+            </div>
+        </td>
+        <td th:text="${cart.products.price * cart.quantity}"><span></span></td>
+    </tr>
+    </tbody>
+</table>
+<h3>총 합계: <span id="totalAmount" th:text="${total}"></span></h3>
+<script>
+    $(document).ready(function() {
+        function updatePriceAndTotal() {
+            var totalAmount = 0;
+            $('tbody tr').each(function() {
+                var quantity = parseInt($(this).find('.quantity').text());
+                var price = parseFloat($(this).find('td:nth-child(4)').text().replace('원', ''));
+                var totalPrice = quantity * price;
+                $(this).find('.total-price').text(totalPrice + '원');
+                totalAmount += totalPrice;
+            });
+            $('#totalAmount').text(totalAmount + '원');
+        }
+
+        $('.increase-quantity, .decrease-quantity').on('click', function() {
+            var cartItemId = $(this).data('cart-item-id');
+            var quantitySpan = $(this).siblings('.quantity');
+            var currentQuantity = parseInt(quantitySpan.text());
+            var newQuantity = $(this).hasClass('increase-quantity') ? currentQuantity + 1 : currentQuantity - 1;
+
+            if (newQuantity < 1) return; // 수량이 1보다 작아지지 않도록 함
+
+            quantitySpan.text(newQuantity);
+
+            // 서버에 수량 업데이트 요청
+            $.post('/cart/update', { cartItemId: cartItemId, quantity: newQuantity }, function(response) {
+                if (response === 'success') {
+                    updatePriceAndTotal();
+                } else {
+                    alert('Failed to update cart item quantity.');
+                }
+            });
+        });
+
+        // 초기 로딩 시 가격 업데이트
+        updatePriceAndTotal();
+    });
+</script>
+</body>
+</html>
