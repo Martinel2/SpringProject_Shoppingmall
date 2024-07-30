@@ -9,14 +9,18 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SpringConfig {
     @PersistenceContext
     private final EntityManager em;
 
-    public SpringConfig(EntityManager em) {
+    private final PasswordEncoder passwordEncoder;
+
+    public SpringConfig(EntityManager em, PasswordEncoder passwordEncoder) {
         this.em = em;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -31,7 +35,7 @@ public class SpringConfig {
     }
     @Bean
     public UserService userService(){
-        return new UserService(userRepository());
+        return new UserService(userRepository(), passwordEncoder);
     }
 
     @Bean

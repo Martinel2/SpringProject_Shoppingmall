@@ -23,6 +23,29 @@ public class Users {
     @Column(name = "birth")
     private String birth;
 
+    @Column(name = "role")
+    private String role = "USER";
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Column(name = "email")
     private String email;
 

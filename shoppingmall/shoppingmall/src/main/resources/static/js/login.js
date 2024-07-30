@@ -2,15 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /////////////////////////login page///////////////////////////////
     const login = document.getElementById("login");
 
-    function handleEnterKey(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // 폼 제출을 방지
-            loginCheck();
-        }
-    }
-
-    handleEnterKey();
-    login.addEventListener("click", function(event) {
+    /*login.addEventListener("click", function(event) {
         loginCheck();
     });
     function loginCheck() {
@@ -29,7 +21,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("label2").focus();
             return false;
         }
-
+        const data ={
+            id: id,
+            password: password
+        };
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/login-process", true);
         xhr.setRequestHeader("Content-Type", "application/json"); // 요청 헤더를 JSON으로 설정
@@ -39,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     //console.log(xhr.responseText);
                     if(xhr.responseText === "success"){
                         // 여기에서 리다이렉션을 수행
-                        window.location.href = "/";
+                        return window.location.href = "/";
                     }
                     else{
                         document.getElementById("label1").style.color = "red";
@@ -53,13 +48,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     document.getElementById("label1").innerText = xhr.responseText;
                     document.getElementById("id").value = ""; // 아이디 입력란 비우기
                     document.getElementById("password").value = ""; //비밀번호 입력란 비우기
+
+                    return "다시 시도해주세요";
                 }
             }
         };
-        xhr.send(JSON.stringify(id,password));
+        xhr.send(JSON.stringify(data));
     }
-
-    document.getElementById("sign_up").addEventListener("click", function (){
+*/
+    /*document.getElementById("sign_up").addEventListener("click", function (){
         window.location.href = "/user/new";
-    });
+    });*/
 });

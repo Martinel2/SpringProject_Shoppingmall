@@ -1,13 +1,13 @@
 package com.shoppingmall;
 
-import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,34 +18,37 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http	.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
-                        .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers("/user/status").denyAll()
-                        .anyRequest().authenticated()
-                )
+        http.csrf((csrf) -> csrf.disable())
+                .authorizeHttpRequests((requests)->requests
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
+                        .requestMatchers("/user/status","/products/add", "/cart/**").authenticated()
+                        .requestMatchers("/user/login","/user/new","/", "/search/**", "/products/{id}").permitAll())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/user/login")
-                        .loginProcessingUrl("/login-process")
-                        .usernameParameter("id")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/user/status", true)
+                        .loginProcessingUrl("/login-Processing")
                         .permitAll()
+                        .defaultSuccessUrl("/") // 성공 시 리다이렉트 URL
+                        .failureUrl("/login?error") // 실패 시 리다이렉트 URL
                 )
+                .httpBasic(Customizer.withDefaults())
                 .logout((logout) -> logout
-                        .logoutSuccessUrl("/login") // 로그아웃 성공 시 리다이렉트
+                        .logoutUrl("/user/status") // 로그아웃 성공 시 리다이렉트
                         .invalidateHttpSession(true)) // 세션 무효화
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션 상태를 Stateless로 설정
 
         return http.build();
     }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new MyUserDetailsService(); // CustomUserDetailsService를 빈으로 등록합니다.
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }

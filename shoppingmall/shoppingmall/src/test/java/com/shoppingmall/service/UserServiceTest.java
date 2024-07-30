@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,15 +16,16 @@ public class UserServiceTest {
     UserService userService;
     MemoryUserRepository userRepository;
     private final EntityManager em;
-
-    public UserServiceTest(EntityManager em) {
+    private PasswordEncoder passwordEncoder;
+    public UserServiceTest(EntityManager em, PasswordEncoder passwordEncoder) {
         this.em = em;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @BeforeEach
     public void beforeEach() {
         userRepository = new MemoryUserRepository(em);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, passwordEncoder);
     }
 
     @AfterEach

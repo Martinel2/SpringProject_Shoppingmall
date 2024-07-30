@@ -15,7 +15,7 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Users add(Users user) { //사용자가 잘 들어갔는지 확인용
+    public Users add(Users user) { //사용자가 잘 들어갔는지 확인
         em.persist(user);
         return user;
     }

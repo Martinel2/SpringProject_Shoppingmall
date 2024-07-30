@@ -175,7 +175,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-                redirectSearchCategory(ajaxCategory);
+
+                redirectSearchCategory(categoryItem.innerText.split("%")[0]);
             });
             category_1depth.appendChild(categoryItem);
         });
