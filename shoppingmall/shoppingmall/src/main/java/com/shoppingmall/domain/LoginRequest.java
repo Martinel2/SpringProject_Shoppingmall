@@ -1,15 +1,15 @@
 package com.shoppingmall.domain;
 
 public class LoginRequest {
-    private String id;
+    private String loginId;
     private String password;
 
-    public String getId() {
-        return id;
+    public String getLoginId() {
+        return loginId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     public String getPassword() {

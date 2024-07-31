@@ -1,10 +1,7 @@
 package com.shoppingmall;
 
 import com.shoppingmall.repository.*;
-import com.shoppingmall.service.CartService;
-import com.shoppingmall.service.FileStorageService;
-import com.shoppingmall.service.ProductService;
-import com.shoppingmall.service.UserService;
+import com.shoppingmall.service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +32,7 @@ public class SpringConfig {
     }
     @Bean
     public UserService userService(){
-        return new UserService(userRepository(), passwordEncoder);
+        return new UserService(userRepository());
     }
 
     @Bean

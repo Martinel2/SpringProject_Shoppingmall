@@ -36,6 +36,7 @@ public class MemoryUserRepository implements UserRepository {
         return em.find(Users.class, id);
     }
 
+
     @Override
     public Users findByEmail(String email){
         TypedQuery<Users> query = em.createQuery("SELECT u FROM Users u WHERE u.email = :email", Users.class);

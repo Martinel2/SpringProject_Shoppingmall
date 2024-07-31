@@ -27,11 +27,13 @@ public class UserController {
         return "user/createUserForm";
     }
 
-    // 로그인 창 매핑
+
+   /* // 로그인 창 매핑
     @GetMapping(value = "/user/login")
     public String login() {
         return "user/login";
     }
+    */
 
     // 회원가입 완료 페이지 매핑
     @GetMapping(value = "/user/complete")

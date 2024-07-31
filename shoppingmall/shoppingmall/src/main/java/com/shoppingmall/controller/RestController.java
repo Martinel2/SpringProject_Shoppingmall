@@ -6,11 +6,9 @@ import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -51,7 +49,7 @@ public class RestController {
 
 
     // 회원가입 처리
-    @PostMapping(value = "/user/new")
+    /*@PostMapping(value = "/user/new")
     public String handleRequest(@RequestBody Users user, RedirectAttributes redirectAttributes) {
         if (userService.findById(user.getId()) == null) {
             userService.join(user);
@@ -60,7 +58,7 @@ public class RestController {
         }
         return "fail";
     }
-
+*/
     @PostMapping("/products/add")
     public String addProduct(
             @RequestParam(name = "name") String name,

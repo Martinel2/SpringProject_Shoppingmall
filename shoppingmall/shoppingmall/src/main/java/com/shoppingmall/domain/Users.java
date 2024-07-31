@@ -3,6 +3,7 @@ package com.shoppingmall.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 public class Users {
@@ -27,16 +28,19 @@ public class Users {
     private String role = "USER";
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private String enabled;
 
-    public boolean isEnabled() {
+    @Column(name = "email")
+    private String email;
+
+
+    public String getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(String enabled) {
         this.enabled = enabled;
     }
-
 
     public String getRole() {
         return role;
@@ -46,10 +50,7 @@ public class Users {
         this.role = role;
     }
 
-    @Column(name = "email")
-    private String email;
-
-    private Users(String id, String password, String name, String place, String phone, String birth, String email){
+    private Users(String id, String password, String name, String place, String phone, String birth, String email, String enabled, String role){
         this.id = id;
         this.password = password;
         this.name = name;
@@ -57,9 +58,13 @@ public class Users {
         this.phone = phone;
         this.birth = birth;
         this.email = email;
+        this.enabled = enabled;
+        this.role = role;
     }
 
-
+    public static Users createUser(String userId, String pw, PasswordEncoder passwordEncoder) {
+        return new Users(userId, passwordEncoder.encode(pw), null, null, null, null, null, null,"USER");
+    }
     public void setId(String id) { this.id = id;}
     @Id
     public String getId() {

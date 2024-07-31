@@ -6,8 +6,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,18 +17,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SpringSecurityConfig {
 
+    // 로그인 기억하기 사용을 위해 MemberAuthenticatorProvider 내부
+    // MemberPrincipalDetailsService 선언
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
                         .requestMatchers("/user/status","/products/add", "/cart/**").authenticated()
                         .requestMatchers("/user/login","/user/new","/", "/search/**", "/products/{id}").permitAll())
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/user/login")
-                        .loginProcessingUrl("/login-Processing")
+                        .loginPage("/login")
+                        .loginProcessingUrl("/user/login")
+                        .usernameParameter("loginId")	// [C] submit할 아이디
+                        .passwordParameter("password")
                         .permitAll()
-                        .defaultSuccessUrl("/") // 성공 시 리다이렉트 URL
+                        .defaultSuccessUrl("/user/status") // 성공 시 리다이렉트 URL
                         .failureUrl("/login?error") // 실패 시 리다이렉트 URL
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -42,13 +48,7 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return new MyUserDetailsService(); // CustomUserDetailsService를 빈으로 등록합니다.
-    }
+    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
 }
