@@ -175,8 +175,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
             categoryItem.addEventListener("click", () => {
                 // 사용자가 카테고리를 클릭했을 때 실행될 함수 호출
-
-                redirectSearchCategory(categoryItem.innerText.split("%")[0]);
+                let text = '';
+                const element = document.getElementById("category_item_active");
+                // 자식 노드를 제외한 텍스트를 수집합니다.
+                for (let i = 0; i < element.childNodes.length; i++) {
+                    const node = element.childNodes[i];
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        text += node.textContent;
+                    }
+                }
+                redirectSearchCategory(text.trim());
             });
             category_1depth.appendChild(categoryItem);
         });
