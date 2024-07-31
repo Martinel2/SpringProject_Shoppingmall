@@ -81,6 +81,8 @@ body {
 .error-message{
     display: inline-block;
     position: relative;
+    bottom: 90px;
+    left: 70px;
 }
 
 #link_box{

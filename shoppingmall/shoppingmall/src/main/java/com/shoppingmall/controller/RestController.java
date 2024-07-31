@@ -1,6 +1,5 @@
 package com.shoppingmall.controller;
 
-import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.UserService;
@@ -36,9 +35,7 @@ public class RestController {
         }
     }
 */
-    //LoginController의 이하 부분 삭제! 필요없어짐.
-
-    @PostMapping("/login-Processing")
+    /*@PostMapping("/login-Processing")
     public String login(@RequestParam(name = "username") String username,
                         @RequestParam(name = "password") String password) {
         Users users = userService.Login(username, password);
@@ -46,7 +43,7 @@ public class RestController {
             return "success";
         return "login";
     }
-
+*/
 
     // 회원가입 처리
     /*@PostMapping(value = "/user/new")

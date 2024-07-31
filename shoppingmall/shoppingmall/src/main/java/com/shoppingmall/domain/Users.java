@@ -3,7 +3,6 @@ package com.shoppingmall.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 public class Users {
@@ -62,9 +61,10 @@ public class Users {
         this.role = role;
     }
 
-    public static Users createUser(String userId, String pw, PasswordEncoder passwordEncoder) {
+    /*public static Users createUser(String userId, String pw, PasswordEncoder passwordEncoder) {
         return new Users(userId, passwordEncoder.encode(pw), null, null, null, null, null, null,"USER");
     }
+     */
     public void setId(String id) { this.id = id;}
     @Id
     public String getId() {

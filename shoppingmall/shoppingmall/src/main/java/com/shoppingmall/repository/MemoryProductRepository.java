@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MemoryProductRepository implements ProductRepository{
     @PersistenceContext
-    private final EntityManager em;
+    public EntityManager em;
 
     public MemoryProductRepository(EntityManager em) {
         this.em = em;

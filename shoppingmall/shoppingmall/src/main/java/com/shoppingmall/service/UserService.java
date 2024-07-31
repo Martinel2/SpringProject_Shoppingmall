@@ -27,12 +27,13 @@ public class UserService implements UserDetailsService {
 
     //로그인 절차 확인 코드
 
-    public Users Login(String id, String password){
+    /*public Users Login(String id, String password){
         Users user = userRepository.findById(id);
         if(user==null) return null;
         else if(user.getPassword().equals(user.getPassword())) return user;
         return null;
     }
+     */
 
     @Override
     public UserDetails loadUserByUsername(String insertedUserId) throws UsernameNotFoundException {
@@ -46,15 +47,9 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public Optional<Users> findOne(String userId) {
-        return Optional.ofNullable(userRepository.findById(userId));
+    public Users join(Users users){
+        userRepository.add(users);
+        return users;
     }
 
-    public boolean isValidUser(String userId, String password) {
-        Optional<Users> users = findOne(userId);
-        if (users.isPresent()) {
-            return users.get().getPassword().equals(password);
-        }
-        return false;
-    }
 }

@@ -6,11 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-@Component
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
@@ -19,9 +15,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String insertedUserId) throws UsernameNotFoundException {
-        Optional<Users> findOne = userService.findOne(insertedUserId);
-        Users user = findOne.orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다 ㅠ"));
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        Users user = userService.findById(loginId);
+        if(user == null) throw new UsernameNotFoundException("없는 회원입니다.");
+        else if(user.getEnabled().equals("F")) throw new UsernameNotFoundException("비활성화된 계정입니다");
 
         return User.builder()
                 .username(user.getId())

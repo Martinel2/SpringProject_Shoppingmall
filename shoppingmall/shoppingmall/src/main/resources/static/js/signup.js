@@ -146,7 +146,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("phone3").value ;
         const email = document.getElementById("email").value;
         const place = document.getElementById("place").value;
-
+        const enabled = "T";
+        const role = "user";
         const data = {
             id: id,
             password: password,
@@ -154,37 +155,33 @@ document.addEventListener("DOMContentLoaded", function() {
             birth: birth,
             phone: phone,
             email: email,
-            place: place
+            place: place,
+            enabled:enabled,
+            role:role
         };
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/user/new", true);
-        xhr.setRequestHeader("Content-Type", "application/json"); // 요청 헤더를 JSON으로 설정
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) { // 요청 완료
-                if (xhr.status === 200) { // 요청 성공
-                    // 여기에서 리다이렉션을 수행
-                    if(xhr.responseText == "success"){
-                        window.location.href = "/user/complete?id="+encodeURIComponent(id);
-                    }
-                    else {
-                        document.getElementById("label1").style.color = "red";
-                        document.getElementById("label1").innerText = "중복된 ID 입니다.";
-                        document.getElementById("id").value = ""; // 아이디 입력란 비우기
-                        document.getElementById("id").style.borderColor = "red";
-                        document.getElementById("id").focus();
-                    }
-                } else {
-                    // 요청이 실패한 경우에 대한 처리
-                    console.error("Request failed with status: " + xhr.status);
+        $.ajax({
+            url: '/user/new',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                // 성공적인 응답 처리
+                if (response.message === "success") { // HTTP Created status
+                    window.location.href = "/user/complete?id="+encodeURIComponent(id); // 성공 후 리다이렉트할 경로
                 }
+                },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // 에러 처리
+                alert("Error: " + jqXHR.responseText);
+                console.log("Error: ", textStatus, errorThrown);
             }
-        };
-        xhr.send(JSON.stringify(data));
+        });
     });
 
 
-    //아이디를 공백으로둘 시 오류
+
+
+        //아이디를 공백으로둘 시 오류
     document.getElementById("id").addEventListener("focusout", function() {
 
         var id = $("#id").val();
