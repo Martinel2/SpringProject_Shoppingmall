@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     const productsSection = document.getElementById("products");
-    const userMenu = document.getElementById("user_menu");
     const category_box = document.getElementById("category_box");
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");
@@ -43,10 +42,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 */
     // Function to redirect to login page
-    function redirectToLoginPage() {
-        window.location.href = "/user/login";
+    function redirectToStatusPage() {
+        window.location.href = "/user/status";
     }
-
+    document.getElementById("status").addEventListener("click", redirectToStatusPage);
     /*
     // Function to toggle user options dropdown
     function toggleUserOptions() {

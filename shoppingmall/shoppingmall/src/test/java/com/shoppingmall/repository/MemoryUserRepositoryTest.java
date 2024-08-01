@@ -1,6 +1,6 @@
 package com.shoppingmall.repository;
 
-import com.shoppingmall.domain.Level;
+import com.shoppingmall.dto.Level;
 import com.shoppingmall.domain.User;
 import com.shoppingmall.domain.Users;
 import jakarta.persistence.EntityManager;

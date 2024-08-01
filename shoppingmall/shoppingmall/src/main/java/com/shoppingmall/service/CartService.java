@@ -37,8 +37,8 @@ public class CartService {
         return cartRepository.addCart(cart);
     }
 
-    public List<Cart> getCart(String userId){
-        return cartRepository.getCart(userId);
+    public List<Cart> getCartByUserId(String userId){
+        return cartRepository.getCartByUserId(userId);
     }
 
     public void updateCartItemQuantity(int cartItemId, int quantity) {
@@ -48,5 +48,16 @@ public class CartService {
             cartItem.setQuantity(quantity);
             cartRepository.addCart(cartItem);
         }
+    }
+
+    public Cart findByTwoId(String userId, int productId){
+        List<Cart> carts = cartRepository.getCartByUserId(userId);
+        for(Cart c : carts){
+            Products p = c.getProducts();
+            if(p.getId() == productId){
+                return c;
+            }
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.shoppingmall.domain;
+package com.shoppingmall.dto;
 
 public class LoginRequest {
     private String loginId;

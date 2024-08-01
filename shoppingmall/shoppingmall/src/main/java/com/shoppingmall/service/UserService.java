@@ -35,6 +35,8 @@ public class UserService implements UserDetailsService {
     }
      */
 
+    public Users findByEmail(String email) {return userRepository.findByEmail(email);}
+
     @Override
     public UserDetails loadUserByUsername(String insertedUserId) throws UsernameNotFoundException {
         Optional<Users> findOne = Optional.ofNullable(userRepository.findById(insertedUserId));

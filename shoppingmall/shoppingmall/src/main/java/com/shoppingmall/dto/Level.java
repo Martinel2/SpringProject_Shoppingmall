@@ -1,4 +1,4 @@
-package com.shoppingmall.domain;
+package com.shoppingmall.dto;
 
 public enum Level {
     BASIC(1), NORMAL(2), VIP(3), VVIP(4); // enum 오브젝트 정의

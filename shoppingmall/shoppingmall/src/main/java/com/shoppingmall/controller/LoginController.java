@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
@@ -26,28 +27,11 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * [View] 로그인 페이지를 엽니다.
-     */
     @GetMapping("/login")
     public String login() {
         return "/user/login";
     }
 
-    /**
-     * [Action] 로그인 프로세스를 동작시킨다.
-     */
-
-    /*@PostMapping("/user/login")
-    public String login(LoginRequest loginRequest) {
-        boolean isValidMember = userSecurityService.isValidUser(loginRequest.getLoginId(), loginRequest.getPassword());
-        if (isValidMember)
-            return "/user/status";
-        return "/user/login";
-    }
-    /**
-     * [Action] 로그아웃 프로세스를 동작시킨다.
-     */
     @GetMapping("/user/logout")
     public String logout(HttpServletResponse response) {
         // JWT 토큰을 저장하는 쿠키의 값을 삭제
@@ -83,6 +67,29 @@ public class LoginController {
             response = ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An exception occured due to " + ex.getMessage());
+        }
+        return response;
+    }
+
+    @GetMapping("/find_id")
+    public String findIdPage() {
+        return "/user/findId";
+    }
+
+    @PostMapping("/find_id")
+    public ResponseEntity<String> findIdByEmail(@RequestParam(name = "email") String email){
+        ResponseEntity response = null;
+        try {
+            Users user = userService.findByEmail(email);
+            String id = user.getId();
+            response = ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(id);
+
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("아이디가 존재하지 않습니다.");
         }
         return response;
     }

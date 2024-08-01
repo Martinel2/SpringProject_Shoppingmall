@@ -77,6 +77,7 @@
             quantitySpan.text(newQuantity);
 
             // 서버에 수량 업데이트 요청
+
             $.post('/cart/update', { cartItemId: cartItemId, quantity: newQuantity }, function(response) {
                 if (response === 'success') {
                     updatePriceAndTotal();

@@ -20,9 +20,15 @@ public class CartRepository {
         return cart;
     }
 
-    public List<Cart> getCart(String user_id){
+    public List<Cart> getCartByUserId(String user_id){
         TypedQuery<Cart> query = em.createQuery("SELECT u FROM Cart u WHERE u.user.id = :user_id", Cart.class);
         query.setParameter("user_id",  user_id);
+        return query.getResultList();
+    }
+
+    public List<Cart> getCartByProductId(int product_id){
+        TypedQuery<Cart> query = em.createQuery("SELECT u FROM Cart u WHERE u.products.id = :product_id", Cart.class);
+        query.setParameter("product_id", product_id);
         return query.getResultList();
     }
 
