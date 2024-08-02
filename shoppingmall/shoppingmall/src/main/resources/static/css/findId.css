@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+}
+/*상단 바*/
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    height: 130px;
+    display: flex;
+    position: relative;
+    min-width: 1200px;
+}
+
+
+/*로고가 좌측 상단에 위치하도록 조정*/
+#home_logo {
+    display: inline-block;
+    width: 270px;
+    height: 90px;
+}
+
+/*선택자를 이용해 로고의 크기 조정*/
+#home_logo > img {
+    width: 270px;
+    height: 90px;
+}
+
+#find_id_form{
+    font-size: 56px;
+    border: #2d6eaf solid 5px;
+    border-radius: 8px;
+    padding: 36px;
+    width: 880px;
+    text-align: center;
+    position: relative;
+    left: 488px;
+    top: 133px;
+    color: #e0e6eb;
+}
+
+#box {
+    margin-right: 36px;
+    margin-top: 50px;
+}
+
+#email{
+    width: 370px;
+    height: 50px;
+    font-size: 24px;
+    position: relative;
+    bottom: 14px;
+}
+
+#find{
+    width: 191px;
+    height: 84px;
+    font-size: 24px;
+    margin-top: 70px;
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+}
+
+#find_pw{
+    display: block;
+    position: relative;
+    left: 321px;
+    width: 256px;
+    height: 68px;
+    margin-top: 54px;
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
+}
+

@@ -1,4 +1,4 @@
-package com.shoppingmall;
+package com.shoppingmall.config;
 
 import com.shoppingmall.repository.*;
 import com.shoppingmall.service.CartService;

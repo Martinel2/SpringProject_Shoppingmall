@@ -44,16 +44,17 @@ public class CartController {
 
     @PostMapping("/cart/add")
     public ResponseEntity<CartResponseDto> addToCart(@RequestParam("productId") int productId, @RequestParam("quantity") int quantity, @AuthenticationPrincipal UserDetails userDetails) {
+        CartResponseDto response;
         try {
             String userId = userDetails.getUsername();
             Cart cart = cartService.findByTwoId(userId,productId);
             if(cart == null){
                 cartService.addCart(userId, productId, quantity); // 장바구니에 상품 추가
-                CartResponseDto response = new CartResponseDto("상품이 장바구니에 추가되었습니다.", userId);
+                response = new CartResponseDto("상품이 장바구니에 추가되었습니다.", userId);
                 return ResponseEntity.ok(response); // 200 OK 응답 반환
             }
             else{
-                CartResponseDto response = new CartResponseDto("이미 추가된 상품입니다",null);
+                response = new CartResponseDto("이미 추가된 상품입니다",null);
                 return ResponseEntity.ok(response); // 200 OK 응답 반환
             }
         } catch (Exception ex) {

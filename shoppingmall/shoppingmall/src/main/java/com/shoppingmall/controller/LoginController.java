@@ -4,6 +4,7 @@ import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,6 +86,30 @@ public class LoginController {
             response = ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(id);
+
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("아이디가 존재하지 않습니다.");
+        }
+        return response;
+    }
+
+    @GetMapping("/reset_password")
+    public String pwResetPage(){
+        return "/user/pwReset";
+    }
+
+    @PostMapping("/resetPW")
+    public ResponseEntity<String> resetPassword(@RequestParam(name = "newPassword") String newPassword, HttpSession session) {
+        ResponseEntity response;
+        try {
+            String email = (String) session.getAttribute("email");
+            Users user = userService.findByEmail(email);
+            user.setPassword(passwordEncoder.encode(newPassword));
+            response = ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("비밀번호 재설정이 완료되었습니다.");
 
         } catch (Exception ex) {
             response = ResponseEntity

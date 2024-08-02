@@ -2,15 +2,12 @@ package com.shoppingmall.dto;
 
 public class CartResponseDto {
     private String message;
-    private String user_id;
+    private String userId;
 
     // Constructors, getters and setters
-
-    public CartResponseDto() {}
-
-    public CartResponseDto(String message, String user_id) {
+    public CartResponseDto(String message, String userId) {
         this.message = message;
-        this.user_id = user_id;
+        this.userId = userId;
     }
 
     public String getMessage() {
@@ -22,11 +19,11 @@ public class CartResponseDto {
     }
 
     public String getUserId() {
-        return user_id;
+        return userId;
     }
 
-    public void setUserId(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
 

@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+}
+/*상단 바*/
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    height: 130px;
+    display: flex;
+    position: relative;
+    min-width: 1200px;
+}
+
+
+/*로고가 좌측 상단에 위치하도록 조정*/
+#home_logo {
+    display: inline-block;
+    width: 270px;
+    height: 90px;
+}
+
+/*선택자를 이용해 로고의 크기 조정*/
+#home_logo > img {
+    width: 270px;
+    height: 90px;
+}
+
+#container{
+    font-size: 35px;
+    border: #2d6eaf solid 5px;
+    border-radius: 8px;
+    padding: 36px;
+    width: 1085px;
+    height: 600px;
+    text-align: center;
+    position: relative;
+    left: 405px;
+    top: 62px;
+    color: #e0e6eb;
+}
+
+#title{
+    position: relative;
+    bottom: 50px;
+}
+
+#pw_case{
+    position: relative;
+    bottom: 68px;
+    font-size: 26px;
+}
+
+#resetForm{
+    position: relative;
+    top: 6px;
+}
+
+#newPw-box{
+    position: relative;
+    right: 190px;
+}
+
+#label2, #label3{
+    text-align: left;
+    font-size: 28px;
+    position: absolute;
+    width: 445px;
+    padding-left: 18px;
+}
+
+#check-box{
+    margin: 80px;
+    right: 202px;
+    position: relative;
+}
+
+#newPassword{
+    width: 310px;
+    height: 41px;
+    font-size: 24px;
+    position: relative;
+    bottom: 10px;
+}
+
+#check{
+    width: 310px;
+    height: 41px;
+    font-size: 24px;
+    position: relative;
+    bottom: 10px;
+}
+
+#reset{
+    width: 260px;
+    height: 74px;
+    font-size: 24px;
+    margin-top: 28px;
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    position: relative;
+    top: 8px;
+}
