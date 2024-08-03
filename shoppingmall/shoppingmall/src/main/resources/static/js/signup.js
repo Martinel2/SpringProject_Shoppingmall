@@ -220,28 +220,19 @@ document.addEventListener("DOMContentLoaded", function() {
     //패스워드가 조건에 맞는지 확인
     document.getElementById("pw").addEventListener("focusout", function() {
 
-
-        let pw = $("#pw").val().toString();
-
+        let pw = $("#newPassword").val().toString();
+        let check = $("#check").val().toString();
         //pw조건: 영문자,숫자,특수문자를 섞어 최소 8자리 이상
         checkPw = validatePassword(pw);
 
-        if(!checkPw) {
+        if (!checkPw) {
             $("#label2").css("color", "red").text("패스워드 조건을 확인해주세요");
-        }
-        else{
+            reCheckPw = false;
+        } else {
             $("#label2").css("color", "green").text("사용할 수 있는 패스워드입니다.");
         }
-    });
 
-    //재입력한 패스워드가 일치하는지 확인
-    document.getElementById("pw_check").addEventListener("focusout", function() {
-
-
-        let pw = $("#pw").val().toString();
-        let check = $("#pw_check").val().toString();
-
-        if(checkPw) {
+        if (checkPw && check.length > 0) {
             if (!(pw === check)) {
                 $("#label3").css("color", "red").text("패스워드가 다릅니다.");
                 reCheckPw = false;
@@ -252,8 +243,28 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         }
-        else{
-            $("#label3").css("color", "red").text("패스워드 조건을 먼저 확인해주세요");
+    });
+
+    //재입력한 패스워드가 일치하는지 확인
+    document.getElementById("pw_check").addEventListener("focusout", function() {
+
+
+        let pw = $("#pw").val().toString();
+        let check = $("#pw_check").val().toString();
+
+        if (checkPw && check.length > 0) {
+            if (!(pw === check)) {
+                $("#label3").css("color", "red").text("패스워드가 다릅니다.");
+                reCheckPw = false;
+            } else {
+                if (checkPw) {
+                    $("#label3").css("color", "green").text("패스워드가 올바릅니다.");
+                    reCheckPw = true;
+                }
+            }
+        }else {
+            $("#label3").css("color", "red").text("패스워드를 다시 한번 입력해주세요");
+            reCheckPw = false;
         }
     });
 

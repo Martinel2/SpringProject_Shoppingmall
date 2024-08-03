@@ -24,19 +24,19 @@ document.addEventListener("DOMContentLoaded", function() {
 //패스워드가 조건에 맞는지 확인
     document.getElementById("newPassword").addEventListener("focusout", function () {
 
-
         let pw = $("#newPassword").val().toString();
-
+        let check = $("#check").val().toString();
         //pw조건: 영문자,숫자,특수문자를 섞어 최소 8자리 이상
         checkPw = validatePassword(pw);
 
         if (!checkPw) {
             $("#label2").css("color", "red").text("패스워드 조건을 확인해주세요");
+            reCheckPw = false;
         } else {
             $("#label2").css("color", "green").text("사용할 수 있는 패스워드입니다.");
         }
 
-        if (checkPw) {
+        if (checkPw && check.length > 0) {
             if (!(pw === check)) {
                 $("#label3").css("color", "red").text("패스워드가 다릅니다.");
                 reCheckPw = false;
@@ -46,8 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     reCheckPw = true;
                 }
             }
-        } else {
-            $("#label3").css("color", "red").text("패스워드 조건을 먼저 확인해주세요");
         }
     });
 
@@ -58,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let pw = $("#newPassword").val().toString();
         let check = $("#check").val().toString();
 
-        if (checkPw) {
+        if (checkPw && check.length > 0) {
             if (!(pw === check)) {
                 $("#label3").css("color", "red").text("패스워드가 다릅니다.");
                 reCheckPw = false;
@@ -68,12 +66,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     reCheckPw = true;
                 }
             }
-        } else {
-            $("#label3").css("color", "red").text("패스워드 조건을 먼저 확인해주세요");
         }
     });
 
-    document.getElementById("resetForm").addEventListener("submit",function () {
+    document.getElementById("resetForm").addEventListener("submit",function (event) {
+        event.preventDefault();
+        const form = event.target;
+        let pw = $("#newPassword").val().toString();
+        let checkPw = validatePassword(pw);
+
+        if (!checkPw) {
+            reCheckPw = false;
+        }
 
         if(!reCheckPw) {
             document.getElementById("label3").style.color = "red";
@@ -88,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Fetch API를 사용하여 비동기 요청 보내기
         // 유효성 검사가 통과하면 AJAX를 통해 폼 데이터 전송
-        const formData = new FormData(this);
+        const formData = new FormData(form);
 
         fetch("/resetPW", {
             method: "POST",
