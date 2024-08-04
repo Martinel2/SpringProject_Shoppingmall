@@ -17,13 +17,13 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+
     public CartService(CartRepository cartRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
     }
 
-    @Transactional
     public Cart addCart(String userId, int productId, int quantity){
         Users user = userRepository.findById(userId);
         Products products = productRepository.findById(productId);

@@ -20,7 +20,6 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             }).then(response => {
-                response.json();
                 if (response.status === 401) {
                     // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
                     const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
@@ -28,17 +27,17 @@
                         window.location.href = '/login'; // 로그인 페이지로 이동
                     }
                     throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
-                } else {
-                    throw new Error('Network response was not ok.');
-                }
+                } else
+                    return response.json();
             }).then(data => {
-                        alert(data.message);
-                        if(data.message === '상품이 장바구니에 추가되었습니다.'){
-                            const shouldRedirect = confirm('장바구니를 확인하시겠습니까?');
-                            if (shouldRedirect) {
-                                const user_id = data.userId; // 서버 응답에서 user_id 가져오기
-                                window.location.href = '/cart/'+user_id; // 로그인 페이지로 이동
-                            }
+                console.log(data);
+                const message = data.message;
+                const userId = data.userId; // 서버 응답에서 user_id 가져오기
+                alert(message);
+                        const shouldRedirect = confirm('장바구니를 확인하시겠습니까?');
+                        if (shouldRedirect) {
+                            const link = '/cart/'+userId;
+                            window.location.href = link; // 로그인 페이지로 이동
                         }
                 })
                 .catch(error => {

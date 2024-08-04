@@ -54,7 +54,7 @@ public class CartController {
                 return ResponseEntity.ok(response); // 200 OK 응답 반환
             }
             else{
-                response = new CartResponseDto("이미 추가된 상품입니다",null);
+                response = new CartResponseDto("이미 추가된 상품입니다",userId);
                 return ResponseEntity.ok(response); // 200 OK 응답 반환
             }
         } catch (Exception ex) {
