@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Fast Mall - 비밀번호 재설정</title>
+    <link rel="stylesheet" href="/css/verify.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          document.getElementById("email").innerText = sessionStorage.getItem("email");
+        });
+
+        function handleSubmit(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 방지
+            const form = event.target;
+
+            // 폼 데이터를 객체로 생성
+            const formData = new FormData(form);
+
+            // Fetch API를 사용하여 비동기 요청 보내기
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            }).then(data => {
+                alert(data);
+                if(data === '인증 코드가 확인되었습니다. 비밀번호 재설정 페이지로 이동합니다.'){
+                    window.location.href = "/reset_password";
+                }
+            })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if(error === 'Network response was not ok.')
+                        alert('네트워크 오류.');
+                });
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <a href="/static" id="home_logo">
+        <img src="/images/icons/logo.png" />
+    </a>
+</div>
+<div id="container">
+<h1>인증 코드 확인</h1>
+<p><span id="email"></span>로 인증 이메일을 발송했습니다. 인증코드를 작성해주세요</p>
+<form action="/verify_code" method="post" onsubmit="handleSubmit(event)">
+    <label for="authCode">인증 코드:</label>
+    <input type="text" id="authCode" name="authCode" required>
+    <button type="submit" id="submit">확인</button>
+</form>
+</div>
+</body>
+</html>

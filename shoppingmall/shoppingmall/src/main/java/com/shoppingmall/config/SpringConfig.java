@@ -1,10 +1,9 @@
 package com.shoppingmall.config;
 
+import com.shoppingmall.policy.DiscountPolicy;
+import com.shoppingmall.policy.FixDiscountPolicy;
 import com.shoppingmall.repository.*;
-import com.shoppingmall.service.CartService;
-import com.shoppingmall.service.FileStorageService;
-import com.shoppingmall.service.ProductService;
-import com.shoppingmall.service.UserService;
+import com.shoppingmall.service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
@@ -52,12 +51,22 @@ public class SpringConfig {
     public CartService cartService() { return new CartService(cartRepository(), userRepository(), productRepository()); }
 
     @Bean
+    public DiscountPolicy discountPolicy() { return new FixDiscountPolicy();}
+
+    @Bean
+    public SellerRepository sellerRepository() { return new SellerRepository(em); }
+
+    @Bean
+    public SellerService sellerService() { return new SellerService(sellerRepository()); }
+
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
-                        .requestMatchers("/user/status", "/products/add", "/cart/**").authenticated()
+                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**").authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex
                 .accessDeniedPage("/cart/add") // 접근 거부 페이지 설정

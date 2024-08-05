@@ -81,7 +81,7 @@ public class EmailService {
     public String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
-        return templateEngine.process("/user/mail", context); //mail.html
+        return templateEngine.process("/mail/mail", context); //mail.html
     }
 
     public boolean verifyAuthCode(String email, String authCode) {

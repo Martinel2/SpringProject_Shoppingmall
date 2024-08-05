@@ -30,7 +30,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        return "/user/login";
+        return "/login/login";
     }
 
     @GetMapping("/user/logout")
@@ -74,7 +74,7 @@ public class LoginController {
 
     @GetMapping("/find_id")
     public String findIdPage() {
-        return "/user/findId";
+        return "/login/findId";
     }
 
     @PostMapping("/find_id")
@@ -97,7 +97,7 @@ public class LoginController {
 
     @GetMapping("/reset_password")
     public String pwResetPage(){
-        return "/user/pwReset";
+        return "/login/pwReset";
     }
 
     @PostMapping("/resetPW")

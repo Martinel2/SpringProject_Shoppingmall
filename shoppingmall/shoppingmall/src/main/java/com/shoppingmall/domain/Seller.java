@@ -6,37 +6,47 @@ import jakarta.persistence.*;
 public class Seller {
 
     @Id
+    private String id;
+
     @OneToOne
-    @JoinColumn(name = "userId")
-    private Users userId;
+    @JoinColumn(name = "id")
+    private Users user;
 
-    @Column(name = "companyId")
-    private String companyId;
+    @Column(name = "company_id")
+    private String company_id;
 
-    @Column(name = "companyName")
-    private String companyName;
+    @Column(name = "company_name")
+    private String company_name;
 
-    public Users getUserId() {
-        return userId;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUserId(Users userId) {
-        this.userId = userId;
+    public void setUser(Users user) {
+        this.user = user;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public String getId() {
+        return id;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getCompany_id() {
+        return company_id;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCompany_id(String company_id) {
+        this.company_id = company_id;
+    }
+
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
     }
 }

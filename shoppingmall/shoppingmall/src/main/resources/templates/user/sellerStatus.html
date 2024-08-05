@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fast Mall - 판매한 상품 정보</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            /*<![CDATA[*/
+            var isSeller = [[${isSeller}]];
+            /*]]>*/
+
+            if (!isSeller) {
+                var proceed = confirm("판매자가 아닙니다. 판매자 회원가입 페이지로 이동하시겠습니까?");
+                if (proceed) {
+                    window.location.href = '/sellerSignup';
+                }else{
+                    window.location.href = '/';
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
+    </a>
+</div>
+<h1>판매자 전용 페이지입니다.</h1>
+<table>
+    <thead>
+    <tr>
+        <th>상품이름</th>
+        <th>사진</th>
+        <th>가격</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="clickable-row" th:each="product : ${products}" th:data-product-id="${product.id}">
+        <td th:text="${product.product_name}"></td>
+        <td><img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="200" width="200"></td>
+        <td th:text="${product.price}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

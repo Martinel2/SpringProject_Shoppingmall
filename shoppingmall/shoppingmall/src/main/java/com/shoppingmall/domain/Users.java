@@ -24,7 +24,7 @@ public class Users {
     private String birth;
 
     @Column(name = "role")
-    private String role = "USER";
+    private String role;
 
     @Column(name = "enabled")
     private String enabled;

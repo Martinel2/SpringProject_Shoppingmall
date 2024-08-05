@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
-
 @Controller
 public class ProductController {
 
@@ -45,7 +43,7 @@ public class ProductController {
             productService.saveProduct(name, description, price, file, category, userId);
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
-                        .body(Map.of("message", "success"));
+                        .body("상품이 등록되었습니다!");
         } catch (Exception ex) {
             response = ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

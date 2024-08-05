@@ -22,50 +22,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const category_box = document.getElementById("category_box");
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");
-    //let isLogin = false;
-
-    /*if(localStorage.getItem("id") != null) isLogin = true;
-    // Function to update user menu
-    function updateUserMenu() {
-        userMenu.innerHTML = "";
-        const loginButton = document.createElement("button");
-        loginButton.classList.add("login_button");
-        loginButton.innerHTML = "<img alt='user' src='/images/icons/login.png'>";
-        if(!isLogin)
-            loginButton.addEventListener("click", redirectToLoginPage);
-        else{
-            loginButton.addEventListener("click", function () {
-                window.location.href = "/user/status";
-            });
-        }
-        userMenu.appendChild(loginButton);
-    }
-*/
-    // Function to redirect to login page
-    function redirectToStatusPage() {
-        window.location.href = "/user/status";
-    }
-    document.getElementById("status").addEventListener("click", redirectToStatusPage);
-    /*
-    // Function to toggle user options dropdown
-    function toggleUserOptions() {
-        const userOptions = document.getElementById("user_options");
-        userOptions.classList.toggle("show");
-    }
-
-
-    // Add event listener to document to close user options dropdown when clicked outside
-    document.addEventListener("click", function(event) {
-        if (!event.target.matches(".user_icon")) {
-            const userOptions = document.getElementById("user_options");
-            if (userOptions.classList.contains("show")) {
-                userOptions.classList.remove("show");
-            }
-        }
-    });
-    */
-    //updateUserMenu();
-
 
     function submitSearch() {
         // 입력된 검색어 가져오기

@@ -25,7 +25,7 @@ public class EmailController {
 
     @GetMapping("/find_pw")
     public String pwMail(){
-        return "/user/find_pw";
+        return "/login/find_pw";
     }
 
     @PostMapping("/find_pw")
@@ -47,7 +47,7 @@ public class EmailController {
 
     @GetMapping("/verify_code")
     public String verifyPage(){
-        return "/user/verify";
+        return "/login/verify";
     }
 
     @PostMapping("/verify_code")
