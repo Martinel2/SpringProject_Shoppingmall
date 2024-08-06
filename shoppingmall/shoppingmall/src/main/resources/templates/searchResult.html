@@ -4,24 +4,57 @@
     <meta charset="UTF-8">
     <title>Fast Mall - 검색결과</title>
     <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            color: #cccccc;
+        }
+        h1{
+            text-align: center;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
         }
+        #image{
+            position: relative;
+            border-radius: 8px;
+            width: 136px;
+            height: 136px;
+        }
+        #name{
+            font-size: 28px;
+            position: relative;
+            left: 18px;
+        }
+        #price{
+            font-size: 26px;
+            position: relative;
+            left: 20px;
+            bottom: 16px;
+        }
+        #box{
+            display: grid;
+        }
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #62646982;
             padding: 8px;
-            text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            color: black;
+            background-color: #4cbbe8d4;
         }
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #616B7347;
         }
         /* 행에 커서를 올릴 때 시각적 피드백을 주기 위한 스타일 추가 */
         tr.clickable-row {
             cursor: pointer;
+        }
+        td{
+            display: flex;
         }
     </style>
     <script>
@@ -50,20 +83,11 @@
     </span><span style="color: #3180d1" th:text="${category}">
     </span><span style="color: #3180d1" th:text="${sellerId}"></span> 검색결과</h1>
     <table>
-        <thead>
-        <tr>
-            <th>상품이름</th>
-            <th>사진</th>
-            <th>가격</th>
-            <th>판매자</th>
-        </tr>
-        </thead>
         <tbody>
         <tr class="clickable-row" th:each="product : ${products}" th:data-product-id="${product.id}">
-            <td th:text="${product.product_name}"></td>
-            <td><img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="200" width="200"></td>
-            <td th:text="${product.price}"></td>
-            <td th:text="${product.seller_id}"></td>
+            <td><img id="image" th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image">
+                <div id="box"><span id="name" th:text="${product.product_name}"></span>
+                <span id="price" th:text="${product.price}"></span></div></td>
         </tr>
         </tbody>
     </table>

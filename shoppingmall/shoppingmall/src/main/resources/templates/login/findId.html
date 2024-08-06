@@ -38,13 +38,23 @@
                     id.id = "id";
                     id.textContent = "id는 \'" + data + "\'  입니다"; // 텍스트를 업데이트
                     find.appendChild(id);
+                    const bBox = document.createElement("div");
+                    bBox.id = 'but_box';
                     const findPw = document.createElement("button");
                     findPw.id = 'find_pw';
                     findPw.innerText = "비밀번호 찾으러 가기";
                     findPw.addEventListener("click", function () {
                         window.location.href = "/find_pw";
                     })
-                    find.appendChild(findPw);
+                    const login = document.createElement("button");
+                    login.id = 'login';
+                    login.innerText = "로그인 창으로 이동";
+                    login.addEventListener("click", function () {
+                        window.location.href = "/login";
+                    })
+                    bBox.appendChild(findPw);
+                    bBox.appendChild(login);
+                    find.appendChild(bBox);
                 }
                 })
                 .catch(error => {

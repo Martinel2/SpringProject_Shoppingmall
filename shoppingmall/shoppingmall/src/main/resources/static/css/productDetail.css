@@ -1,0 +1,91 @@
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+    font-size: 32px;
+}
+/*로고가 좌측 상단에 위치하도록 조정*/
+#home_logo {
+    display: inline-block;
+    width: 270px;
+    height: 90px;
+}
+
+/*선택자를 이용해 로고의 크기 조정*/
+#home_logo > img {
+    width: 270px;
+    height: 90px;
+}
+#container{
+    margin: 18px;
+    display: flex;
+}
+#info{
+    display: grid;
+}
+h2{
+    position: relative;
+    bottom: 40px;
+}
+#image{
+    margin-right: 66px;
+}
+#price_box{
+    position: relative;
+    bottom: 100px;
+    font-size: 36px;
+}
+#seller_id{
+    position: relative;
+    bottom: 163px;
+    font-size: 26px;
+}
+.val{
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+    font-size: 18px;
+    border: #cccccc solid 1px;
+    background-color: #333333;
+    color: #ffffff;
+}
+#quantity{
+    width: 34px;
+    font-size: 18px;
+    border-radius: 5px;
+    text-align: center;
+    color: #cccccc;
+    border: #cccccc solid 1px;
+    background-color: #333333;
+}
+#quantity_box{
+    display: inline-block;
+}
+#tot{
+    display: inline-block;
+    margin-left: 100px;
+}
+#cart{
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
+}
+#buy{
+    position: relative;
+    left: 50px;
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
+}
+#description{
+    text-align: center;
+}
+#but_box{
+    text-align: center;
+}

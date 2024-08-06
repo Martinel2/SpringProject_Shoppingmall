@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Fast Mall - 상품 상세 정보</title>
+    <link rel="stylesheet" href="/css/productDetail.css">
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script>
         function handleSubmit(event) {
@@ -71,6 +72,7 @@
             document.getElementById('totalPrice').textContent = totalPrice.toString();
         }
     </script>
+
 </head>
 <body>
 <div class="header">
@@ -78,27 +80,31 @@
         <img src="/images/icons/logo.png" alt="Home Logo"/>
     </a>
 </div>
-<h1>상품 상세 정보</h1>
-<div>
-    <h2 th:text="${product.product_name}"></h2>
-    <img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="400" width="400">
-    <p>판매자: <span th:text="${product.seller_id}"></span></p>
-    <p>설명: <span th:text="${product.description}"></span></p>
-    <p>가격: <span id="price" th:text="${product.price}"></span></p>
-</div>
-<form action="/cart/add" method="post" onsubmit="handleSubmit(event)">
-    <input type="hidden" name="productId" th:value="${product.id}"/>
-    <input type="hidden" id="query" name="query" th:value="${query}"/>
-    <input type="hidden" id="category" name="category" th:value="${category}"/>
-    <input type="hidden" id="sellerId" name="sellerId" th:value="${sellerId}"/>
-    <div>
-        <button type="button" onclick="decrementValue()">-</button>
-        <input type="number" id="quantity" name="quantity" value="1" readonly />
-        <button type="button" onclick="incrementValue()">+</button>
+<div id="container">
+    <img id="image" th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="700" width="700">
+    <div id="info">
+        <h2 th:text="${product.product_name}"></h2>
+        <p id="price_box"><span id="price" th:text="${product.price}"></span>원</p>
+        <p id="seller_id">판매자: <span th:text="${product.seller_id}"></span></p>
+        <form action="/cart/add" method="post" onsubmit="handleSubmit(event)">
+            <input type="hidden" name="productId" th:value="${product.id}"/>
+            <input type="hidden" id="query" name="query" th:value="${query}"/>
+            <input type="hidden" id="category" name="category" th:value="${category}"/>
+            <input type="hidden" id="sellerId" name="sellerId" th:value="${sellerId}"/>
+            <div id="quantity_box">
+                <button class="val" type="button" onclick="decrementValue()">-</button>
+                <input type="number" id="quantity" name="quantity" value="1" readonly />
+                <button class="val" type="button" onclick="incrementValue()">+</button>
+            </div>
+            <p id="tot">결제 가격: <span id="totalPrice" th:text="${product.price}"></span></p>
+            <div id="but_box">
+                <button id="cart" type="submit">장바구니 담기</button>
+                <button id="buy" type="submit">결제하기</button>
+            </div>
+        </form>
+    <a th:href="@{/search(query=${query}, category=${category}, sellerID=${sellerId})}" style="color: #3180d1">검색 결과로 돌아가기</a>
     </div>
-    <p>결제 가격: <span id="totalPrice" th:text="${product.price}"></span></p>
-    <button type="submit">장바구니 담기</button>
-</form>
-<a th:href="@{/search(query=${query}, category=${category}, sellerID=${sellerId})}" style="color: #3180d1">검색 결과로 돌아가기</a>
+</div>
+<p id="description">설명: <span th:text="${product.description}"></span></p>
 </body>
 </html>

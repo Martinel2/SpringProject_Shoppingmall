@@ -16,7 +16,6 @@ body {
     min-width: 1200px;
 }
 
-
 /*로고가 좌측 상단에 위치하도록 조정*/
 #home_logo {
     display: inline-block;
@@ -68,9 +67,9 @@ body {
 }
 
 #find_pw{
-    display: block;
+    display: inline-block;
     position: relative;
-    left: 321px;
+    right: 120px;
     width: 256px;
     height: 68px;
     margin-top: 54px;
@@ -81,3 +80,16 @@ body {
     font-size: 18px;
 }
 
+#login{
+    display: inline-block;
+    position: relative;
+    left: 100px;
+    width: 256px;
+    height: 68px;
+    margin-top: 54px;
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
+}

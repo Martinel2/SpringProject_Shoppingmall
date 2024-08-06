@@ -32,6 +32,9 @@ public class SearchController {
         } else if (sellerId != null) {
             products = productService.searchBySellerId(sellerId);
         }else products = productService.searchByName(keyword);
+        model.addAttribute("query", keyword);
+        model.addAttribute("category", category);
+        model.addAttribute("sellerId", sellerId);
         model.addAttribute("products", products);
         // 검색결과를 표시할 템플릿 이름을 반환합니다.
         return "searchResult"; // search-result.html과 같은 템플릿 파일을 찾게 됩니다.

@@ -35,6 +35,19 @@ public class SellerController {
         this.userService = userService;
     }
 
+    @GetMapping(value = "/products/add")
+    public String createForm(@AuthenticationPrincipal User user, Model model) {
+        String userId = user.getUsername();
+        Seller seller = sellerService.findById(userId);
+        boolean isSeller = false;
+        if(seller != null) {
+            isSeller = true;
+        }
+
+        model.addAttribute("isSeller", isSeller);
+        return "/product/productAdd";
+    }
+
 
     @GetMapping("/sellerStatus")
     public String sellerStatusPage(@AuthenticationPrincipal User user, Model model){

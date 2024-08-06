@@ -23,11 +23,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping(value = "/products/add")
-    public String createForm() {
-        return "product/productAdd";
-    }
-
     @PostMapping("/products/add")
     public ResponseEntity<String> addProduct(
             @RequestParam(name = "name") String name,

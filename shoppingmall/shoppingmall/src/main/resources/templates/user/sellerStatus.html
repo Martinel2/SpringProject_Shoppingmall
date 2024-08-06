@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Fast Mall - 판매한 상품 정보</title>
+    <link rel="stylesheet" href="/css/sellerStatus.css">
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -27,19 +28,21 @@
         <img src="/images/icons/logo.png" alt="Home Logo"/>
     </a>
 </div>
-<h1>판매자 전용 페이지입니다.</h1>
 <table>
     <thead>
     <tr>
-        <th>상품이름</th>
-        <th>사진</th>
-        <th>가격</th>
+        <th>상품명</th>
+        <th>가격 수정하기</th>
+        <th>배송비</th>
+        <th>판매 가격</th>
     </tr>
     </thead>
     <tbody>
     <tr class="clickable-row" th:each="product : ${products}" th:data-product-id="${product.id}">
-        <td th:text="${product.product_name}"></td>
-        <td><img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="200" width="200"></td>
+        <td id="product"><img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="80" width="80">
+            <span id="name" th:text="${product.product_name}"></span></td>
+        <td><button>최저가 적용</button><button>가격 수정하기</button></td>
+        <td>배송비 포함 가격</td>
         <td th:text="${product.price}"></td>
     </tr>
     </tbody>
