@@ -3,43 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>장바구니</title>
-    <style>
-        .clickable-row {
-            cursor: pointer;
-        }
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-        }
-        .quantity-controls button {
-            border: 1px solid #ccc;
-            background-color: #f0f0f0;
-            padding: 5px;
-            cursor: pointer;
-        }
-        .quantity-controls span {
-            padding: 0 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/cart.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
+    </a>
+</div>
 <h2>장바구니</h2>
 <table>
     <thead>
-    <tr>
-        <th>상품이름</th>
-        <th>사진</th>
-        <th>가격</th>
-        <th>갯수</th>
-    </tr>
+    <th>장바구니 목록</th>
     </thead>
     <tbody>
     <tr class="clickable-row" th:each="cart, iterStat : ${carts}">
-        <td th:text="${cart.products.product_name}"></td>
-        <td>
-            <img th:src="@{'/images/uploads/' + ${cart.products.photo}}" alt="Product Image" height="200" width="200">
-        </td>
+        <td id="product"><img th:src="@{'/images/uploads/' + ${cart.products.photo}}" alt="Product Image" height="80" width="80">
+            <span id="name" th:text="${cart.products.product_name}"></span></td>
         <td>
             <div class="quantity-controls">
                 <button type="button" class="decrease-quantity" th:data-cart-item-id="${cart.id}">-</button>
@@ -47,18 +28,20 @@
                 <button type="button" class="increase-quantity" th:data-cart-item-id="${cart.id}">+</button>
             </div>
         </td>
-        <td th:text="${cart.products.price * cart.quantity}"><span></span></td>
+        <td th:text="${cart.products.price * cart.quantity}"></td>
+        <td><button id="coupon">쿠폰 적용</button></td>
     </tr>
     </tbody>
 </table>
 <h3>총 합계: <span id="totalAmount" th:text="${total}"></span></h3>
+<button type="button" id="buy">결제하기</button>
 <script>
     $(document).ready(function() {
         function updatePriceAndTotal() {
             var totalAmount = 0;
             $('tbody tr').each(function() {
                 var quantity = parseInt($(this).find('.quantity').text());
-                var price = parseFloat($(this).find('td:nth-child(4)').text().replace('원', ''));
+                var price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
                 var totalPrice = quantity * price;
                 $(this).find('.total-price').text(totalPrice + '원');
                 totalAmount += totalPrice;
