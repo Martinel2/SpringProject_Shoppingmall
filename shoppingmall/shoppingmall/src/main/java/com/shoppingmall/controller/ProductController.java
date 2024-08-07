@@ -1,6 +1,7 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Products;
+import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,11 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    private final CartService cartService;
+
+    public ProductController(ProductService productService, CartService cartService) {
         this.productService = productService;
+        this.cartService = cartService;
     }
 
     @PostMapping("/products/add")
@@ -62,5 +66,47 @@ public class ProductController {
         return "product/productDetail"; // 상세 페이지의 템플릿 이름
     }
 
+    @PostMapping("/products/modPrice")
+    public ResponseEntity<String> modPrice(@RequestParam(name = "product_id") int product_id, @RequestParam(name = "modPrice") int modPrice){
+        ResponseEntity response = null;
+        try {
+            if(productService.updatePrice(product_id, modPrice)) {
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("가격이 변경되었습니다.");
+            } else{
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("업데이트 실패");
+            }
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An exception occured due to " + ex.getMessage());
+        }
+        return response;
+    }
+
+    @PostMapping("/products/delete")
+    public ResponseEntity<String> modPrice(@RequestParam(name = "product_id") int product_id){
+        ResponseEntity response = null;
+        try {
+            cartService.deleteAllProductById(product_id);
+            if(productService.deleteProduct(product_id)) {
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("상품이 성공적으로 판매 종료 되었습니다.");
+            } else{
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("삭제 실패");
+            }
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An exception occured due to " + ex.getMessage());
+        }
+        return response;
+    }
 }
 

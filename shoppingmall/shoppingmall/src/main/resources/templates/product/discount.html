@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Row Popup Example</title>
+  <style>
+    /* 팝업 스타일 */
+    .popup {
+      display: none; /* 기본적으로 팝업을 숨깁니다 */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      border: 1px solid #000;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    /* 테이블 스타일 */
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>John Doe</td>
+    <td>30</td>
+    <td><button class="popup-button">Show Info</button></td>
+  </tr>
+  <tr>
+    <td>Jane Smith</td>
+    <td>25</td>
+    <td><button class="popup-button">Show Info</button></td>
+  </tr>
+  <tr>
+    <td>Mike Johnson</td>
+    <td>40</td>
+    <td><button class="popup-button">Show Info</button></td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="popup" id="popup">
+  <button id="close-popup">Close</button>
+  <p id="popup-content"></p>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.popup-button');
+    const popup = document.getElementById('popup');
+    const popupContent = document.getElementById('popup-content');
+    const closePopup = document.getElementById('close-popup');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        const row = button.closest('tr');
+        const name = row.cells[0].innerText;
+        const age = row.cells[1].innerText;
+
+        popupContent.innerText = `Name: ${name}, Age: ${age}`;
+        popup.style.display = 'block';
+      });
+    });
+
+    closePopup.addEventListener('click', function() {
+      popup.style.display = 'none';
+    });
+  });
+</script>
+</body>
+</html>

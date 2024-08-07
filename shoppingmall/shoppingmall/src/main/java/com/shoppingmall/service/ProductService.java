@@ -69,4 +69,8 @@ public class ProductService {
     }
 
     public Products findById(int id) { return productRepository.findById(id); }
+
+    public boolean updatePrice(int id, int price) { return productRepository.updatePrice(id, price); };
+
+    public boolean deleteProduct(int id) { return productRepository.deleteProduct(id); }
 }

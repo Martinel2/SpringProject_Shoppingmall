@@ -45,4 +45,26 @@ public class MemoryProductRepository implements ProductRepository{
         query.setParameter("seller_id",  "%" + seller_id + "%");
         return query.getResultList();
     }
+
+    @Override
+    public boolean updatePrice(int id, int price) {
+        Products product = em.find(Products.class, id);
+        if (product != null) {
+            product.setPrice(price);
+            // `merge` 메서드를 사용하여 업데이트 수행
+            em.merge(product);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteProduct(int id) {
+        Products product = em.find(Products.class, id);
+        if (product != null) {
+            em.remove(product); // 엔티티 삭제
+            return true;
+        }
+        return false;
+    }
 }

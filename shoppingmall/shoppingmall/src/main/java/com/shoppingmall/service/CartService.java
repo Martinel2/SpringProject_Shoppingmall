@@ -60,4 +60,6 @@ public class CartService {
         }
         return null;
     }
+
+    public boolean deleteAllProductById(int product_id) { return cartRepository.deleteCart(product_id); }
 }

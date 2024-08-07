@@ -4,7 +4,7 @@ body {
     padding: 0;
     background-color: #333;
     color: #cccccc;
-    font-size: 28px;
+    font-size: 18px;
 }
 /*상단 바*/
 .header {
@@ -32,11 +32,14 @@ table{
     position: relative;
     width: 1000px;
     text-align: center;
-    left: 500px;
+    left: 300px;
     border-collapse: collapse;
 }
 th,td{
     border: #cccccc solid 1px;
+    white-space: nowrap; /* 텍스트를 한 줄로 유지합니다 */
+    overflow: hidden; /* 넘치는 텍스트를 숨깁니다 */
+    text-overflow: ellipsis; /* 넘치는 부분을 '...'으로 표시합니다 */
 }
 #product{
     text-align: left;
@@ -53,4 +56,25 @@ button{
     border-radius: 8px;
     font-size: 18px;
     margin: 5px;
+}
+
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 300px;
 }

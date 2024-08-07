@@ -35,4 +35,12 @@ public class CartRepository {
     public Cart findById(int id){
         return em.find(Cart.class, id);
     }
+
+    public boolean deleteCart(int product_id) {
+        List<Cart> cart = getCartByProductId(product_id);
+        for(int i = 0; i<cart.size(); i++){
+            em.remove(cart.get(i));
+        }
+        return true;
+    }
 }

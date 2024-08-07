@@ -19,6 +19,101 @@
                     window.location.href = '/';
                 }
             }
+
+            //상품 가격 업데이트 코드
+            const popup = document.getElementById("modPopup");
+            const mod = document.querySelectorAll(".mod");
+            const closePopup = document.getElementById('close-popup');
+            const popupContent = document.getElementById('popup-content');
+            const postButton = document.getElementById('mod_submit');
+            const modPrice = document.getElementById("modPrice");
+
+            let currentId = null;
+            mod.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = button.closest('tr');
+                    const name = row.cells[0].innerText;
+                    const price = row.cells[3].innerText;
+                    currentId = row.getAttribute('data-product-id');
+
+                    popupContent.innerText = `상품 명: ${name}, 현재 가격: ${price}`;
+                    popup.style.display = 'block';
+                });
+            });
+
+            postButton.addEventListener('click', function() {
+                if (currentId) {
+                    const url = new URL('http://localhost:8080/products/modPrice');
+                    url.searchParams.append('product_id', currentId);
+                    url.searchParams.append('modPrice', modPrice.value);
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data);
+                            popup.style.display = 'none';
+                            modPrice.value = ''; // 입력 필드를 초기화
+                            window.location.href = "/sellerStatus";
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('There was an error with the post request.');
+                        });
+                }
+            });
+
+            closePopup.onclick = function() {
+                modPrice.value = ''; // 입력 필드를 초기화
+                popup.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == popup) {
+                    modPrice.value = ''; // 입력 필드를 초기화
+                    popup.style.display = "none";
+                }
+            }
+
+            //상품 삭제 코드
+            const del = document.querySelectorAll(".del");
+
+            del.forEach(button => {
+                button.addEventListener('click', function() {
+                    const shouldRedirect = confirm('정말로 해당 상품을 판매 종료 하시겠습니까?');
+                    if (shouldRedirect) {
+                        const row = button.closest('tr');
+                        currentId = row.getAttribute('data-product-id');
+
+                        if (currentId) {
+                            const url = new URL('http://localhost:8080/products/delete');
+                            url.searchParams.append('product_id', currentId);
+
+                            fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'Accept': 'application/json'
+                                }
+                            })
+                                .then(response => response.text())
+                                .then(data => {
+                                    alert(data);
+                                    window.location.href = "/sellerStatus";
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('There was an error with the post request.');
+                                });
+                        }
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -35,17 +130,34 @@
         <th>가격 수정하기</th>
         <th>배송비</th>
         <th>판매 가격</th>
+        <th>상품 판매 종료</th>
     </tr>
     </thead>
     <tbody>
     <tr class="clickable-row" th:each="product : ${products}" th:data-product-id="${product.id}">
         <td id="product"><img th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image" height="80" width="80">
             <span id="name" th:text="${product.product_name}"></span></td>
-        <td><button>최저가 적용</button><button>가격 수정하기</button></td>
-        <td>배송비 포함 가격</td>
+        <td><button>최저가 적용</button><button class="mod">가격 수정하기</button></td>
+        <td>배송비</td>
         <td th:text="${product.price}"></td>
+        <td><button class="del">판매 종료</button></td>
     </tr>
     </tbody>
 </table>
+
+<div id="modPopup" class="popup">
+    <div class="popup-content">
+        <button id="close-popup">Close</button>
+        <h2>Settings</h2>
+        <!-- Add your settings options here -->
+        <p id="popup-content"></p>
+        <div id="productForm">
+            <label for="modPrice">변경할 가격 :</label>
+            <input id="modPrice" type="number" name="modPrice" placeholder="Product Price" step="1" required>
+            <button id="mod_submit">변경하기</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

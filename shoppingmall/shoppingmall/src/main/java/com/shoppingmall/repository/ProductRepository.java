@@ -14,5 +14,9 @@ public interface ProductRepository {
     List<Products> findBySellerId(String seller_id);
 
     Products findById(int productId);
+
+    boolean updatePrice(int id, int price);
+
+    boolean deleteProduct(int id);
 }
 
