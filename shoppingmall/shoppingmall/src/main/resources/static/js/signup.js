@@ -220,8 +220,8 @@ document.addEventListener("DOMContentLoaded", function() {
     //패스워드가 조건에 맞는지 확인
     document.getElementById("pw").addEventListener("focusout", function() {
 
-        let pw = $("#newPassword").val().toString();
-        let check = $("#check").val().toString();
+        let pw = $("#pw").val().toString();
+        let check = $("#pw_check").val().toString();
         //pw조건: 영문자,숫자,특수문자를 섞어 최소 8자리 이상
         checkPw = validatePassword(pw);
 

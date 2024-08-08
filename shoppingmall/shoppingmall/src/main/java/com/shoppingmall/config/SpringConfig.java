@@ -67,9 +67,10 @@ public class SpringConfig {
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
                         .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("admin")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex
-                .accessDeniedPage("/cart/add") // 접근 거부 페이지 설정
+                .accessDeniedPage("/") // 접근 거부 페이지 설정
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

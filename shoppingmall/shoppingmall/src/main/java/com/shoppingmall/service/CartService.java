@@ -61,5 +61,7 @@ public class CartService {
         return null;
     }
 
-    public boolean deleteAllProductById(int product_id) { return cartRepository.deleteCart(product_id); }
+    public boolean deleteAllProductById(int product_id) { return cartRepository.deleteCartAllProduct(product_id); }
+
+    public boolean deleteCartItem(int id) { return cartRepository.deleteCartItem(id); }
 }

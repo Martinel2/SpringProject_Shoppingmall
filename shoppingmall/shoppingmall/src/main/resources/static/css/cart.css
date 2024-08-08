@@ -29,8 +29,10 @@ body {
     width: 270px;
     height: 90px;
 }
-h2{
-    text-align: center;
+h2, h3{
+    position: relative;
+    left: 600px;
+    display: inline-block;
 }
 .clickable-row {
     cursor: pointer;
@@ -55,7 +57,7 @@ table{
     position: relative;
     width: 1000px;
     text-align: center;
-    left: 500px;
+    left: 208px;
     border-collapse: collapse;
 }
 tr,td{
@@ -80,6 +82,17 @@ tr,td{
 #buy{
     border: #2d6eaf solid 5px;
     background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
+    margin: 5px;
+    position: relative;
+    left: 600px;
+}
+
+.del{
+    border: #CC5E5EFF solid 5px;
+    background-color: #CC5E5EFF;
     color: #e0e6eb;
     border-radius: 8px;
     font-size: 18px;

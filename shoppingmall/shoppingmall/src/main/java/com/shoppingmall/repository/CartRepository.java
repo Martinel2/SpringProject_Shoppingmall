@@ -36,11 +36,20 @@ public class CartRepository {
         return em.find(Cart.class, id);
     }
 
-    public boolean deleteCart(int product_id) {
+    public boolean deleteCartAllProduct(int product_id) {
         List<Cart> cart = getCartByProductId(product_id);
         for(int i = 0; i<cart.size(); i++){
             em.remove(cart.get(i));
         }
         return true;
+    }
+
+    public boolean deleteCartItem(int id){
+        Cart cart = em.find(Cart.class, id);
+        if(cart != null) {
+            em.remove(cart);
+            return true;
+        }
+        return false;
     }
 }

@@ -2,7 +2,6 @@ package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Cart;
 import com.shoppingmall.domain.Products;
-import com.shoppingmall.dto.CartResponseDto;
 import com.shoppingmall.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class CartController {
@@ -27,11 +24,11 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/cart/{user_id}")
-    public String getCart(@PathVariable("user_id") String user_id,
+    @GetMapping("/cart")
+    public String getCart(@AuthenticationPrincipal UserDetails userDetails,
                           Model model){
         List<Cart> carts = new ArrayList<>();
-        carts = cartService.getCartByUserId(user_id);
+        carts = cartService.getCartByUserId(userDetails.getUsername());
         int total = 0;
         for(int i = 0; i<carts.size(); i++){
             Products p = carts.get(i).getProducts();
@@ -43,24 +40,28 @@ public class CartController {
     }
 
     @PostMapping("/cart/add")
-    public ResponseEntity<CartResponseDto> addToCart(@RequestParam("productId") int productId, @RequestParam("quantity") int quantity, @AuthenticationPrincipal UserDetails userDetails) {
-        CartResponseDto response;
+    public ResponseEntity<String> addToCart(@RequestParam("productId") int productId, @RequestParam("quantity") int quantity, @AuthenticationPrincipal UserDetails userDetails) {
+        ResponseEntity response;
         try {
             String userId = userDetails.getUsername();
             Cart cart = cartService.findByTwoId(userId,productId);
             if(cart == null){
                 cartService.addCart(userId, productId, quantity); // 장바구니에 상품 추가
-                response = new CartResponseDto("상품이 장바구니에 추가되었습니다.", userId);
-                return ResponseEntity.ok(response); // 200 OK 응답 반환
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("상품이 장바구니에 추가되었습니다.");
             }
             else{
-                response = new CartResponseDto("이미 추가된 상품입니다",userId);
-                return ResponseEntity.ok(response); // 200 OK 응답 반환
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("이미 추가된 상품입니다");
             }
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new CartResponseDto("상품 추가에 실패했습니다.", null)); // 500 응답 반환
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An exception occured due to " + ex.getMessage());
         }
+        return response;
     }
 
     @PostMapping("/cart/update")
@@ -71,7 +72,23 @@ public class CartController {
             cartService.updateCartItemQuantity(cartItemId, quantity);
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
-                        .body(Map.of("message", "success"));
+                        .body("success");
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An exception occured due to " + ex.getMessage());
+        }
+        return response;
+    }
+
+    @PostMapping("cart/delete")
+    public ResponseEntity<String> deleteCartItem(@RequestParam(value = "cartItemId") int cartItemId) {
+        ResponseEntity response = null;
+        try {
+            cartService.deleteCartItem(cartItemId);
+            response = ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("success");
         } catch (Exception ex) {
             response = ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -29,17 +29,14 @@
                     }
                     throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
                 } else
-                    return response.json();
+                    return response.text();
             }).then(data => {
-                console.log(data);
-                const message = data.message;
-                const userId = data.userId; // 서버 응답에서 user_id 가져오기
-                alert(message);
-                        const shouldRedirect = confirm('장바구니를 확인하시겠습니까?');
-                        if (shouldRedirect) {
-                            const link = '/cart/'+userId;
-                            window.location.href = link; // 로그인 페이지로 이동
-                        }
+                    console.log(data);
+                    alert(data);
+                    const shouldRedirect = confirm('장바구니를 확인하시겠습니까?');
+                    if (shouldRedirect) {
+                        window.location.href = '/cart'; // 로그인 페이지로 이동
+                    }
                 })
                 .catch(error => {
                     console.error('Error:', error);

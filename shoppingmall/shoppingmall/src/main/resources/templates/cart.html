@@ -18,18 +18,20 @@
     <th>장바구니 목록</th>
     </thead>
     <tbody>
-    <tr class="clickable-row" th:each="cart, iterStat : ${carts}">
+    <tr class="clickable-row" th:each="cart, iterStat : ${carts}" th:data-cart-item-id="${cart.id}">
         <td id="product"><img th:src="@{'/images/uploads/' + ${cart.products.photo}}" alt="Product Image" height="80" width="80">
             <span id="name" th:text="${cart.products.product_name}"></span></td>
         <td>
             <div class="quantity-controls">
                 <button type="button" class="decrease-quantity" th:data-cart-item-id="${cart.id}">-</button>
                 <span class="quantity" th:text="${cart.quantity}"></span>
+                <span class="origin-price" style="visibility: hidden" th:text="${cart.products.price}"></span>
                 <button type="button" class="increase-quantity" th:data-cart-item-id="${cart.id}">+</button>
             </div>
         </td>
-        <td th:text="${cart.products.price * cart.quantity}"></td>
+        <td class="total-price" th:text="${cart.products.price * cart.quantity}"></td>
         <td><button id="coupon">쿠폰 적용</button></td>
+        <td><button class="del">삭제</button></td>
     </tr>
     </tbody>
 </table>
@@ -40,38 +42,88 @@
         function updatePriceAndTotal() {
             var totalAmount = 0;
             $('tbody tr').each(function() {
-                var quantity = parseInt($(this).find('.quantity').text());
                 var price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
-                var totalPrice = quantity * price;
-                $(this).find('.total-price').text(totalPrice + '원');
-                totalAmount += totalPrice;
+                console.log(price);
+                totalAmount += price;
             });
             $('#totalAmount').text(totalAmount + '원');
         }
 
-        $('.increase-quantity, .decrease-quantity').on('click', function() {
-            var cartItemId = $(this).data('cart-item-id');
-            var quantitySpan = $(this).siblings('.quantity');
-            var currentQuantity = parseInt(quantitySpan.text());
-            var newQuantity = $(this).hasClass('increase-quantity') ? currentQuantity + 1 : currentQuantity - 1;
+        // 수량 증가 버튼 클릭 이벤트 처리
+        $('.increase-quantity').on('click', function() {
+            updateQuantity(this, 1);
+        });
 
-            if (newQuantity < 1) return; // 수량이 1보다 작아지지 않도록 함
+        // 수량 감소 버튼 클릭 이벤트 처리
+        $('.decrease-quantity').on('click', function() {
+            updateQuantity(this, -1);
+        });
 
-            quantitySpan.text(newQuantity);
+        function updateQuantity(button, increment) {
+            var $button = $(button);
+            var $row = $button.closest('tr');
+            var cartItemId = $button.attr('data-cart-item-id');
+            var $quantitySpan = $row.find('.quantity');
+            var currentQuantity = parseInt($quantitySpan.text());
+            var newQuantity = currentQuantity + increment;
 
-            // 서버에 수량 업데이트 요청
+            // 수량이 1 이하로 떨어지지 않도록 합니다.
+            if (newQuantity < 1) {
+                alert('수량은 1보다 작을 수 없습니다.');
+                return;
+            }
 
             $.post('/cart/update', { cartItemId: cartItemId, quantity: newQuantity }, function(response) {
                 if (response === 'success') {
+                    var $originPriceSpan = $row.find('.origin-price');
+                    var originPrice = parseFloat($originPriceSpan.text());
+                    var totalPrice = newQuantity * originPrice;
+
+                    // 수량과 총 가격 업데이트
+                    $quantitySpan.text(newQuantity);
+                    $row.find('.total-price').text(totalPrice + '원');
+                    //console.log('Updated total price:', totalPrice);
+
                     updatePriceAndTotal();
                 } else {
                     alert('Failed to update cart item quantity.');
                 }
             });
-        });
+        }
 
         // 초기 로딩 시 가격 업데이트
         updatePriceAndTotal();
+
+        //장바구니 삭제 코드
+        const del = document.querySelectorAll(".del");
+        let id = null;
+        del.forEach(button => {
+            button.addEventListener('click', function() {
+                    const row = button.closest('tr');
+                    id = row.getAttribute('data-cart-item-id');
+
+                    if (id) {
+                        const url = new URL('http://localhost:8080/cart/delete');
+                        url.searchParams.append('product_id', id);
+
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Accept': 'application/json'
+                            }
+                        })
+                            .then(response => response.text())
+                            .then(data => {
+                                if(data === "success") updatePriceAndTotal();
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('There was an error with the post request.');
+                            });
+                    }
+            });
+        });
     });
 </script>
 </body>

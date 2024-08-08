@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "/user/status";
     })
 
+    document.getElementById("cart").addEventListener("click", function () {
+        window.location.href = "/cart";
+    })
+
     function submitSearch() {
         // 입력된 검색어 가져오기
         document.getElementById("search_form").addEventListener("submit", function(event) {

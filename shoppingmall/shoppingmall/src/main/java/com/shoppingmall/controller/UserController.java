@@ -37,4 +37,9 @@ public class UserController {
         model.addAttribute("user", users);
         return "/user/status";
     }
+
+    @GetMapping("/admin/admin")
+    public String adminPage(){
+        return "/user/admin";
+    }
 }
