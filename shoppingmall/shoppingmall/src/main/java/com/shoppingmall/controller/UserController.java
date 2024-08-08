@@ -38,8 +38,4 @@ public class UserController {
         return "/user/status";
     }
 
-    @GetMapping("/admin/admin")
-    public String adminPage(){
-        return "/user/admin";
-    }
 }

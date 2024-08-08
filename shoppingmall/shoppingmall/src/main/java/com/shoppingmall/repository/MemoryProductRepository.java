@@ -59,6 +59,18 @@ public class MemoryProductRepository implements ProductRepository{
     }
 
     @Override
+    public boolean discount(int id, int discount) {
+        Products product = em.find(Products.class, id);
+        if (product != null) {
+            product.setDiscount(discount);
+            // `merge` 메서드를 사용하여 업데이트 수행
+            em.merge(product);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean deleteProduct(int id) {
         Products product = em.find(Products.class, id);
         if (product != null) {
@@ -66,5 +78,11 @@ public class MemoryProductRepository implements ProductRepository{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Products> getAllProduct() {
+        String query = "SELECT c FROM Products c";
+        return em.createQuery(query, Products.class).getResultList();
     }
 }

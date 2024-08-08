@@ -2,9 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/admin.css">
     <title>관리자 전용 페이지</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const popup = document.getElementById("modPopup");
+            const discount = document.querySelectorAll(".discount");
+            const closePopup = document.getElementById('close-popup');
+            const popupContent = document.getElementById('popup-content');
+            const postButton = document.getElementById('mod_submit');
+            const discountPriceInput = document.getElementById("discountPrice");
+            const updatedPrice = document.getElementById("updatedPrice");
+
+            let currentId = null;
+            let originalPrice = null;
+            let nowPrice = null;
+            discount.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = button.closest('tr');
+                    const name = row.cells[0].innerText;
+                    originalPrice = parseFloat(row.cells[2].innerText.replace(/[^\d.-]/g, '')); // 숫자만 추출
+                    nowPrice = parseFloat(row.cells[3].innerText.replace(/[^\d.-]/g, '')); // 숫자만 추출
+                    currentId = row.getAttribute('data-product-id');
+
+                    popupContent.innerText = `상품 명: ${name}, 원래 가격: ${originalPrice}, 현재 가격: ${nowPrice}`;
+                    updatedPrice.innerText = `변경된 가격: ${originalPrice}`; // 초기 표시 가격
+                    popup.style.display = 'block';
+                });
+            });
+
+            // 할인율 입력 필드의 값이 변경될 때마다 실행
+            discountPriceInput.addEventListener('input', function() {
+                if (originalPrice !== null) {
+                    const discountPercentage = parseFloat(discountPriceInput.value) || 0;
+                    const discounted = 1-(discountPercentage/100);
+                    const discountedPrice = originalPrice * discounted;
+                    updatedPrice.innerText = `변경된 가격: ${discountedPrice.toFixed(0)}`;
+                }
+            });
+
+            postButton.addEventListener('click', function() {
+                if (currentId && discountPriceInput.value) {
+                    const url = new URL('http://localhost:8080/products/discount');
+                    url.searchParams.append('product_id', currentId);
+                    url.searchParams.append('discount', discountPriceInput.value);
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data);
+                            popup.style.display = 'none';
+                            discountPriceInput.value = ''; // 입력 필드를 초기화
+                            updatedPrice.innerText = '변경된 가격: '; // 가격 초기화
+                            window.location.href = "/admin/product";
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('There was an error with the post request.');
+                        });
+                }
+            });
+
+            closePopup.onclick = function() {
+                discountPriceInput.value = ''; // 입력 필드를 초기화
+                updatedPrice.innerText = '변경된 가격: '; // 가격 초기화
+                popup.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == popup) {
+                    discountPriceInput.value = ''; // 입력 필드를 초기화
+                    updatedPrice.innerText = '변경된 가격: '; // 가격 초기화
+                    popup.style.display = "none";
+                }
+            }
+        });
+    </script>
 </head>
 <body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
+    </a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>상품명</th>
+        <th>할인 적용하기</th>
+        <th>원래 가격</th>
+        <th>할인된 가격</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="clickable-row" th:each="product : ${productDto}" th:data-product-id="${product.products.id}">
+        <td id="product"><img th:src="@{'/images/uploads/' + ${product.products.photo}}" alt="Product Image" height="80" width="80">
+            <span id="name" th:text="${product.products.product_name}"></span></td>
+        <td><span>할인율 : </span><span id="percent" th:text="${product.percent} + '%'"></span> </span><button class="discount">할인 적용하기</button></td>
+        <td th:text="${product.products.price}"></td>
+        <td><span th:text="${product.discountPrice}"></span></td>
+    </tr>
+    </tbody>
+</table>
+
+<div id="modPopup" class="popup">
+    <div class="popup-content">
+        <button id="close-popup">Close</button>
+        <h2>Settings</h2>
+        <!-- Add your settings options here -->
+        <p id="popup-content"></p>
+        <div id="productForm">
+            <label for="discountPrice">할인율 : </label>
+            <input id="discountPrice" type="number" name="discountPrice" placeholder="Product Price" step="1" required>
+            <p id="updatedPrice">변경된 가격: </p>
+            <button id="mod_submit">할인율 적용</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

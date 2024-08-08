@@ -17,6 +17,10 @@ public interface ProductRepository {
 
     boolean updatePrice(int id, int price);
 
+    boolean discount(int id, int discount);
+
     boolean deleteProduct(int id);
+
+    List<Products> getAllProduct();
 }
 

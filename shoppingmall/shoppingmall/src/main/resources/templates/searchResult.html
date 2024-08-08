@@ -3,60 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Fast Mall - 검색결과</title>
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #333;
-            color: #cccccc;
-        }
-        h1{
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        #image{
-            position: relative;
-            border-radius: 8px;
-            width: 136px;
-            height: 136px;
-        }
-        #name{
-            font-size: 28px;
-            position: relative;
-            left: 18px;
-        }
-        #price{
-            font-size: 26px;
-            position: relative;
-            left: 20px;
-            bottom: 16px;
-        }
-        #box{
-            display: grid;
-        }
-        th, td {
-            border: 1px solid #62646982;
-            padding: 8px;
-        }
-        th {
-            color: black;
-            background-color: #4cbbe8d4;
-        }
-        tr:hover {
-            background-color: #616B7347;
-        }
-        /* 행에 커서를 올릴 때 시각적 피드백을 주기 위한 스타일 추가 */
-        tr.clickable-row {
-            cursor: pointer;
-        }
-        td{
-            display: flex;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/searchResult.css">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // 모든 테이블 행에 대해 클릭 이벤트를 추가
@@ -84,10 +31,15 @@
     </span><span style="color: #3180d1" th:text="${sellerId}"></span> 검색결과</h1>
     <table>
         <tbody>
-        <tr class="clickable-row" th:each="product : ${products}" th:data-product-id="${product.id}">
-            <td><img id="image" th:src="@{'/images/uploads/' + ${product.photo}}" alt="Product Image">
-                <div id="box"><span id="name" th:text="${product.product_name}"></span>
-                <span id="price" th:text="${product.price}"></span></div></td>
+        <tr class="clickable-row" th:each="product : ${productDto}" th:data-product-id="${product.products.id}">
+            <td><img id="image" th:src="@{'/images/uploads/' + ${product.products.photo}}" alt="Product Image">
+                <div id="box"><span id="name" th:text="${product.products.product_name}"></span>
+                    <div>
+                        <span id="percent" th:if="${product.percent > 0}" th:text="${product.percent} + '%'"></span>
+                        <span id="price" th:if="${product.products.price != product.discountPrice}"  th:text="${product.products.price} + '원'"></span>
+                        <span id="discount_price" th:text="${product.discountPrice} + '원'"></span>
+                    </div>
+                </div></td>
         </tr>
         </tbody>
     </table>

@@ -27,6 +27,9 @@ public class Products {
     @Column(name = "price")
     private int price;
 
+    @Column(name = "discount")
+    private double discount;
+
     @Lob  // 대용량 데이터를 저장할 때 사용
 
     @Column(name = "description")
@@ -104,5 +107,13 @@ public class Products {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 }

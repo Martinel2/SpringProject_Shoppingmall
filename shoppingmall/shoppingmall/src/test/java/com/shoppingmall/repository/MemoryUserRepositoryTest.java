@@ -1,9 +1,9 @@
 package com.shoppingmall.repository;
 
 import com.shoppingmall.dto.Level;
-import com.shoppingmall.domain.User;
 import com.shoppingmall.domain.Users;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MemoryUserRepositoryTest {
 
-    private final EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
     MemoryUserRepository repository = new MemoryUserRepository(em);
 
     public MemoryUserRepositoryTest(EntityManager em) {
@@ -20,7 +21,7 @@ public class MemoryUserRepositoryTest {
 
     @AfterEach
     public void afterEach(){
-        repository.clearStore();
+        //repository.clearStore();
     }
 
     @Test
@@ -47,15 +48,15 @@ public class MemoryUserRepositoryTest {
 
     @Test
     public void findById() {
-        User user1 = new User();
+        Users user1 = new Users();
         user1.setId("test1");
         repository.add(user1);
 
-        User user2 = new User();
+        Users user2 = new Users();
         user2.setId("test2");
         repository.add(user2);
 
-        User res = repository.findById("test1").get();
+        Users res = repository.findById("test1");
         assertThat(res).isEqualTo(user1);
     }
 }

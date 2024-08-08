@@ -37,6 +37,31 @@ h2{
     bottom: 100px;
     font-size: 36px;
 }
+#percent{
+    font-size: 24px;
+    position: relative;
+    left: 5px;
+    top: 9px;
+    color: #c82525d9;
+    font-style: italic;
+    font-weight: bold;
+}
+#price{
+    text-decoration: line-through;
+    color: #c82525d9;
+    font-size: 22px;
+    position: relative;
+    left: 60px;
+    bottom: 26px;
+    display: block;
+}
+#discount_price{
+    font-size: 28px;
+    position: relative;
+    left: 11px;
+    bottom: 27px;
+    display: block;
+}
 #seller_id{
     position: relative;
     bottom: 163px;

@@ -1,6 +1,6 @@
 package com.shoppingmall.service;
 
-import com.shoppingmall.domain.User;
+import com.shoppingmall.domain.Users;
 import com.shoppingmall.repository.MemoryUserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -8,8 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserServiceTest {
 
@@ -25,31 +26,30 @@ public class UserServiceTest {
     @BeforeEach
     public void beforeEach() {
         userRepository = new MemoryUserRepository(em);
-        userService = new UserService(userRepository, passwordEncoder);
+        userService = new UserService(userRepository);
     }
 
     @AfterEach
     public void afterEach(){
-        userRepository.clearStore();
+        //userRepository.clearStore();
     }
 
     @Test
     public void join(){
-        User user = new User();
+        Users user = new Users();
         user.setId("test1");
 
-        String saveId = userService.join(user);
+        Users saveUser = (userService.join(user));
 
-        User isUser = userRepository.findById(saveId).get();
-        assertEquals(user.getId(), isUser.getId());
+        assertEquals(user.getId(), saveUser.getId());
     }
 
     @Test
     public void validateDupUser(){
-        User user1 = new User();
+        Users user1 = new Users();
         user1.setId("test1");
 
-        User user2 = new User();
+        Users user2 = new Users();
         user2.setId("test1");
 
         userService.join(user1);

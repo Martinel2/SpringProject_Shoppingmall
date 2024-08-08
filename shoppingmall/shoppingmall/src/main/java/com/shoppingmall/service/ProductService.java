@@ -46,7 +46,7 @@ public class ProductService {
         product.setUser(user);  // user를 설정하면 자동으로 userId도 설정됨
         product.setSeller_id(user.getId());
         product.setCategory(category);
-
+        product.setDiscount(0);
         // 상품 저장
         productRepository.save(product);
     }
@@ -72,5 +72,9 @@ public class ProductService {
 
     public boolean updatePrice(int id, int price) { return productRepository.updatePrice(id, price); };
 
+    public boolean discount(int id, int discount) { return productRepository.discount(id, discount); }
+
     public boolean deleteProduct(int id) { return productRepository.deleteProduct(id); }
+
+    public List<Products> getAllProduct() { return productRepository.getAllProduct(); }
 }

@@ -1,6 +1,7 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Products;
+import com.shoppingmall.dto.ProductDto;
 import com.shoppingmall.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,10 +33,16 @@ public class SearchController {
         } else if (sellerId != null) {
             products = productService.searchBySellerId(sellerId);
         }else products = productService.searchByName(keyword);
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Products product:products) {
+            int price = product.getPrice();
+            int discountPrice = (int) (price * (1-product.getDiscount()/100));
+            productDtos.add(new ProductDto(product,discountPrice));
+        }
         model.addAttribute("query", keyword);
         model.addAttribute("category", category);
         model.addAttribute("sellerId", sellerId);
-        model.addAttribute("products", products);
+        model.addAttribute("productDto", productDtos);
         // 검색결과를 표시할 템플릿 이름을 반환합니다.
         return "searchResult"; // search-result.html과 같은 템플릿 파일을 찾게 됩니다.
     }

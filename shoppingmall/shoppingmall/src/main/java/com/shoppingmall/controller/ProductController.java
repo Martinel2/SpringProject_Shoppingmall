@@ -1,6 +1,7 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Products;
+import com.shoppingmall.dto.ProductDto;
 import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ProductController {
@@ -57,8 +61,12 @@ public class ProductController {
                                    @RequestParam(value = "category", required = false) String category,
                                    @RequestParam(value = "sellerId", required = false) String sellerId,
                                    Model model) {
-        Products product = productService.findById(id);
-        model.addAttribute("product", product);
+        Products products = productService.findById(id);
+        int price = products.getPrice();
+        int discountPrice = (int) (price * (1-products.getDiscount()/100));
+
+        ProductDto productDtos = new ProductDto(products,discountPrice);
+        model.addAttribute("productDto", productDtos);
         model.addAttribute("query", keyword); // 검색 쿼리를 모델에 추가
         model.addAttribute("category", category); // 검색 쿼리를 모델에 추가
         model.addAttribute("sellerId", sellerId); // 검색 쿼리를 모델에 추가
@@ -88,7 +96,7 @@ public class ProductController {
     }
 
     @PostMapping("/products/delete")
-    public ResponseEntity<String> modPrice(@RequestParam(name = "product_id") int product_id){
+    public ResponseEntity<String> deletePrice(@RequestParam(name = "product_id") int product_id){
         ResponseEntity response = null;
         try {
             cartService.deleteAllProductById(product_id);
@@ -108,5 +116,42 @@ public class ProductController {
         }
         return response;
     }
+
+    @GetMapping("/admin/product")
+    public String adminPage(Model model){
+        List<Products> productsList = new ArrayList<>();
+        productsList = productService.getAllProduct();
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Products product:productsList) {
+            int price = product.getPrice();
+            int discountPrice = (int) (price * (1-product.getDiscount()/100));
+            productDtos.add(new ProductDto(product,discountPrice));
+        }
+        model.addAttribute("productDto", productDtos);
+        return "/user/admin";
+    }
+
+    @PostMapping("/products/discount")
+    public ResponseEntity<String> discountProduct(@RequestParam(name = "product_id") int product_id,
+                                                  @RequestParam(name = "discount") int discount){
+        ResponseEntity response;
+        try {
+            if(productService.discount(product_id, discount)) {
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("할인율 설정 완료");
+            } else{
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("업데이트 실패");
+            }
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An exception occured due to " + ex.getMessage());
+        }
+        return response;
+    }
+
 }
 
