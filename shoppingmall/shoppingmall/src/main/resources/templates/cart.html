@@ -5,6 +5,7 @@
     <title>장바구니</title>
     <link rel="stylesheet" href="/css/cart.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/cart.js"></script>
 </head>
 <body>
 <div class="header">
@@ -29,102 +30,35 @@
                 <button type="button" class="increase-quantity" th:data-cart-item-id="${cart.id}">+</button>
             </div>
         </td>
-        <td class="total-price" th:text="${cart.products.price * cart.quantity}"></td>
-        <td><button id="coupon">쿠폰 적용</button></td>
+        <td class="total-price" th:text="${cart.products.price * cart.quantity} + '원'"></td>
+        <td><button class="coupon-button" id="coupon">쿠폰 적용</button>
+        <td class="discounted-price-cell" style="display: none;">
+            <span class="discounted-price" data-discount="0"></span>
+            <button class="change-button">변경</button>
+        </td>
         <td><button class="del">삭제</button></td>
     </tr>
     </tbody>
 </table>
+
+<!-- 팝업 -->
+<div id="coupon-popup" class="popup hidden">
+    <div class="popup-header">
+        <span>쿠폰 적용</span>
+        <button id="close-popup" class="close-btn">×</button>
+    </div>
+    <div class="popup-body">
+        <div id="coupon-list">
+            <!-- 쿠폰 리스트가 여기에 동적으로 삽입됩니다. -->
+        </div>
+        <div id="discounted-price">
+            할인된 가격: <span id="price" class="discounted-price-value"></span>
+        </div>
+        <button class="apply-coupon">적용하기</button>
+    </div>
+</div>
+
 <h3>총 합계: <span id="totalAmount" th:text="${total}"></span></h3>
 <button type="button" id="buy">결제하기</button>
-<script>
-    $(document).ready(function() {
-        function updatePriceAndTotal() {
-            var totalAmount = 0;
-            $('tbody tr').each(function() {
-                var price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
-                console.log(price);
-                totalAmount += price;
-            });
-            $('#totalAmount').text(totalAmount + '원');
-        }
-
-        // 수량 증가 버튼 클릭 이벤트 처리
-        $('.increase-quantity').on('click', function() {
-            updateQuantity(this, 1);
-        });
-
-        // 수량 감소 버튼 클릭 이벤트 처리
-        $('.decrease-quantity').on('click', function() {
-            updateQuantity(this, -1);
-        });
-
-        function updateQuantity(button, increment) {
-            var $button = $(button);
-            var $row = $button.closest('tr');
-            var cartItemId = $button.attr('data-cart-item-id');
-            var $quantitySpan = $row.find('.quantity');
-            var currentQuantity = parseInt($quantitySpan.text());
-            var newQuantity = currentQuantity + increment;
-
-            // 수량이 1 이하로 떨어지지 않도록 합니다.
-            if (newQuantity < 1) {
-                alert('수량은 1보다 작을 수 없습니다.');
-                return;
-            }
-
-            $.post('/cart/update', { cartItemId: cartItemId, quantity: newQuantity }, function(response) {
-                if (response === 'success') {
-                    var $originPriceSpan = $row.find('.origin-price');
-                    var originPrice = parseFloat($originPriceSpan.text());
-                    var totalPrice = newQuantity * originPrice;
-
-                    // 수량과 총 가격 업데이트
-                    $quantitySpan.text(newQuantity);
-                    $row.find('.total-price').text(totalPrice + '원');
-                    //console.log('Updated total price:', totalPrice);
-
-                    updatePriceAndTotal();
-                } else {
-                    alert('Failed to update cart item quantity.');
-                }
-            });
-        }
-
-        // 초기 로딩 시 가격 업데이트
-        updatePriceAndTotal();
-
-        //장바구니 삭제 코드
-        const del = document.querySelectorAll(".del");
-        let id = null;
-        del.forEach(button => {
-            button.addEventListener('click', function() {
-                    const row = button.closest('tr');
-                    id = row.getAttribute('data-cart-item-id');
-
-                    if (id) {
-                        const url = new URL('http://localhost:8080/cart/delete');
-                        url.searchParams.append('product_id', id);
-
-                        fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'Accept': 'application/json'
-                            }
-                        })
-                            .then(response => response.text())
-                            .then(data => {
-                                if(data === "success") updatePriceAndTotal();
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                alert('There was an error with the post request.');
-                            });
-                    }
-            });
-        });
-    });
-</script>
 </body>
 </html>

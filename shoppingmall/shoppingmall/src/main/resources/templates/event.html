@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이벤트</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            //상품 삭제 코드
+            const getCoupon = document.querySelectorAll(".get");
+            let couponId = null;
+            getCoupon.forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = button.closest('tr');
+                    couponId = row.getAttribute('data-coupon-id');
+
+                    if (couponId) {
+                        const url = new URL('http://localhost:8080/saveCoupon');
+                        url.searchParams.append('coupon_id', couponId);
+
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Accept': 'application/json'
+                            }
+                        })
+                            .then(response => {
+                                if (response.status === 401) {
+                                    // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
+                                    const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+                                    if (shouldRedirect) {
+                                        window.location.href = '/login'; // 로그인 페이지로 이동
+                                    }
+                                    throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
+                                } else
+                                    return response.text();
+                            })
+                            .then(data => {
+                                alert(data);
+                                window.location.href = "/cart";
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('There was an error with the post request.');
+                            });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<table>
+    <tbody>
+    <tr class="clickable-row" th:each="coupon : ${coupons}" th:data-coupon-id="${coupon.id}">
+            <td th:text="${coupon.percent}"></td>
+            <td><button class="get">쿠폰 발급</button></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

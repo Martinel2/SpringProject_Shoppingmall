@@ -98,3 +98,27 @@ tr,td{
     font-size: 18px;
     margin: 5px;
 }
+
+.popup {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 1000;
+    display: none; /* 기본적으로 숨김 */
+}
+
+.popup.hidden {
+    display: none; /* 숨김 상태 */
+}
+
+.popup .apply-coupon {
+    display: block;
+}
+
+.popup .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}

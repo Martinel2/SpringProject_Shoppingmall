@@ -59,6 +59,12 @@ public class SpringConfig {
     @Bean
     public SellerService sellerService() { return new SellerService(sellerRepository()); }
 
+    @Bean
+    public CouponRepository couponRepository() { return new CouponRepository(em); }
+
+    @Bean
+    public CouponService couponService() { return new CouponService(couponRepository());}
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -66,7 +72,7 @@ public class SpringConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
-                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**").authenticated()
+                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**", "/**Coupon").authenticated()
                         .requestMatchers("/admin/**").hasRole("admin")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex
