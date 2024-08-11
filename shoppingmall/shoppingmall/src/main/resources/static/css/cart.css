@@ -100,25 +100,84 @@ tr,td{
 }
 
 .popup {
-    position: absolute;
-    background: white;
     border: 1px solid #ccc;
-    padding: 20px;
     z-index: 1000;
     display: none; /* 기본적으로 숨김 */
+    position: absolute;
+    left: 325px;
+    top: 102px;
+    width: 400px;
+    border-radius: 7px;
+    background-color: rgb(51, 51, 51);
 }
 
 .popup.hidden {
     display: none; /* 숨김 상태 */
 }
 
+.popup-header{
+    text-align: center;
+    border-radius: 7px;
+    background-color: #0099d7b3;
+}
+
 .popup .apply-coupon {
     display: block;
+    position: relative;
+    left: 152px;
+    margin-top: 13px;
+    margin-bottom: 14px;
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
 }
 
 .popup .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     cursor: pointer;
+    position: relative;
+    left: 376px;
+    bottom: 25px;
+    width: 21px;
+    font-size: 16px;
+    border: 0px;
+    background: #0f7aa6;
+}
+
+#coupon-list{
+    display: grid;
+    margin: 18px;
+}
+
+#discounted-price {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.change-button{
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    position: relative;
+    width: 50px;
+    margin: 5px;
+}
+
+.cancel-button{
+    border: #CC5E5EFF solid 5px;
+    background-color: #CC5E5EFF;
+    color: #e0e6eb;
+    border-radius: 8px;
+    margin: 5px;
+    width: 50px;
+}
+
+.mod_but_box{
+    display: inline-grid;
+}
+
+.discount_box{
+    display: inline-flex;
 }

@@ -105,12 +105,13 @@ $(document).ready(function() {
     document.querySelectorAll('.coupon-button').forEach(button => {
         button.addEventListener('click', (event) => {
             const row = event.target.closest('tr'); // 버튼이 포함된 행 찾기
-            const productPrice = parseFloat(row.querySelector('.origin-price').textContent);
-            const quantity = parseInt(row.querySelector('.quantity').textContent, 10);
-            const totalPrice = productPrice * quantity;
+            let productPrice = parseFloat(row.querySelector('.origin-price').textContent);
+            let quantity = parseInt(row.querySelector('.quantity').textContent, 10);
+            let totalPrice = productPrice * quantity;
             const applyButton = popup.querySelector('.apply-coupon');
             const discountedPriceElement = popup.querySelector('.discounted-price-value');
             const changeButton = row.querySelector('.change-button');
+            const cancelButton = row.querySelector('.cancel-button');
             // 팝업에 현재 가격 설정
             priceElement.textContent = `${totalPrice.toFixed(0)} 원`;
 
@@ -141,9 +142,29 @@ $(document).ready(function() {
 
             // 변경 버튼 클릭 시 처리 (예: 다시 쿠폰 적용)
             changeButton.addEventListener('click', () => {
-                    popup.style.display = "flex";
+                productPrice = parseFloat(row.querySelector('.origin-price').textContent);
+                quantity = parseInt(row.querySelector('.quantity').textContent, 10);
+                totalPrice = productPrice * quantity;
+                const couponElement = document.querySelector('.coupon-option:checked');
+                if (couponElement) {
+                    const discount = parseInt(couponElement.value, 10);
+                    const discountedPrice = totalPrice * (1 - discount / 100);
+                    priceElement.textContent = `${discountedPrice.toFixed(0)} 원`;
+                }
+                popup.style.display = "grid";
             });
 
+            cancelButton.addEventListener('click', () => {
+                const discountedPriceCell = row.querySelector('.discounted-price-cell');
+                const discountPriceSpan = discountedPriceCell.firstElementChild.firstElementChild;
+                discountPriceSpan.setAttribute('data-discount', "0"); // 할인율 저장
+                discountedPriceCell.style.display = 'none';
+
+                const applyCell = row.querySelector('.coupon-apply-cell');
+                applyCell.style.display = 'table-cell';
+
+                updatePriceAndTotal();
+            });
             // 쿠폰 적용 버튼 클릭 시 할인된 가격 계산
             applyButton.addEventListener('click', () => {
                 const selectedCoupon = popup.querySelector('input[name="coupon"]:checked');
@@ -153,11 +174,13 @@ $(document).ready(function() {
 
                     // 할인된 가격을 테이블에 표시
                     const discountedPriceCell = row.querySelector('.discounted-price-cell');
-                    const discountPriceSpan = discountedPriceCell.firstElementChild;
+                    const discountPriceSpan = discountedPriceCell.firstElementChild.firstElementChild;
                     discountPriceSpan.textContent = `${discountedPrice.toFixed(0)} 원`;
                     discountPriceSpan.setAttribute('data-discount', discountPercent.toString()); // 할인율 저장
                     discountedPriceCell.style.display = 'table-cell';
-
+                    discountPriceSpan.nextElementSibling.style.display='grid';
+                    const applyCell = row.querySelector('.coupon-apply-cell');
+                    applyCell.style.display = 'none';
                     updatePriceAndTotal();
 
                     // 팝업 숨기기
@@ -166,7 +189,8 @@ $(document).ready(function() {
             });
 
             // 팝업 표시
-            popup.style.display="flex";
+
+            popup.style.display="grid";
         });
     });
 
