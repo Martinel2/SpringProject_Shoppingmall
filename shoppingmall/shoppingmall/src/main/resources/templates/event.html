@@ -5,7 +5,7 @@
     <title>이벤트</title>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            //상품 삭제 코드
+            //쿠폰 발급 코드
             const getCoupon = document.querySelectorAll(".get");
             let couponId = null;
             getCoupon.forEach(button => {
@@ -20,8 +20,7 @@
                         fetch(url, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'Accept': 'application/json'
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
                         })
                             .then(response => {
@@ -41,7 +40,8 @@
                             })
                             .catch(error => {
                                 console.error('Error:', error);
-                                alert('There was an error with the post request.');
+                                if(error === 'Network response was not ok.')
+                                    alert('네트워크 오류.');
                             });
                     }
                 });

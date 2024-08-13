@@ -225,4 +225,15 @@ $(document).ready(function() {
         });
     }
 
+    document.getElementById("buy").addEventListener("click", function () {
+        let name = document.getElementById("name").innerText;
+        const row = document.getElementById("table").rows.length;
+        const total = document.getElementById("totalAmount").innerText.replace("원", "");
+        if(row > 2)
+            name = name + " 외" + (String)(row-2) + "건";
+        sessionStorage.setItem("product_name",name);
+        sessionStorage.setItem("total",total);
+        window.location.href="/pay";
+    })
+
 });

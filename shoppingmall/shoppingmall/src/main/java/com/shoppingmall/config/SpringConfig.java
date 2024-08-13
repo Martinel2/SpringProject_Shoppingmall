@@ -72,7 +72,7 @@ public class SpringConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
-                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**", "/**Coupon").authenticated()
+                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**", "/**Coupon","/pay").authenticated()
                         .requestMatchers("/admin/**").hasRole("admin")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!-- SDK 추가 -->
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+</head>
+<body>
+<div class="checkout-container">
+    <!-- 장바구니 목록 -->
+    <div class="cart-items">
+        <div class="item">
+            <span id="product_name"></span>
+        </div>
+        <!-- 다른 상품들도 반복 -->
+        <div class="total">
+            <h3>총 합계: <span id="totalAmount"></span></h3>
+        </div>
+    </div>
+
+    <!-- 배송지 정보 -->
+    <div class="shipping-info">
+        <h2>배송지 정보</h2>
+        <div class="existing-address">
+            <h3>기존 주소</h3>
+            <label id="user_name" th:text="${user.name}"></label>
+            <label id="phone" th:text="${user.phone}"></label>
+            <label id="place" th:text="${user.place}"></label>
+        </div>
+    </div>
+
+    <!-- 결제 유형 선택 -->
+    <div class="payment-method">
+        <h2>결제 방법</h2>
+        <select id="payment-select">
+            <option value="CARD">신용카드</option>
+            <option value="TRANSFER">계좌이체</option>
+            <option value="MOBILEPHONE">휴대폰 결제</option>
+            <option value="GIFTCERTIFICATE">상품권</option>
+            <option value="VIRTUALACCOUNT">가상계좌</option>
+        </select>
+    </div>
+</div>
+<!-- 결제하기 버튼 -->
+<button class="button" id="pay_button" style="margin-top: 30px" onclick="requestPayment()">결제하기</button>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const name = sessionStorage.getItem("product_name");
+        const total = sessionStorage.getItem("total");
+
+        document.getElementById('totalAmount').innerText = total + '원';
+        document.getElementById('pay_button').innerText = total + "원 결제하기";
+        document.getElementById("product_name").innerText = name;
+    });
+        // ------  SDK 초기화 ------
+        // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
+        const clientKey = "test_ck_d46qopOB89ZkgoPjP5Eo3ZmM75y0";
+        const customerKey = uuid.v4();
+        const tossPayments = TossPayments(clientKey);
+        // 회원 결제
+        // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+        const payment = tossPayments.payment({ customerKey });
+        // 비회원 결제
+        // const payment = tossPayments.payment({customerKey: TossPayments.ANONYMOUS})
+
+        // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+        // @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
+        async function requestPayment() {
+            const total = sessionStorage.getItem("total");
+            const productName = sessionStorage.getItem("product_name");
+            const purchaseType = document.getElementById('payment-select').value;
+            var phone = [[${user.phone}]];
+            var email = [[${user.email}]];
+            var userName = [[${user.name}]];
+            // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
+            // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
+            await payment.requestPayment({
+                method: purchaseType, // 카드 결제
+                amount: {
+                    currency: "KRW",
+                    value: parseInt(total),
+                },
+                orderId: "Tp50IZJXeWa_KANgtTPv2", // 고유 주분번호
+                orderName: productName,
+                successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+                failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+                customerEmail: email,
+                customerName: userName,
+                customerMobilePhone: phone,
+                // 카드 결제에 필요한 정보
+                card: {
+                    useEscrow: false,
+                    flowMode: "DEFAULT", // 통합결제창 여는 옵션
+                    useCardPoint: false,
+                    useAppCardOnly: false,
+                },
+            });
+        }
+</script>
+</body>
+</html>
