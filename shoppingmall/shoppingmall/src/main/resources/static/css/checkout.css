@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+    text-align: center;
+}
+
+/*상단 바*/
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    height: 130px;
+    display: flex;
+    position: relative;
+    min-width: 1200px;
+}
+
+/*로고가 좌측 상단에 위치하도록 조정*/
+#home_logo {
+    display: inline-block;
+    width: 270px;
+    height: 90px;
+}
+
+/*선택자를 이용해 로고의 크기 조정*/
+#home_logo > img {
+    width: 270px;
+    height: 90px;
+}
+
+.checkout-container{
+    width: 800px;
+    height: 672px;
+    display: inline-grid;
+    border: #cccccc solid 1px;
+    padding: 15px;
+    position: relative;
+}
+
+.shipping-info{
+    margin-bottom: 36px;
+}
+.existing-address{
+    display: inline-grid;
+    border: #cccccc solid 1px;
+    padding: 15px;
+    text-align: left;
+    width: 763px;
+    font-size: 20px;
+    word-break: break-all;
+}
+
+h2{
+    text-align: left;
+    margin-left: 6px;
+}
+
+h4{
+    margin-top: 3px;
+}
+
+#user_name #phone #place #product_name #totalAmount{
+    margin: 10px;
+}
+
+.cart-items{
+    display: inline-flex;
+    border: #cccccc solid 1px;
+    padding: 15px;
+    text-align: left;
+    width: 766px;
+    font-size: 18px;
+    justify-content: space-between;
+}
+
+#product_name{
+    word-break: break-all;
+    margin-left: 5px;
+}
+
+#totalAmount{
+    margin-left: 30px;
+    width: 120px;
+}
+
+#payment_method{
+    text-align: center;
+    border-collapse: collapse;
+}
+
+table{
+    width: 740px;
+    height: 155px;
+}
+
+tr,td{
+    border: #cccccc solid 1px;
+}
+
+.button2{
+    background-color: transparent;
+    border: none;
+    color: #e0e6eb;
+    width: 100%;
+    height: 100%;
+}
+
+#pay_button{
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    font-size: 18px;
+    margin-top: 30px;
+}
+

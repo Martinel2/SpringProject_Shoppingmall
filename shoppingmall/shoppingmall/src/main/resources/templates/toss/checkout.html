@@ -2,49 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="/css/checkout.css">
     <!-- SDK 추가 -->
     <script src="https://js.tosspayments.com/v2/standard"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
+    </a>
+</div>
 <div class="checkout-container">
-    <!-- 장바구니 목록 -->
-    <div class="cart-items">
-        <div class="item">
-            <span id="product_name"></span>
-        </div>
-        <!-- 다른 상품들도 반복 -->
-        <div class="total">
-            <h3>총 합계: <span id="totalAmount"></span></h3>
-        </div>
-    </div>
-
+    <!-- 주문서 영역 -->
     <!-- 배송지 정보 -->
     <div class="shipping-info">
         <h2>배송지 정보</h2>
         <div class="existing-address">
-            <h3>기존 주소</h3>
-            <label id="user_name" th:text="${user.name}"></label>
-            <label id="phone" th:text="${user.phone}"></label>
-            <label id="place" th:text="${user.place}"></label>
+            <h4>기존 주소</h4>
+            <label id="user_name" th:text="'주문자 : ' + ${user.name}"></label>
+            <label id="phone" th:text="'휴대폰 번호 : ' + ${user.phone}"></label>
+            <label id="place" th:text="'배송지 : ' + ${user.place}"></label>
         </div>
     </div>
 
-    <!-- 결제 유형 선택 -->
-    <div class="payment-method">
-        <h2>결제 방법</h2>
-        <select id="payment-select">
-            <option value="CARD">신용카드</option>
-            <option value="TRANSFER">계좌이체</option>
-            <option value="MOBILEPHONE">휴대폰 결제</option>
-            <option value="GIFTCERTIFICATE">상품권</option>
-            <option value="VIRTUALACCOUNT">가상계좌</option>
-        </select>
+    <!-- 장바구니 목록 -->
+    <div class="cart-items">
+        <label id="product_name"></label>
+        <label id="totalAmount"></label>
+    </div>
+
+    <div class="box_section" style="padding: 40px 30px 50px 30px; margin-bottom: 50px">
+        <h2>일반 결제</h2>
+        <!-- 결제 UI -->
+        <table id="payment_method">
+            <tbody>
+            <tr>
+                <td><button id="CARD" class="button2" onclick="selectPaymentMethod('CARD')">카드</button></td>
+                <td><button id="TRANSFER" class="button2" onclick="selectPaymentMethod('TRANSFER')">계좌이체</button></td>
+                <td><button id="VIRTUAL_ACCOUNT" class="button2" onclick="selectPaymentMethod('VIRTUAL_ACCOUNT')">가상계좌</button></td>
+            </tr>
+            <tr>
+                <td><button id="MOBILE_PHONE" class="button2" onclick="selectPaymentMethod('MOBILE_PHONE')">휴대폰</button></td>
+                <td><button id="CULTURE_GIFT_CERTIFICATE" class="button2" onclick="selectPaymentMethod('CULTURE_GIFT_CERTIFICATE')">문화상품권</button></td>
+                <td><button id="FOREIGN_EASY_PAY" class="button2" onclick="selectPaymentMethod('FOREIGN_EASY_PAY')">해외간편결제</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- 결제하기 버튼 -->
+        <button class="button" id="pay_button" onclick="requestPayment()">결제하기</button>
     </div>
 </div>
-<!-- 결제하기 버튼 -->
-<button class="button" id="pay_button" style="margin-top: 30px" onclick="requestPayment()">결제하기</button>
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
         const name = sessionStorage.getItem("product_name");
@@ -54,10 +63,25 @@
         document.getElementById('pay_button').innerText = total + "원 결제하기";
         document.getElementById("product_name").innerText = name;
     });
+
+    let selectedPaymentMethod = null;
+
+    function selectPaymentMethod(method) {
+        if (selectedPaymentMethod != null) {
+            document.getElementById(selectedPaymentMethod).style.backgroundColor = "transparent";
+            document.getElementById(selectedPaymentMethod).style.color = "#e0e6eb";
+        }
+
+        selectedPaymentMethod = method;
+
+        document.getElementById(selectedPaymentMethod).style.backgroundColor = "#ffffff";
+        document.getElementById(selectedPaymentMethod).style.color = "#333";
+    }
+
         // ------  SDK 초기화 ------
         // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
         const clientKey = "test_ck_d46qopOB89ZkgoPjP5Eo3ZmM75y0";
-        const customerKey = uuid.v4();
+        const customerKey = generateRandomString();
         const tossPayments = TossPayments(clientKey);
         // 회원 결제
         // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
@@ -70,34 +94,135 @@
         async function requestPayment() {
             const total = sessionStorage.getItem("total");
             const productName = sessionStorage.getItem("product_name");
-            const purchaseType = document.getElementById('payment-select').value;
             var phone = [[${user.phone}]];
             var email = [[${user.email}]];
             var userName = [[${user.name}]];
             // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
             // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-            await payment.requestPayment({
-                method: purchaseType, // 카드 결제
-                amount: {
-                    currency: "KRW",
-                    value: parseInt(total),
-                },
-                orderId: "Tp50IZJXeWa_KANgtTPv2", // 고유 주분번호
-                orderName: productName,
-                successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
-                failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
-                customerEmail: email,
-                customerName: userName,
-                customerMobilePhone: phone,
-                // 카드 결제에 필요한 정보
-                card: {
-                    useEscrow: false,
-                    flowMode: "DEFAULT", // 통합결제창 여는 옵션
-                    useCardPoint: false,
-                    useAppCardOnly: false,
-                },
-            });
+            if(selectedPaymentMethod == null) alert("결제방법을 선택해주세요");
+            switch (selectedPaymentMethod) {
+                case "CARD":
+                    await payment.requestPayment({
+                        method: "CARD", // 카드 결제
+                        amount: {
+                            currency: "KRW",
+                            value: parseInt(total),
+                        },
+                        orderId: generateRandomString(), // 고유 주분번호
+                        orderName: productName,
+                        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+                        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+                        customerEmail: email,
+                        customerName: userName,
+                        customerMobilePhone: phone,
+                        // 카드 결제에 필요한 정보
+                        card: {
+                            useEscrow: false,
+                            flowMode: "DEFAULT", // 통합결제창 여는 옵션
+                            useCardPoint: false,
+                            useAppCardOnly: false,
+                        },
+                    });
+                case "TRANSFER":
+                    await payment.requestPayment({
+                        method: "TRANSFER", // 계좌이체 결제
+                        amount: {
+                            currency: "KRW",
+                            value: parseInt(total),
+                        },
+                        orderId: generateRandomString(),
+                        orderName: productName,
+                        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+                        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+                        customerEmail: email,
+                        customerName: userName,
+                        customerMobilePhone: phone,
+                        transfer: {
+                            cashReceipt: {
+                                type: "소득공제",
+                            },
+                            useEscrow: false,
+                        },
+                    });
+                case "VIRTUAL_ACCOUNT":
+                    await payment.requestPayment({
+                        method: "VIRTUAL_ACCOUNT", // 가상계좌 결제
+                        amount: {
+                            currency: "KRW",
+                            value: parseInt(total),
+                        },
+                        orderId: generateRandomString(),
+                        orderName: productName,
+                        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+                        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+                        customerEmail: email,
+                        customerName: userName,
+                        customerMobilePhone: phone,
+                        virtualAccount: {
+                            cashReceipt: {
+                                type: "소득공제",
+                            },
+                            useEscrow: false,
+                            validHours: 24,
+                        },
+                    });
+                case "MOBILE_PHONE":
+                    await payment.requestPayment({
+                        method: "MOBILE_PHONE", // 휴대폰 결제
+                        amount: {
+                            currency: "KRW",
+                            value: parseInt(total),
+                        },
+                        orderId: generateRandomString(),
+                        orderName: productName,
+                        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+                        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+                        customerEmail: email,
+                        customerName: userName,
+                        customerMobilePhone: phone,
+                    });
+                case "CULTURE_GIFT_CERTIFICATE":
+                    await payment.requestPayment({
+                        method: "CULTURE_GIFT_CERTIFICATE", // 문화상품권 결제
+                        amount: {
+                            currency: "KRW",
+                            value: parseInt(total),
+                        },
+                        orderId: generateRandomString(),
+                        orderName: productName,
+                        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+                        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+                        customerEmail: email,
+                        customerName: userName,
+                        customerMobilePhone: phone,
+                    });
+                case "FOREIGN_EASY_PAY":
+                    await payment.requestPayment({
+                        method: "FOREIGN_EASY_PAY", // 해외 간편결제
+                        amount: {
+                            value: 100,
+                            currency: "USD",
+                        },
+                        orderId: generateRandomString(),
+                        orderName: "토스 티셔츠 외 2건",
+                        successUrl: window.location.origin + "/payment/success.html",
+                        failUrl: window.location.origin + "/fail.html",
+                        customerEmail: "customer123@gmail.com",
+                        customerName: "김토스",
+                        customerMobilePhone: "01012341234",
+                        foreignEasyPay: {
+                            provider: "PAYPAL",
+                            country: "KR",
+                        },
+                    });
+            }
+
         }
+
+
+    function generateRandomString() {
+        return window.btoa(Math.random()).slice(0, 20);
+    }
 </script>
 </body>
 </html>

@@ -42,6 +42,16 @@ public class WidgetController {
         return "/toss/checkout";
     }
 
+    @GetMapping("/success")
+    public String success() {
+        return "/toss/success";
+    }
+
+    @GetMapping("/fail")
+    public String fail() {
+        return "/toss/fail";
+    }
+
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
 
