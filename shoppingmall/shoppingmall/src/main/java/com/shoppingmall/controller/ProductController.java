@@ -1,9 +1,11 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Products;
+import com.shoppingmall.domain.Wishlist;
 import com.shoppingmall.dto.ProductDto;
 import com.shoppingmall.service.CartService;
 import com.shoppingmall.service.ProductService;
+import com.shoppingmall.service.WishlistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,9 +28,12 @@ public class ProductController {
 
     private final CartService cartService;
 
-    public ProductController(ProductService productService, CartService cartService) {
+    private final WishlistService wishlistService;
+
+    public ProductController(ProductService productService, CartService cartService, WishlistService wishlistService) {
         this.productService = productService;
         this.cartService = cartService;
+        this.wishlistService = wishlistService;
     }
 
     @PostMapping("/products/add")
@@ -60,17 +65,22 @@ public class ProductController {
                                    @RequestParam(value = "query", required = false) String keyword,
                                    @RequestParam(value = "category", required = false) String category,
                                    @RequestParam(value = "sellerId", required = false) String sellerId,
+                                   @AuthenticationPrincipal UserDetails userDetails,
                                    Model model) {
         Products products = productService.findById(id);
         int price = products.getPrice();
         int discountPrice = (int) (price * (1-products.getDiscount()/100));
-
+        boolean isWishlist = false;
+        if(userDetails !=null) {
+            Wishlist wishlist = wishlistService.findByTwoId(userDetails.getUsername(), id);
+            if (wishlist != null) isWishlist = true;
+        }
         ProductDto productDtos = new ProductDto(products,discountPrice);
         model.addAttribute("productDto", productDtos);
         model.addAttribute("query", keyword); // 검색 쿼리를 모델에 추가
         model.addAttribute("category", category); // 검색 쿼리를 모델에 추가
         model.addAttribute("sellerId", sellerId); // 검색 쿼리를 모델에 추가
-
+        model.addAttribute("isWishlist", isWishlist);
         return "product/productDetail"; // 상세 페이지의 템플릿 이름
     }
 

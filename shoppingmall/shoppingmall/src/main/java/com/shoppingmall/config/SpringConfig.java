@@ -66,12 +66,18 @@ public class SpringConfig {
     public CouponService couponService() { return new CouponService(couponRepository());}
 
     @Bean
+    public WishlistRepository wishlistRepository() { return new WishlistRepository(); }
+
+    @Bean
+    public WishlistService wishlistService() { return new WishlistService(wishlistRepository()); }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
-                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**", "/**Coupon","/pay").authenticated()
+                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**", "/**Coupon","/pay", "/**Wishlist").authenticated()
                         .requestMatchers("/admin/**").hasRole("admin")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex

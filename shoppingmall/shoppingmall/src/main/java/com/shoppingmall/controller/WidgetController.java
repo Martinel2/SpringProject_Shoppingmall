@@ -2,6 +2,7 @@ package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.UserService;
+import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -52,6 +53,7 @@ public class WidgetController {
         return "/toss/fail";
     }
 
+    @Transactional
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
 

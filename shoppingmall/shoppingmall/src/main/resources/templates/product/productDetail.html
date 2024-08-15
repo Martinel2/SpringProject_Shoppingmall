@@ -68,6 +68,77 @@
             const totalPrice = price * quantity;
             document.getElementById('totalPrice').textContent = totalPrice.toString();
         }
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            var isWishlist = [[${isWishlist}]];
+            let product_id = [[${productDto.products.id}]];
+            console.log(product_id);
+            const wish = document.getElementById("wish_image");
+            if (isWishlist) {
+                wish.src = '/images/icons/wishlist-wish.png';
+            }
+            document.getElementById("wish").addEventListener("click", function () {
+                if(wish.src.includes("wishlist-nowish")){
+                    const url = new URL('http://localhost:8080/addWishlist');
+                    url.searchParams.append('productId', product_id);
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => {
+                            if (response.status === 401) {
+                                // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
+                                const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+                                if (shouldRedirect) {
+                                    window.location.href = '/login'; // 로그인 페이지로 이동
+                                }
+                                throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
+                            } else
+                                return response.text();
+                        })
+                        .then(data => {
+                            document.getElementById("wish_image").src = '/images/icons/wishlist-wish.png';
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            if(error === 'Network response was not ok.')
+                                alert('네트워크 오류.');
+                        });
+                } else {
+                    const url = new URL('http://localhost:8080/delWishlist');
+                    url.searchParams.append('productId', product_id);
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => {
+                            if (response.status === 401) {
+                                // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
+                                const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+                                if (shouldRedirect) {
+                                    window.location.href = '/login'; // 로그인 페이지로 이동
+                                }
+                                throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
+                            } else
+                                return response.text();
+                        })
+                        .then(data => {
+                            document.getElementById("wish_image").src = '/images/icons/wishlist-nowish.png';
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            if (error === 'Network response was not ok.')
+                                alert('네트워크 오류.');
+                        });
+                }
+            });
+        })
     </script>
 
 </head>
@@ -79,8 +150,11 @@
 </div>
 <div id="container">
     <img id="image" th:src="@{'/images/uploads/' + ${productDto.products.photo}}" alt="Product Image" height="700" width="700">
+    <p id="wish_box">
+        <button id="wish"><img id="wish_image" src="/images/icons/wishlist-nowish.png" width="45" height="45"></button>
+    </p>
     <div id="info">
-        <h2 th:text="${productDto.products.product_name}"></h2>
+        <label id="title" th:text="${productDto.products.product_name}"></label>
         <p id="price_box">
             <span id="percent" th:if="${productDto.percent > 0}" th:text="${productDto.percent} + '%'"></span>
             <span id="price" th:if="${productDto.products.price != productDto.discountPrice}"  th:text="${productDto.products.price} + '원'"></span>
