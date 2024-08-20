@@ -21,12 +21,20 @@
   const paymentKey = urlParams.get("paymentKey");
   const orderId = urlParams.get("orderId");
   const amount = urlParams.get("amount");
+  const cartIds = JSON.parse(sessionStorage.getItem("cartIds"));
+  const discounts = JSON.parse(sessionStorage.getItem("discounts"));
+  const quantity = JSON.parse(sessionStorage.getItem("quantity"));
+  const paymentType = sessionStorage.getItem("paymentType");
 
   async function confirm() {
     const requestData = {
       paymentKey: paymentKey,
       orderId: orderId,
       amount: amount,
+      cartIds: cartIds,
+      discounts:discounts,
+      paymentType:paymentType,
+      quantity:quantity
     };
 
     const response = await fetch("/confirm", {
@@ -46,6 +54,12 @@
     }
 
     // 결제 성공 비즈니스 로직을 구현하세요.
+    sessionStorage.removeItem("cartIds");
+    sessionStorage.removeItem("discounts");
+    sessionStorage.removeItem("quantity");
+    sessionStorage.removeItem("paymentType");
+    sessionStorage.removeItem("product_name");
+    sessionStorage.removeItem("total");
     console.log(json);
   }
   confirm();

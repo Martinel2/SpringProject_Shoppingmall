@@ -72,6 +72,12 @@ public class SpringConfig {
     public WishlistService wishlistService() { return new WishlistService(wishlistRepository()); }
 
     @Bean
+    public PurchasesRepository purchasesRepository() { return new PurchasesRepository(em); }
+
+    @Bean
+    public PurchaseService purchaseService() { return new PurchaseService(purchasesRepository()); }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)

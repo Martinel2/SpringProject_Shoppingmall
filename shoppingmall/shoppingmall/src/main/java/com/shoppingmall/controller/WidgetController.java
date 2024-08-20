@@ -1,8 +1,13 @@
 package com.shoppingmall.controller;
 
+import com.shoppingmall.domain.Products;
+import com.shoppingmall.domain.Purchases;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.service.CartService;
+import com.shoppingmall.service.PurchaseService;
 import com.shoppingmall.service.UserService;
 import jakarta.transaction.Transactional;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -32,8 +37,14 @@ public class WidgetController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
 
-    public WidgetController(UserService userService) {
+    private final CartService cartService;
+
+    private final PurchaseService purchaseService;
+
+    public WidgetController(UserService userService, CartService cartService, PurchaseService purchaseService) {
         this.userService = userService;
+        this.cartService = cartService;
+        this.purchaseService = purchaseService;
     }
 
     @GetMapping("/pay")
@@ -55,18 +66,28 @@ public class WidgetController {
 
     @Transactional
     @RequestMapping(value = "/confirm")
-    public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
+    public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
 
         JSONParser parser = new JSONParser();
         String orderId;
         String amount;
         String paymentKey;
+        String paymentType;
+
+        JSONArray cartIdsJsonArray;
+        JSONArray discountsJsonArray;
+        JSONArray quantityJsonArray;
+
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
             JSONObject requestData = (JSONObject) parser.parse(jsonBody);
             paymentKey = (String) requestData.get("paymentKey");
             orderId = (String) requestData.get("orderId");
             amount = (String) requestData.get("amount");
+            cartIdsJsonArray = (JSONArray) requestData.get("cartIds");
+            discountsJsonArray = (JSONArray) requestData.get("discounts");
+            quantityJsonArray = (JSONArray) requestData.get("quantity");
+            paymentType = (String) requestData.get("paymentType");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -76,9 +97,20 @@ public class WidgetController {
         obj.put("amount", amount);
         obj.put("paymentKey", paymentKey);
 
+        // JSONArray를 int[] 배열로 변환
+        int[] cartIds = new int[cartIdsJsonArray.size()];
+        int[] discounts = new int[discountsJsonArray.size()];
+        int[] quantity = new int[quantityJsonArray.size()];
+
+        for (int i = 0; i < cartIdsJsonArray.size(); i++) {
+            cartIds[i] = Integer.parseInt((String) cartIdsJsonArray.get(i));
+            discounts[i] = Integer.parseInt((String) discountsJsonArray.get(i));
+            quantity[i] = Integer.parseInt((String) quantityJsonArray.get(i));
+        }
+
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
         // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-        String widgetSecretKey = "test_sk_ma60RZblrqJGQ2DYAbpe8wzYWBn1";
+        String widgetSecretKey = "결제 연동 시크릿 키";
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
@@ -100,6 +132,21 @@ public class WidgetController {
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
+        int len = cartIds.length;
+        String userId = userDetails.getUsername();
+        for(int i = 0; i<len; i++){
+            Purchases purchases = new Purchases();
+            purchases.setUser_id(userId);
+            purchases.setUsers(userService.findById(userId));
+            Products p = cartService.findById(cartIds[i]).getProducts();
+            purchases.setProduct_id(p.getId());
+            purchases.setPurchase_type(paymentType);
+            purchases.setProducts(p);
+            purchases.setUse_coupon(discounts[i]);
+            purchases.setProduct_cnt(quantity[i]);
+            purchaseService.addPurchase(purchases);
+            cartService.deleteCartItem(cartIds[i]);
+        }
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
         responseStream.close();

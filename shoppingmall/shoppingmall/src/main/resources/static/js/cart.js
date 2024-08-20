@@ -229,10 +229,33 @@ $(document).ready(function() {
         let name = document.getElementById("name").innerText;
         const row = document.getElementById("table").rows.length;
         const total = document.getElementById("totalAmount").innerText.replace("원", "");
+        const cartIds = [];
+        const cartIdElements = document.querySelectorAll('.clickable-row');
+        cartIdElements.forEach(elements => {
+            let cartId = elements.dataset.cartItemId;
+            cartIds.push(cartId);
+        })
+        const discounts = [];
+        const discount = document.querySelectorAll('.discounted-price');
+        discount.forEach(elements => {
+            let discount1 = elements.dataset.discount;
+            discounts.push(discount1);
+        })
+        const quantities = [];
+        const quantity = document.querySelectorAll('.quantity');
+        quantity.forEach(elements => {
+            let q = elements.textContent;
+            quantities.push(q);
+        })
         if(row > 2)
             name = name + " 외" + (String)(row-2) + "건";
         sessionStorage.setItem("product_name",name);
         sessionStorage.setItem("total",total);
+        // 배열을 JSON 문자열로 변환하여 sessionStorage에 저장
+        sessionStorage.setItem('cartIds', JSON.stringify(cartIds));
+        sessionStorage.setItem('discounts', JSON.stringify(discounts));
+        sessionStorage.setItem('quantity', JSON.stringify(quantities));
+
         window.location.href="/pay";
     })
 

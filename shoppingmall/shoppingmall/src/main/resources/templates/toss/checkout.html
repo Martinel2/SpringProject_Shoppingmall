@@ -51,7 +51,7 @@
             </tbody>
         </table>
         <!-- 결제하기 버튼 -->
-        <button class="button" id="pay_button" onclick="requestPayment()">결제하기</button>
+        <button class="button" id="pay_button">결제하기</button>
     </div>
 </div>
 <script th:inline="javascript">
@@ -62,6 +62,14 @@
         document.getElementById('totalAmount').innerText = total + '원';
         document.getElementById('pay_button').innerText = total + "원 결제하기";
         document.getElementById("product_name").innerText = name;
+
+        document.getElementById('pay_button').addEventListener("click", function () {
+            if(selectedPaymentMethod != null){
+                sessionStorage.setItem("paymentType", selectedPaymentMethod);
+                requestPayment();
+            }
+            else alert("결제방법을 선택해주세요");
+        });
     });
 
     let selectedPaymentMethod = null;
@@ -80,7 +88,7 @@
 
         // ------  SDK 초기화 ------
         // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
-        const clientKey = "test_ck_d46qopOB89ZkgoPjP5Eo3ZmM75y0";
+        const clientKey = "결제 연동 클라이언트 키";
         const customerKey = generateRandomString();
         const tossPayments = TossPayments(clientKey);
         // 회원 결제
@@ -99,7 +107,6 @@
             var userName = [[${user.name}]];
             // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
             // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-            if(selectedPaymentMethod == null) alert("결제방법을 선택해주세요");
             switch (selectedPaymentMethod) {
                 case "CARD":
                     await payment.requestPayment({

@@ -50,6 +50,8 @@ public class CartService {
         }
     }
 
+    public Cart findById(int id) { return cartRepository.findById(id); }
+
     public Cart findByTwoId(String userId, int productId){
         List<Cart> carts = cartRepository.getCartByUserId(userId);
         for(Cart c : carts){

@@ -20,7 +20,7 @@
     </thead>
     <tbody>
     <tr class="clickable-row" th:each="cart, iterStat : ${carts}" th:data-cart-item-id="${cart.id}">
-        <td id="product"><img th:src="@{'/images/uploads/' + ${cart.products.photo}}" alt="Product Image" height="80" width="80">
+        <td class="product" th:data-product-id="${cart.products.id}"><img th:src="@{'/images/uploads/' + ${cart.products.photo}}" alt="Product Image" height="80" width="80">
             <span id="name" th:text="${cart.products.product_name}"></span></td>
         <td>
             <div class="quantity-controls">
