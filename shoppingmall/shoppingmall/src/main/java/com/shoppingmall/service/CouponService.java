@@ -54,4 +54,6 @@ public class CouponService {
     public List<Coupon> getAllCoupon(){
         return couponRepository.getAllCoupon();
     }
+
+    public List<Coupon> findCouponByLevel(int level) { return couponRepository.findByLevel(level); }
 }

@@ -50,6 +50,7 @@
     </script>
 </head>
 <body>
+<h3 th:text="${level}"></h3>
 <table>
     <tbody>
     <tr class="clickable-row" th:each="coupon : ${coupons}" th:data-coupon-id="${coupon.id}">

@@ -88,4 +88,11 @@ public class CouponRepository {
         return em.createQuery(query, Coupon.class).getResultList();
     }
 
+
+
+    public List<Coupon> findByLevel(int level){
+        TypedQuery<Coupon> query = em.createQuery("SELECT u FROM Coupon u WHERE u.level = :level", Coupon.class);
+        query.setParameter("level", level);
+        return query.getResultList();
+    }
 }

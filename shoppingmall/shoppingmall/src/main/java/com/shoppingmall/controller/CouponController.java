@@ -2,6 +2,7 @@ package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Coupon;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.dto.Level;
 import com.shoppingmall.service.CouponService;
 import com.shoppingmall.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -59,12 +60,14 @@ public class CouponController {
     }
 
     @GetMapping("/event")
-    public String eventCouponPage(Model model){
-        List<Coupon> coupons = couponService.getAllCoupon();
+    public String eventCouponPage(@AuthenticationPrincipal UserDetails userDetails, Model model){
+        Users users = userService.findById(userDetails.getUsername());
+        int level = Level.toInt(users.getRole());
+        List<Coupon> coupons = couponService.findCouponByLevel(level);
         model.addAttribute("coupons", coupons);
+        model.addAttribute("level", users.getRole());
         return "/event";
     }
-
 
 
 }

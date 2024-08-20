@@ -16,6 +16,9 @@ public class Coupon {
     @Column(name = "percent")
     private int percent;
 
+    @Column(name = "level")
+    private int level;
+
     public int getId() {
         return id;
     }
@@ -38,5 +41,13 @@ public class Coupon {
 
     public void setPercent(int percent) {
         this.percent = percent;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
