@@ -2,7 +2,7 @@ package com.shoppingmall.domain;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class Purchases {
@@ -33,9 +33,14 @@ public class Purchases {
     @Column(name = "use_coupon")
     private int use_coupon; //쿠폰 퍼센트나 감면된 금액 저장
 
-    @Column(name = "created")
-    private Timestamp created;
 
+    @Column(name = "created")
+    private LocalDateTime created;
+
+    @PrePersist
+    protected void onCreate() {
+        created = LocalDateTime.now();
+    }
     public int getId() {
         return id;
     }
@@ -100,11 +105,11 @@ public class Purchases {
         this.use_coupon = use_coupon;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 }
