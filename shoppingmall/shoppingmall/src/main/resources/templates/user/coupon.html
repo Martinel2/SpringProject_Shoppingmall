@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원정보</title>
+  <link rel="stylesheet" href="/css/statusTemplate.css">
+  <link href="/css/coupon.css" rel="stylesheet" />
+</head>
+<body>
+<div class="header">
+  <a href="/" id="home_logo">
+    <img src="/images/icons/logo.png" />
+  </a>
+</div>
+<div id="body_container">
+  <div class="aside">
+    <div id="profile">
+      <div style="display: grid">
+        <label th:text="${user.id}" style="padding-bottom: 12px"></label>
+        <label th:text="${user.role} + ' 등급'" style="padding-bottom: 12px"></label>
+      </div>
+      <button id="status">회원정보</button>
+      <form th:action="@{/logout}" method="post">
+        <button id="logout" type="submit">로그아웃</button>
+      </form>
+    </div>
+    <div id="link_box">
+      <button class="link" id="coupon" style="font-weight: bold">쿠폰함</button>
+      <button class="link" id="order">주문내역</button>
+    </div>
+  </div>
+  <div id="content" style="border-left: #e0e6eb solid 1px">
+    <div>
+      <h2 style="text-align: center">쿠폰함</h2>
+    </div>
+    <table>
+      <tbody>
+      <tr class="clickable-row" th:each="coupons : ${couponDto}" th:data-product-id="${coupons.coupon.id}">
+        <td th:text="${coupons.coupon.percent} + '% 할인 쿠폰'"></td>
+        <td>
+          <div style="padding-bottom: 12px">유효기간</div>
+          <label th:text="'~' + ${coupons.expired}"></label>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+
+</script>
+</body>
+</html>

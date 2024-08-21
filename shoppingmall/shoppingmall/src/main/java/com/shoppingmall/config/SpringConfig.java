@@ -3,6 +3,7 @@ package com.shoppingmall.config;
 import com.shoppingmall.policy.DiscountPolicy;
 import com.shoppingmall.policy.FixDiscountPolicy;
 import com.shoppingmall.repository.*;
+import com.shoppingmall.scheduler.CouponScheduler;
 import com.shoppingmall.service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -64,6 +65,9 @@ public class SpringConfig {
 
     @Bean
     public CouponService couponService() { return new CouponService(couponRepository());}
+
+    @Bean
+    public CouponScheduler couponScheduler() { return new CouponScheduler(em); }
 
     @Bean
     public WishlistRepository wishlistRepository() { return new WishlistRepository(); }

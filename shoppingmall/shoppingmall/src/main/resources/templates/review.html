@@ -3,23 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Write a Review</title>
-    <style>
-        .rating span {
-            font-size: 2em;
-            cursor: pointer;
-            color: #ccc; /* 기본 색상 (비활성화된 별) */
-        }
-
-        .rating span.active {
-            color: #f5c518; /* 활성화된 별 색상 (노란색) */
-        }
-    </style>
+    <link rel="stylesheet" href="/css/review.css">
 </head>
 <body>
-<h2>Write a Review</h2>
-<form action="/submitReview" method="post" enctype="multipart/form-data">
+<form action="/submitReview" method="post" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
     <input type="hidden" name="itemId" th:value="${itemId}">
 
+    <label for="rating" class="rating">배송된 상품에 만족하시나요?</label>
     <div class="rating">
         <span onclick="rate(1)" onmouseover="highlight(1)" onmouseout="resetHighlight()">★</span>
         <span onclick="rate(2)" onmouseover="highlight(2)" onmouseout="resetHighlight()">★</span>
@@ -31,24 +21,25 @@
 
 
     <div>
-        <label for="title">Title</label>
+        <label for="title">상품을 한줄로 표현한다면?</label>
         <input type="text" id="title" name="title" required>
     </div>
 
     <div>
-        <label for="content">Content</label>
+        <label for="content">상품 리뷰를 남겨주세요!</label>
         <textarea id="content" name="content" rows="4" required></textarea>
     </div>
 
     <div>
-        <label for="photo">Attach Photo</label>
+        <label for="photo">사진이 있다면 올려주세요!</label>
         <input type="file" id="photo" name="photo">
     </div>
 
-    <div>
-        <button type="submit">Submit Review</button>
+    <div class="but">
+        <button type="submit" id="submit">등록</button>
     </div>
 </form>
+<button id="cancel" onclick="cancel()">취소</button>
 <script>
     let currentRating = 0;
 
@@ -71,6 +62,43 @@
 
     function resetHighlight() {
         highlight(currentRating);
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault(); // 기본 폼 제출 동작 방지
+        const form = event.target;
+
+        // 폼 데이터를 객체로 생성
+        const formData = new FormData(form);
+
+        // Fetch API를 사용하여 비동기 요청 보내기
+        fetch(form.action, {
+            method: form.method,
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        }).then(data => {
+            if(data === '리뷰가 등록되었습니다!'){
+                alert(data);
+                window.close();
+            }
+        })
+            .catch(error => {
+                console.error('Error:', error);
+                if(error === 'Network response was not ok.')
+                    alert('네트워크 오류.');
+            });
+    }
+
+    function cancel() {
+        window.close();
     }
 </script>
 </body>

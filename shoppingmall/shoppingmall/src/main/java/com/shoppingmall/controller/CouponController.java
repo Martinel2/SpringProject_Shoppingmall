@@ -2,6 +2,7 @@ package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Coupon;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.dto.CouponDto;
 import com.shoppingmall.dto.Level;
 import com.shoppingmall.service.CouponService;
 import com.shoppingmall.service.UserService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -69,5 +72,19 @@ public class CouponController {
         return "/event";
     }
 
-
+    @GetMapping("/myCoupon")
+    public String myCoupon(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        List<Coupon> coupons = couponService.makeRealCouponList(couponService.findListByUserId(userDetails.getUsername()));
+        Users users = userService.findById(userDetails.getUsername());
+        List<CouponDto> couponDtos= new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        for (Coupon c: coupons) {
+            int validDate = c.getValidTerm();
+            LocalDate expired = now.plusDays(validDate);
+            couponDtos.add(new CouponDto(c,expired));
+        }
+        model.addAttribute("user", users);
+        model.addAttribute("couponDto", couponDtos);
+        return "/user/coupon"; // 200 OK 상태 코드와 함께 쿠폰 리스트 반환
+    }
 }

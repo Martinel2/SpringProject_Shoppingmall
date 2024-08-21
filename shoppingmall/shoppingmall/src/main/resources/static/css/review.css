@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+    text-align: center;
+}
+
+form{
+    margin-top: 26px;
+}
+
+form div{
+    margin-bottom: 14px;
+}
+
+div label{
+    display: block;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.rating{
+    font-weight: bold;
+}
+
+.rating span {
+    font-size: 2em;
+    cursor: pointer;
+    color: #ccc; /* 기본 색상 (비활성화된 별) */
+}
+
+.rating span.active {
+    color: #f5c518; /* 활성화된 별 색상 (노란색) */
+}
+
+
+
+.but{
+    display: flex;
+    margin-bottom: 0px;
+}
+
+#submit{
+    width: 50%;
+    height: 50px;
+    background-color: #3180d1;
+    color: #e0e6eb;
+}
+
+#cancel{
+    width: 50%;
+    height: 50px;
+    position: absolute;
+    left: 302px;
+}
+

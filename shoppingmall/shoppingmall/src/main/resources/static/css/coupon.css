@@ -1,0 +1,23 @@
+#content{
+    border-left: #e0e6eb solid 1px;
+    text-align: center;
+    width: 800px;
+}
+
+table{
+    width: 800px;
+    border: #cccccc solid 1px;
+    border-left: 0px;
+    border-right: 0px;
+    border-collapse: collapse;
+}
+
+tr{
+    border: #cccccc solid 1px;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+td{
+    padding: 20px;
+}
