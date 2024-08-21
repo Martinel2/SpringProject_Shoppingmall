@@ -7,7 +7,7 @@ $(document).ready(function() {
             if(discountPercent > 0) price = parseFloat($(this).find('.discounted-price').text().replace('원', ''));
             else price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
 
-            console.log($(this).find('.discounted-price').attr('data-discount'));
+            //console.log($(this).find('.discounted-price').attr('data-discount'));
             totalAmount += price;
         });
         $('#totalAmount').text(totalAmount + '원');
@@ -247,6 +247,15 @@ $(document).ready(function() {
             let q = elements.textContent;
             quantities.push(q);
         })
+        const prices = [];
+        $('tbody tr').each(function() {
+            const discountPercent = parseInt($(this).find('.discounted-price').attr('data-discount'), 10) || 0;
+            var price = 0;
+            if(discountPercent > 0) price = parseFloat($(this).find('.discounted-price').text().replace('원', ''));
+            else price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
+
+            prices.push(price);
+        });
         if(row > 2)
             name = name + " 외" + (String)(row-2) + "건";
         sessionStorage.setItem("product_name",name);
@@ -255,6 +264,7 @@ $(document).ready(function() {
         sessionStorage.setItem('cartIds', JSON.stringify(cartIds));
         sessionStorage.setItem('discounts', JSON.stringify(discounts));
         sessionStorage.setItem('quantity', JSON.stringify(quantities));
+        sessionStorage.setItem('price', JSON.stringify(prices));
 
         window.location.href="/pay";
     })

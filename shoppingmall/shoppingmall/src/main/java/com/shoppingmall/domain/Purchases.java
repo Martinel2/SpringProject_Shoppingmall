@@ -33,6 +33,8 @@ public class Purchases {
     @Column(name = "use_coupon")
     private int use_coupon; //쿠폰 퍼센트나 감면된 금액 저장
 
+    @Column(name = "price")
+    private int price;
 
     @Column(name = "created")
     private LocalDateTime created;
@@ -111,5 +113,13 @@ public class Purchases {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

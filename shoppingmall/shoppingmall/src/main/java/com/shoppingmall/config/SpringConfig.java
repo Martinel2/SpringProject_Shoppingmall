@@ -78,6 +78,12 @@ public class SpringConfig {
     public PurchaseService purchaseService() { return new PurchaseService(purchasesRepository()); }
 
     @Bean
+    public ReviewRepository reviewRepository() { return new ReviewRepository(em); }
+
+    @Bean
+    public ReviewService reviewService() { return new ReviewService(reviewRepository(), fileStorageService()); }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)

@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PurchasesRepository {
@@ -25,4 +26,18 @@ public class PurchasesRepository {
         query.setParameter("user_id",  user_id);
         return query.getResultList();
     }
+
+    public List<Purchases> getPurchaseWithinOneMonth(String user_id) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneMonthBef = now.minusMonths(1);
+
+        String jpql = "SELECT p FROM Purchases p WHERE p.users.id = :user_id AND p.created BETWEEN :oneMonthBef AND :now";
+        TypedQuery<Purchases> query = em.createQuery(jpql, Purchases.class);
+        query.setParameter("user_id", user_id);
+        query.setParameter("now", now);
+        query.setParameter("oneMonthBef", oneMonthBef);
+
+        return query.getResultList();
+    }
+
 }

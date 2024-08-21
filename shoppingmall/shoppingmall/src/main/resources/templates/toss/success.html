@@ -25,7 +25,7 @@
   const discounts = JSON.parse(sessionStorage.getItem("discounts"));
   const quantity = JSON.parse(sessionStorage.getItem("quantity"));
   const paymentType = sessionStorage.getItem("paymentType");
-
+  const price = JSON.parse(sessionStorage.getItem("price"));
   async function confirm() {
     const requestData = {
       paymentKey: paymentKey,
@@ -34,7 +34,8 @@
       cartIds: cartIds,
       discounts:discounts,
       paymentType:paymentType,
-      quantity:quantity
+      quantity:quantity,
+      price:price
     };
 
     const response = await fetch("/confirm", {
@@ -60,6 +61,7 @@
     sessionStorage.removeItem("paymentType");
     sessionStorage.removeItem("product_name");
     sessionStorage.removeItem("total");
+    sessionStorage.removeItem("price");
     console.log(json);
   }
   confirm();

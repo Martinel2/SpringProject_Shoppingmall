@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Write a Review</title>
+    <style>
+        .rating span {
+            font-size: 2em;
+            cursor: pointer;
+            color: #ccc; /* 기본 색상 (비활성화된 별) */
+        }
+
+        .rating span.active {
+            color: #f5c518; /* 활성화된 별 색상 (노란색) */
+        }
+    </style>
+</head>
+<body>
+<h2>Write a Review</h2>
+<form action="/submitReview" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="itemId" th:value="${itemId}">
+
+    <div class="rating">
+        <span onclick="rate(1)" onmouseover="highlight(1)" onmouseout="resetHighlight()">★</span>
+        <span onclick="rate(2)" onmouseover="highlight(2)" onmouseout="resetHighlight()">★</span>
+        <span onclick="rate(3)" onmouseover="highlight(3)" onmouseout="resetHighlight()">★</span>
+        <span onclick="rate(4)" onmouseover="highlight(4)" onmouseout="resetHighlight()">★</span>
+        <span onclick="rate(5)" onmouseover="highlight(5)" onmouseout="resetHighlight()">★</span>
+    </div>
+    <input type="hidden" id="rating" name="rating">
+
+
+    <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required>
+    </div>
+
+    <div>
+        <label for="content">Content</label>
+        <textarea id="content" name="content" rows="4" required></textarea>
+    </div>
+
+    <div>
+        <label for="photo">Attach Photo</label>
+        <input type="file" id="photo" name="photo">
+    </div>
+
+    <div>
+        <button type="submit">Submit Review</button>
+    </div>
+</form>
+<script>
+    let currentRating = 0;
+
+    function rate(value) {
+        currentRating = value;
+        document.getElementById('rating').value = value; // 선택한 별점 값 저장
+        highlight(currentRating);
+    }
+
+    function highlight(value) {
+        const stars = document.querySelectorAll('.rating span');
+        stars.forEach((star, index) => {
+            if (index < value) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+    }
+
+    function resetHighlight() {
+        highlight(currentRating);
+    }
+</script>
+</body>
+</html>

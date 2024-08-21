@@ -22,4 +22,8 @@ public class PurchaseService {
     public List<Purchases> getPurchaseByUserId(String user_id){
         return purchasesRepository.getPurchasesByUserId(user_id);
     }
+
+    public List<Purchases> getPurchaseWithinOneMonth(String user_id){
+        return purchasesRepository.getPurchaseWithinOneMonth(user_id);
+    }
 }
