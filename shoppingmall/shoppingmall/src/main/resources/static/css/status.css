@@ -1,3 +1,7 @@
+#content{
+    width: 928px;
+}
+
 ul{
     list-style: none;
 }
@@ -8,13 +12,51 @@ li{
 }
 
 .photo, .product_name, .product_info, .but_box{
-    display: grid;
-    align-items: center;
+    display: inline-block;
     padding: 7px 40px 0px 16px;
-    align-content: space-evenly;
+}
+
+.product_name, .product_info, .but_box{
+    position: relative;;
 }
 
 .product_name{
     text-decoration: none;
     color: #e0e6eb;
+    width: 200px;
+    white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
+    top: 27px;
+}
+
+.product_info{
+    width: 150px;
+    top: 60px
+}
+
+.but_box{
+    width: 117px;
+    top: 33px;
+    text-align: center;
+}
+
+.review{
+    display: block;
+    font-size: 16px;
+    width: 120px;
+}
+
+.review-completed{
+    border: #cccccc solid 1px;
+    padding: 5px;
+    font-size: 16px;
+    display: block;
+    width: 108px;
+}
+
+.cancel{
+    margin-top: 24px;
+    display: block;
+    width: 120px;
 }

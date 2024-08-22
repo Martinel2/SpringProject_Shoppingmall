@@ -35,8 +35,6 @@ div label{
     color: #f5c518; /* 활성화된 별 색상 (노란색) */
 }
 
-
-
 .but{
     display: flex;
     margin-bottom: 0px;
@@ -53,6 +51,8 @@ div label{
     width: 50%;
     height: 50px;
     position: absolute;
-    left: 302px;
+    bottom: 0px;
+    background: transparent;
+    color: #e0e6eb;
 }
 

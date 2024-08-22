@@ -35,23 +35,31 @@
             <h2 style="text-align: center">최근 주문 내역</h2>
         </div>
         <ul>
-            <li th:each="item : ${purchase}">
+            <li th:each="item : ${purchaseDto}">
                 <div class="order_box" style="display: flex">
                     <div class="photo">
-                        <a th:href="'/products/'+${item.product_id}">
-                            <img id="image" th:src="@{'/images/uploads/' + ${item.products.photo}}" alt="Product Image" width="150" height="150">
+                        <a th:href="'/products/'+${item.purchases.product_id}">
+                            <img id="image" th:src="@{'/images/uploads/' + ${item.purchases.products.photo}}" alt="Product Image" width="150" height="150">
                         </a>
                     </div>
                     <div class="product_name">
-                        <a  class="product_name" th:href="'/products/'+${item.product_id}" th:text="${item.products.product_name}"></a>
+                        <a  class="product_name" th:href="'/products/'+${item.purchases.product_id}" th:text="${item.purchases.products.product_name}"></a>
                     </div>
                     <div class="product_info">
-                        <span th:text="${item.price} + '원'"></span>
-                        <span th:text="${item.product_cnt} + '개'"></span>
+                        <span th:text="${item.purchases.price} + '원'"></span>
+                        <span th:text="${item.purchases.product_cnt} + '개'"></span>
                     </div>
                     <div class="but_box">
-                        <button th:onclick="'openReviewPopup('+${item.product_id}+')'">리뷰 작성</button>
-                        <button onclick="cancelOrder()">주문 취소</button>
+                        <button class="review" th:if="${item.canReview == true}"
+                                th:text="'리뷰 작성'"
+                                th:attr="data-order-id=${item.purchases.order_id}, data-product-id=${item.purchases.product_id}"
+                                onclick="openReviewPopup(this.getAttribute('data-order-id'),this.getAttribute('data-product-id'))">>
+                        </button>
+                        <span class="review-completed"
+                              th:if="${item.canReview == false}"
+                              th:text="'리뷰 작성 완료'">
+                        </span>
+                        <button class="cancel" onclick="cancelOrder()">주문 취소</button>
                     </div>
                 </div>
             </li>
@@ -59,8 +67,8 @@
     </div>
 </div>
 <script>
-    function openReviewPopup(itemId) {
-        const url = '/reviewPopup?itemId=' + itemId; // 팝업으로 열릴 URL
+    function openReviewPopup(orderId, productId) {
+        const url = '/reviewPopup?orderId=' + encodeURIComponent(orderId) + '&productId=' + encodeURIComponent(productId);
         const windowFeatures = 'width=600,height=400,menubar=no,toolbar=no,location=yes,status=no,resizable=yes,scrollbars=yes';
 
         window.open(url, 'ReviewPopup', windowFeatures);

@@ -1,8 +1,11 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Purchases;
+import com.shoppingmall.domain.Review;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.dto.PurchaseDto;
 import com.shoppingmall.service.PurchaseService;
+import com.shoppingmall.service.ReviewService;
 import com.shoppingmall.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -11,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -18,9 +22,12 @@ public class UserController {
     private final UserService userService;
     private final PurchaseService purchaseService;
 
-    public UserController(UserService userService, PurchaseService purchaseService) {
+    private final ReviewService reviewService;
+
+    public UserController(UserService userService, PurchaseService purchaseService, ReviewService reviewService) {
         this.userService = userService;
         this.purchaseService = purchaseService;
+        this.reviewService = reviewService;
     }
 
 
@@ -41,8 +48,20 @@ public class UserController {
     public String profilePage(@AuthenticationPrincipal User user, Model model) {
         Users users = userService.findById(user.getUsername());
         List<Purchases> purchases = purchaseService.getPurchaseWithinOneMonth(users.getId());
+        List<Review> reviews = reviewService.findReviewByUserId(users.getId());
+        List<PurchaseDto> purchaseDtos= new ArrayList<>();
+        for(Purchases p : purchases){
+            boolean canReview = true;
+            for(Review r : reviews){
+                if(p.getId() == r.getPurchases().getId()){
+                    canReview = false;
+                    break;
+                }
+            }
+            purchaseDtos.add(new PurchaseDto(p,canReview));
+        }
         model.addAttribute("user", users);
-        model.addAttribute("purchase", purchases);
+        model.addAttribute("purchaseDto", purchaseDtos);
         return "/user/status";
     }
 

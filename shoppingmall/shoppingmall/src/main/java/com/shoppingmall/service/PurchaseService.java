@@ -15,15 +15,25 @@ public class PurchaseService {
         this.purchasesRepository = purchasesRepository;
     }
 
-    public Purchases addPurchase(Purchases purchases){
+    public Purchases addPurchase(Purchases purchases) {
         return purchasesRepository.addPurchases(purchases);
     }
 
-    public List<Purchases> getPurchaseByUserId(String user_id){
+    public List<Purchases> getPurchaseByUserId(String user_id) {
         return purchasesRepository.getPurchasesByUserId(user_id);
     }
 
-    public List<Purchases> getPurchaseWithinOneMonth(String user_id){
+    public List<Purchases> getPurchaseWithinOneMonth(String user_id) {
         return purchasesRepository.getPurchaseWithinOneMonth(user_id);
     }
+
+    public List<Purchases> findByUserIdAndOrderId(String user_id, String order_id) {
+        return purchasesRepository.findByUserIdAndOrderId(user_id, order_id);
+    }
+
+    public List<Purchases> findByProductIdAndOrderId(int product_id, String order_id) {
+        return purchasesRepository.findByProductIdAndOrderId(product_id, order_id);
+    }
+
+    public Purchases findByThreeId(String user_id, int product_id, String order_id){ return purchasesRepository.findByThreeId(user_id, product_id, order_id); }
 }

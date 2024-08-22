@@ -4,8 +4,8 @@ $(document).ready(function() {
         $('tbody tr').each(function() {
             const discountPercent = parseInt($(this).find('.discounted-price').attr('data-discount'), 10) || 0;
             var price = 0;
-            if(discountPercent > 0) price = parseFloat($(this).find('.discounted-price').text().replace('원', ''));
-            else price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
+            if(discountPercent > 0) price = parseInt($(this).find('.discounted-price').text().replace('원', ''));
+            else price = parseInt($(this).find('td:nth-child(3)').text().replace('원', ''));
 
             //console.log($(this).find('.discounted-price').attr('data-discount'));
             totalAmount += price;
@@ -250,10 +250,10 @@ $(document).ready(function() {
         const prices = [];
         $('tbody tr').each(function() {
             const discountPercent = parseInt($(this).find('.discounted-price').attr('data-discount'), 10) || 0;
-            var price = 0;
-            if(discountPercent > 0) price = parseFloat($(this).find('.discounted-price').text().replace('원', ''));
-            else price = parseFloat($(this).find('td:nth-child(3)').text().replace('원', ''));
-
+            let price;
+            if(discountPercent > 0) price = $(this).find('.discounted-price').text().replace('원', '').replace(' ', '');
+            else price = $(this).find('td:nth-child(3)').text().replace('원', '').replace(' ', '');
+            //console.log(price);
             prices.push(price);
         });
         if(row > 2)

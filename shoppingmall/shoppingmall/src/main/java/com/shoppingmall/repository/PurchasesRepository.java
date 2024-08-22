@@ -40,4 +40,33 @@ public class PurchasesRepository {
         return query.getResultList();
     }
 
+
+    public List<Purchases> findByUserIdAndOrderId(String user_id, String order_id){
+        String jpql = "SELECT p FROM Purchases p WHERE p.users.id = :user_id AND p.order_id = :order_id";
+        TypedQuery<Purchases> query = em.createQuery(jpql, Purchases.class);
+        query.setParameter("user_id", user_id);
+        query.setParameter("order_id", order_id);
+
+        return query.getResultList();
+    }
+
+    public List<Purchases> findByProductIdAndOrderId(int product_id, String order_id){
+        String jpql = "SELECT p FROM Purchases p WHERE p.products.id = :product_id AND p.order_id = :order_id";
+        TypedQuery<Purchases> query = em.createQuery(jpql, Purchases.class);
+        query.setParameter("product_id", product_id);
+        query.setParameter("order_id", order_id);
+
+        return query.getResultList();
+    }
+
+    public Purchases findByThreeId(String user_id, int product_id, String order_id){
+        String jpql = "SELECT p FROM Purchases p WHERE p.products.id = :product_id AND p.order_id = :order_id AND p.users.id = :user_id";
+        TypedQuery<Purchases> query = em.createQuery(jpql, Purchases.class);
+        query.setParameter("product_id", product_id);
+        query.setParameter("user_id", user_id);
+        query.setParameter("order_id", order_id);
+
+        return query.getSingleResult();
+    }
+
 }

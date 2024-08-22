@@ -7,7 +7,8 @@
 </head>
 <body>
 <form action="/submitReview" method="post" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
-    <input type="hidden" name="itemId" th:value="${itemId}">
+    <input type="hidden" name="order_id" th:value="${orderId}">
+    <input type="hidden" name="product_id" th:value="${productId}">
 
     <label for="rating" class="rating">배송된 상품에 만족하시나요?</label>
     <div class="rating">
@@ -100,6 +101,12 @@
     function cancel() {
         window.close();
     }
+
+    window.onunload = function() {
+        if (window.opener) {
+            window.opener.location.reload();
+        }
+    };
 </script>
 </body>
 </html>

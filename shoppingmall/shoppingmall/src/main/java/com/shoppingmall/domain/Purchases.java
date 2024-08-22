@@ -39,6 +39,9 @@ public class Purchases {
     @Column(name = "created")
     private LocalDateTime created;
 
+    @Column(name = "order_id")
+    private String order_id;
+
     @PrePersist
     protected void onCreate() {
         created = LocalDateTime.now();
@@ -121,5 +124,13 @@ public class Purchases {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(String order_id) {
+        this.order_id = order_id;
     }
 }

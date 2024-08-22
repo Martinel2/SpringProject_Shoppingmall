@@ -77,6 +77,7 @@ public class WidgetController {
         JSONArray cartIdsJsonArray;
         JSONArray discountsJsonArray;
         JSONArray quantityJsonArray;
+        JSONArray priceJsonArray;
 
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
@@ -87,6 +88,7 @@ public class WidgetController {
             cartIdsJsonArray = (JSONArray) requestData.get("cartIds");
             discountsJsonArray = (JSONArray) requestData.get("discounts");
             quantityJsonArray = (JSONArray) requestData.get("quantity");
+            priceJsonArray = (JSONArray) requestData.get("price");
             paymentType = (String) requestData.get("paymentType");
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -101,11 +103,13 @@ public class WidgetController {
         int[] cartIds = new int[cartIdsJsonArray.size()];
         int[] discounts = new int[discountsJsonArray.size()];
         int[] quantity = new int[quantityJsonArray.size()];
+        int[] price = new int[priceJsonArray.size()];
 
         for (int i = 0; i < cartIdsJsonArray.size(); i++) {
             cartIds[i] = Integer.parseInt((String) cartIdsJsonArray.get(i));
             discounts[i] = Integer.parseInt((String) discountsJsonArray.get(i));
             quantity[i] = Integer.parseInt((String) quantityJsonArray.get(i));
+            price[i] = Integer.parseInt((String) priceJsonArray.get(i));
         }
 
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
@@ -144,6 +148,8 @@ public class WidgetController {
             purchases.setProducts(p);
             purchases.setUse_coupon(discounts[i]);
             purchases.setProduct_cnt(quantity[i]);
+            purchases.setPrice(price[i]);
+            purchases.setOrder_id(orderId);
             purchaseService.addPurchase(purchases);
             cartService.deleteCartItem(cartIds[i]);
         }

@@ -21,6 +21,9 @@ public class Review {
     @Column(name = "rating")
     private int rating;
 
+    @OneToOne
+    @JoinColumn(name = "purchase_id")
+    private Purchases purchases;
 
     @Lob
     @Column(name = "content", columnDefinition = "text")
@@ -29,7 +32,6 @@ public class Review {
     @Lob
     @Column(name = "photo")
     private String photo;  // 사진 파일 경로 또는 URL
-
 
     public Users getUsers() {
         return users;
@@ -77,5 +79,13 @@ public class Review {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public Purchases getPurchases() {
+        return purchases;
+    }
+
+    public void setPurchases(Purchases purchases) {
+        this.purchases = purchases;
     }
 }

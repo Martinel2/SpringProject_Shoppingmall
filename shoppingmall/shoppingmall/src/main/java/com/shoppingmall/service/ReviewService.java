@@ -1,6 +1,7 @@
 package com.shoppingmall.service;
 
 import com.shoppingmall.domain.Products;
+import com.shoppingmall.domain.Purchases;
 import com.shoppingmall.domain.Review;
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.repository.ReviewRepository;
@@ -19,7 +20,7 @@ public class ReviewService {
         this.fileStorageService = fileStorageService;
     }
 
-    public Review writeReview(Users user, Products products, String title, String content, int rating, MultipartFile photo){
+    public Review writeReview(Users user, Products products, String title, String content, int rating, MultipartFile photo, Purchases purchases){
         String photoPath = "";
 
         if(photo != null)
@@ -32,7 +33,9 @@ public class ReviewService {
         review.setContent(content);
         review.setTitle(title);
         review.setRating(rating);
+        review.setPurchases(purchases);
         if(photoPath.length() > 0) review.setPhoto(photoPath);
+
         return reviewRepository.writeReview(review);
     }
 
