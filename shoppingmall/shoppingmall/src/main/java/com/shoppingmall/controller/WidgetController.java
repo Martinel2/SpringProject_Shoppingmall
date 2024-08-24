@@ -79,7 +79,7 @@ public class WidgetController {
         String paymentType;
 
         JSONArray cartIdsJsonArray;
-        JSONArray couponIdJsonArray;
+        JSONArray couponIdsJsonArray;
         JSONArray quantityJsonArray;
         JSONArray priceJsonArray;
 
@@ -90,7 +90,7 @@ public class WidgetController {
             orderId = (String) requestData.get("orderId");
             amount = (String) requestData.get("amount");
             cartIdsJsonArray = (JSONArray) requestData.get("cartIds");
-            couponIdJsonArray = (JSONArray) requestData.get("couponId");
+            couponIdsJsonArray = (JSONArray) requestData.get("couponIds");
             quantityJsonArray = (JSONArray) requestData.get("quantity");
             priceJsonArray = (JSONArray) requestData.get("price");
             paymentType = (String) requestData.get("paymentType");
@@ -105,13 +105,13 @@ public class WidgetController {
 
         // JSONArray를 int[] 배열로 변환
         int[] cartIds = new int[cartIdsJsonArray.size()];
-        int[] couponId = new int[couponIdJsonArray.size()];
+        int[] couponIds = new int[couponIdsJsonArray.size()];
         int[] quantity = new int[quantityJsonArray.size()];
         int[] price = new int[priceJsonArray.size()];
 
         for (int i = 0; i < cartIdsJsonArray.size(); i++) {
             cartIds[i] = Integer.parseInt((String) cartIdsJsonArray.get(i));
-            couponId[i] = Integer.parseInt((String) couponIdJsonArray.get(i));
+            couponIds[i] = Integer.parseInt((String) couponIdsJsonArray.get(i));
             quantity[i] = Integer.parseInt((String) quantityJsonArray.get(i));
             price[i] = Integer.parseInt((String) priceJsonArray.get(i));
         }
@@ -150,12 +150,12 @@ public class WidgetController {
             purchases.setProduct_id(p.getId());
             purchases.setPurchase_type(paymentType);
             purchases.setProducts(p);
-            purchases.setCoupon(couponService.findCouponById(couponId[i]));
+            purchases.setCoupon(couponService.findCouponById(couponIds[i]));
             purchases.setProduct_cnt(quantity[i]);
             purchases.setPrice(price[i]);
             purchases.setOrder_id(orderId);
             purchaseService.addPurchase(purchases);
-            couponService.deleteCouponList(userId,couponId[i]);
+            couponService.deleteFirstCouponList(userId,couponIds[i]);
             cartService.deleteCartItem(cartIds[i]);
         }
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);

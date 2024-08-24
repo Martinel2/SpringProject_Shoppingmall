@@ -103,8 +103,7 @@ public class CouponRepository {
         return query.getResultList().get(0);
     }
 
-    public boolean deleteCouponList(String user_id, int coupon_id) {
-        CouponList couponList = findFirstCouponList(user_id, coupon_id);
+    public boolean deleteCouponList(CouponList couponList) {
         if (couponList != null) {
             em.remove(couponList); // 엔티티 삭제
             return true;

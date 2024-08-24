@@ -2,6 +2,51 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
+  <link rel="stylesheet" href="/css/success.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #333;
+      color: #cccccc;
+      text-align: center;
+    }
+    /*상단 바*/
+    .header {
+      text-align: left;
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      height: 130px;
+      display: flex;
+      position: relative;
+      min-width: 1200px;
+    }
+
+    /*로고가 좌측 상단에 위치하도록 조정*/
+    #home_logo {
+      display: inline-block;
+      width: 270px;
+      height: 90px;
+    }
+
+    /*선택자를 이용해 로고의 크기 조정*/
+    #home_logo > img {
+      width: 270px;
+      height: 90px;
+    }
+
+    button{
+      display: inline-block;
+      margin: 10px;
+      border: #2d6eaf solid 5px;
+      background-color: #2d6eaf;
+      color: #e0e6eb;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
 <div class="header">
@@ -9,12 +54,22 @@
     <img src="/images/icons/logo.png" alt="Home Logo"/>
   </a>
 </div>
-<h2>결제 성공</h2>
-<p id="paymentKey"></p>
-<p id="orderId"></p>
-<p id="amount"></p>
-
+<h2>결제가 완료되었습니다!</h2>
+<p>저희 쇼핑몰을 이용해주셔서 감사합니다!</p>
+<div id="but_box">
+  <button id="orderHistory">주문 내역 보러가기</button>
+  <button id="home">홈으로 돌아가기</button>
+</div>
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("orderHistory").addEventListener("click", function () {
+        window.location.href = "/user/status";
+    });
+
+    document.getElementById("home").addEventListener("click", function () {
+        window.location.href = "/";
+    })
+  })
   // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
   // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
   const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +77,7 @@
   const orderId = urlParams.get("orderId");
   const amount = urlParams.get("amount");
   const cartIds = JSON.parse(sessionStorage.getItem("cartIds"));
-  const couponId = JSON.parse(sessionStorage.getItem("couponId"));
+  const couponIds = JSON.parse(sessionStorage.getItem("couponIds"));
   const quantity = JSON.parse(sessionStorage.getItem("quantity"));
   const paymentType = sessionStorage.getItem("paymentType");
   const price = JSON.parse(sessionStorage.getItem("price"));
@@ -32,7 +87,7 @@
       orderId: orderId,
       amount: amount,
       cartIds: cartIds,
-      couponId:couponId,
+      couponIds:couponIds,
       paymentType:paymentType,
       quantity:quantity,
       price:price

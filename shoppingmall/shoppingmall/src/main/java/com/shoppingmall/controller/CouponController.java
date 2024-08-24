@@ -91,13 +91,18 @@ public class CouponController {
         model.addAttribute("price", price);
         model.addAttribute("useCoupon", useCoupon);
         model.addAttribute("cartItemId", cartItemId);
-        return "/cart/couponPopup"; // 200 OK 상태 코드와 함께 쿠폰 리스트 반환
+        return "/cart/couponPopup";
     }
 
     @GetMapping("/event")
     public String eventCouponPage(@AuthenticationPrincipal UserDetails userDetails, Model model){
-        Users users = userService.findById(userDetails.getUsername());
-        int level = Level.toInt(users.getRole());
+        Users users = new Users();
+        users.setRole("BASIC");
+        int level = 1;
+        if(userDetails != null) {
+            users = userService.findById(userDetails.getUsername());
+            level = Level.toInt(users.getRole());
+        }
         List<Coupon> coupons = couponService.findCouponByLevel(level);
         model.addAttribute("coupons", coupons);
         model.addAttribute("level", users.getRole());

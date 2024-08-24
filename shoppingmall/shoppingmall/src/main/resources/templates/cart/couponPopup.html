@@ -9,7 +9,8 @@
             let price = originPrice;
             if(useCouponId > 0){
                 let percent = [[${useCoupon.percent}]];
-                price *= (1 - percent/100);
+                let discount = (price * (1 - percent/100)).toFixed(0);
+                price = discount;
             }
             document.getElementById("price").innerText = price + " 원";
         })

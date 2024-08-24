@@ -81,12 +81,6 @@ $(document).ready(function() {
         });
     });
 
-/*    // 팝업과 관련된 요소들
-    const popup = document.getElementById('coupon-popup');
-    const closePopupButton = document.getElementById('close-popup');
-    const couponList = document.getElementById('coupon-list');
-    const priceElement = document.getElementById('price');
-*/
     // 각 쿠폰 적용 버튼에 이벤트 리스너 추가
     document.querySelectorAll('.coupon-button').forEach(button => {
         button.addEventListener('click', (event) => {
@@ -95,13 +89,13 @@ $(document).ready(function() {
             let quantity = parseInt(row.querySelector('.quantity').textContent, 10);
             let usedCouponIds = [];
             document.querySelectorAll('.discounted-price').forEach(function (discountedPriceSpan) {
-                const couponId = discountedPriceSpan.getAttribute('data-couponId');
+                const couponId = discountedPriceSpan.getAttribute('data-coupon-id');
                 if (couponId) {
                     usedCouponIds.push(couponId);
                 }
             });
 
-            const useCouponId = row.querySelector('.discounted-price').getAttribute('data-couponId') || 0;
+            const useCouponId = row.querySelector('.discounted-price').getAttribute('data-coupon-id') || 0;
             let productPrice = parseFloat(row.querySelector('.origin-price').textContent);
             let totalPrice = productPrice * quantity;
 
@@ -120,13 +114,13 @@ $(document).ready(function() {
                 let quantity = parseInt(row.querySelector('.quantity').textContent, 10);
                 let usedCouponIds = [];
                 document.querySelectorAll('.discounted-price').forEach(function (discountedPriceSpan) {
-                    const couponId = discountedPriceSpan.getAttribute('data-couponId');
+                    const couponId = discountedPriceSpan.getAttribute('data-coupon-id');
                     if (couponId) {
                         usedCouponIds.push(couponId);
                     }
                 });
 
-                const useCouponId = row.querySelector('.discounted-price').getAttribute('data-couponId') || 0;
+                const useCouponId = row.querySelector('.discounted-price').getAttribute('data-coupon-id') || 0;
                 let productPrice = parseFloat(row.querySelector('.origin-price').textContent);
                 let totalPrice = productPrice * quantity;
 
@@ -139,7 +133,7 @@ $(document).ready(function() {
                 const discountedPriceCell = row.querySelector('.discounted-price-cell');
                 const discountPriceSpan = discountedPriceCell.firstElementChild.firstElementChild;
                 discountPriceSpan.setAttribute('data-discount', "0"); // 할인율 저장
-                discountPriceSpan.setAttribute('data-couponId', "0"); // 할인율 저장
+                discountPriceSpan.setAttribute('data-coupon-id', "0"); // 할인율 저장
                 discountedPriceCell.style.display = 'none';
 
                 const applyCell = row.querySelector('.coupon-apply-cell');
@@ -188,7 +182,7 @@ $(document).ready(function() {
         sessionStorage.setItem("total",total);
         // 배열을 JSON 문자열로 변환하여 sessionStorage에 저장
         sessionStorage.setItem('cartIds', JSON.stringify(cartIds));
-        sessionStorage.setItem('couponId', JSON.stringify(couponIds));
+        sessionStorage.setItem('couponIds', JSON.stringify(couponIds));
         sessionStorage.setItem('quantity', JSON.stringify(quantities));
         sessionStorage.setItem('price', JSON.stringify(prices));
 
@@ -205,7 +199,7 @@ function updatePriceAfterCoupon(cartItemId, couponId,finalPrice, percent) {
     const discountPriceSpan = discountedPriceCell.firstElementChild.firstElementChild;
     discountPriceSpan.textContent = `${finalPrice.toFixed(0)} 원`;
     discountPriceSpan.setAttribute('data-discount', percent.toString()); // 할인율 저장
-    discountPriceSpan.setAttribute('data-couponId', couponId.toString()); // 쿠폰Id 저장
+    discountPriceSpan.setAttribute('data-coupon-id', couponId.toString()); // 쿠폰Id 저장
     discountedPriceCell.style.display = 'table-cell';
     discountPriceSpan.nextElementSibling.style.display='grid';
     const applyCell = row.querySelector('.coupon-apply-cell');

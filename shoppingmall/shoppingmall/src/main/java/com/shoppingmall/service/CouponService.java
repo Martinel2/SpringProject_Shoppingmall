@@ -57,5 +57,8 @@ public class CouponService {
 
     public List<Coupon> findCouponByLevel(int level) { return couponRepository.findByLevel(level); }
 
-    public boolean deleteCouponList(String user_id, int Coupon_id) { return couponRepository.deleteCouponList(user_id, Coupon_id); }
+    public boolean deleteFirstCouponList(String user_id, int Coupon_id) {
+        CouponList couponList = couponRepository.findFirstCouponList(user_id, Coupon_id);
+        return couponRepository.deleteCouponList(couponList);
+    }
 }
