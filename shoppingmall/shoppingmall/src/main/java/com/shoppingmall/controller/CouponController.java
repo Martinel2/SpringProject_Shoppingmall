@@ -56,10 +56,42 @@ public class CouponController {
         return response;
     }
 
-    @GetMapping("/getCoupon")
-    public ResponseEntity<List<Coupon>> getCoupons(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/couponPopup")
+    public String getCoupons(@AuthenticationPrincipal UserDetails userDetails,
+                             @RequestParam(name = "price") int price,
+                             @RequestParam(name = "useCouponId") int useCouponId,
+                             @RequestParam(name = "cartItemId") int cartItemId,
+                             @RequestParam(name = "usedCouponIds", required = false) List<Integer> usedCouponIds,
+                             Model model) {
         List<Coupon> coupons = couponService.makeRealCouponList(couponService.findListByUserId(userDetails.getUsername()));
-        return ResponseEntity.ok(coupons); // 200 OK 상태 코드와 함께 쿠폰 리스트 반환
+        List<Coupon> excludeCoupon = new ArrayList<>();
+        Coupon useCoupon = null;
+        if(usedCouponIds!=null && coupons != null){
+            for (Coupon c: coupons) {
+                boolean canUse = true;
+                for (int id: usedCouponIds) {
+                    if(c.getId() == useCouponId){
+                        useCoupon = c;
+                        break;
+                    }
+
+                    if(c.getId() == id) {
+                        canUse = false;
+                        break;
+                    }
+                }
+                if(canUse) excludeCoupon.add(c);
+            }
+        }
+        if(useCoupon == null){
+            useCoupon = new Coupon();
+            useCoupon.setId(0);
+        }
+        model.addAttribute("coupons", excludeCoupon);
+        model.addAttribute("price", price);
+        model.addAttribute("useCoupon", useCoupon);
+        model.addAttribute("cartItemId", cartItemId);
+        return "/cart/couponPopup"; // 200 OK 상태 코드와 함께 쿠폰 리스트 반환
     }
 
     @GetMapping("/event")

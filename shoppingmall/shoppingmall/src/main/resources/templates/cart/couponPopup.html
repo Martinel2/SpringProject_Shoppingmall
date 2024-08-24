@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>쿠폰함</title>
+    <link rel="stylesheet" href="/css/couponPopup.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let useCouponId = [[${useCoupon.id}]];
+            let price = originPrice;
+            if(useCouponId > 0){
+                let percent = [[${useCoupon.percent}]];
+                price *= (1 - percent/100);
+            }
+            document.getElementById("price").innerText = price + " 원";
+        })
+
+        let originPrice = [[${price}]];
+        let cartItemId = [[${cartItemId}]];
+
+        function applyCoupon() {
+            const selectedCouponId = document.querySelector('input[name="couponId"]:checked').value;
+            const percent = parseInt(document.querySelector('input[name="couponId"]:checked').dataset.percent ,10);
+            const price = originPrice * (1 - percent/100);
+            console.log(percent);
+            console.log(price);
+            window.opener.updatePriceAfterCoupon(cartItemId, selectedCouponId,price,percent);
+            // 팝업 창 닫기
+            window.close();
+        }
+
+        document.addEventListener('change', (e) => {
+            if (e.target.classList.contains('coupon-option')) {
+                const discount = parseInt(e.target.dataset.percent, 10);
+                const totalPrice = originPrice;
+                const discountedPrice = totalPrice * (1 - discount / 100);
+                document.getElementById("price").textContent = `${discountedPrice.toFixed(0)} 원`;
+            }
+        });
+
+    </script>
+</head>
+<body>
+<h3>쿠폰함</h3>
+<div id="container">
+    <div id="couponList" th:each="coupon : ${coupons}">
+        <input class="coupon-option" type="radio" name="couponId" th:checked="${useCoupon.id} == ${coupon.id}" th:data-percent="${coupon.percent}" th:value="${coupon.id}" th:id="'coupon-' + ${coupon.id}"/>
+        <label name="percent" th:for="'coupon-' + ${coupon.id}" th:text="${coupon.percent}+'% 할인쿠폰'"></label>
+    </div>
+
+    <input type="hidden" name="price" th:value="${price}"/>
+</div>
+<div id="footer">
+    <div id="discounted-price">
+        할인된 가격: <span id="price" class="discounted-price-value"></span>
+    </div>
+    <!-- 선택한 쿠폰 적용 버튼 -->
+    <button type="button" onclick="applyCoupon()">적용하기</button>
+</div>
+</body>
+</html>

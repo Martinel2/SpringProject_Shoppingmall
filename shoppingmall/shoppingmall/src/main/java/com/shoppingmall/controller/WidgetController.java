@@ -4,6 +4,7 @@ import com.shoppingmall.domain.Products;
 import com.shoppingmall.domain.Purchases;
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.service.CartService;
+import com.shoppingmall.service.CouponService;
 import com.shoppingmall.service.PurchaseService;
 import com.shoppingmall.service.UserService;
 import jakarta.transaction.Transactional;
@@ -41,10 +42,13 @@ public class WidgetController {
 
     private final PurchaseService purchaseService;
 
-    public WidgetController(UserService userService, CartService cartService, PurchaseService purchaseService) {
+    private final CouponService couponService;
+
+    public WidgetController(UserService userService, CartService cartService, PurchaseService purchaseService, CouponService couponService) {
         this.userService = userService;
         this.cartService = cartService;
         this.purchaseService = purchaseService;
+        this.couponService = couponService;
     }
 
     @GetMapping("/pay")
@@ -75,7 +79,7 @@ public class WidgetController {
         String paymentType;
 
         JSONArray cartIdsJsonArray;
-        JSONArray discountsJsonArray;
+        JSONArray couponIdJsonArray;
         JSONArray quantityJsonArray;
         JSONArray priceJsonArray;
 
@@ -86,7 +90,7 @@ public class WidgetController {
             orderId = (String) requestData.get("orderId");
             amount = (String) requestData.get("amount");
             cartIdsJsonArray = (JSONArray) requestData.get("cartIds");
-            discountsJsonArray = (JSONArray) requestData.get("discounts");
+            couponIdJsonArray = (JSONArray) requestData.get("couponId");
             quantityJsonArray = (JSONArray) requestData.get("quantity");
             priceJsonArray = (JSONArray) requestData.get("price");
             paymentType = (String) requestData.get("paymentType");
@@ -101,13 +105,13 @@ public class WidgetController {
 
         // JSONArray를 int[] 배열로 변환
         int[] cartIds = new int[cartIdsJsonArray.size()];
-        int[] discounts = new int[discountsJsonArray.size()];
+        int[] couponId = new int[couponIdJsonArray.size()];
         int[] quantity = new int[quantityJsonArray.size()];
         int[] price = new int[priceJsonArray.size()];
 
         for (int i = 0; i < cartIdsJsonArray.size(); i++) {
             cartIds[i] = Integer.parseInt((String) cartIdsJsonArray.get(i));
-            discounts[i] = Integer.parseInt((String) discountsJsonArray.get(i));
+            couponId[i] = Integer.parseInt((String) couponIdJsonArray.get(i));
             quantity[i] = Integer.parseInt((String) quantityJsonArray.get(i));
             price[i] = Integer.parseInt((String) priceJsonArray.get(i));
         }
@@ -146,11 +150,12 @@ public class WidgetController {
             purchases.setProduct_id(p.getId());
             purchases.setPurchase_type(paymentType);
             purchases.setProducts(p);
-            purchases.setUse_coupon(discounts[i]);
+            purchases.setCoupon(couponService.findCouponById(couponId[i]));
             purchases.setProduct_cnt(quantity[i]);
             purchases.setPrice(price[i]);
             purchases.setOrder_id(orderId);
             purchaseService.addPurchase(purchases);
+            couponService.deleteCouponList(userId,couponId[i]);
             cartService.deleteCartItem(cartIds[i]);
         }
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);

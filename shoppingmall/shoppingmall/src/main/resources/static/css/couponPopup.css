@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #cccccc;
+    font-size: 22px;
+    text-align: center;
+}
+
+#couponList{
+    text-align: left;
+    margin: 18px;
+    border: #cccccc solid 1px;
+    padding: 8px;
+}
+
+#footer{
+    position: fixed;
+    margin-top: 320px;
+    margin-left: 38px;
+}
+
+#discounted-price {
+    text-align: center;
+}
+
+button{
+    border: #2d6eaf solid 5px;
+    background-color: #2d6eaf;
+    color: #e0e6eb;
+    border-radius: 8px;
+    position: fixed;
+    left: 106px;
+    width: 85px;
+    margin: 5px;
+}

@@ -95,4 +95,20 @@ public class CouponRepository {
         query.setParameter("level", level);
         return query.getResultList();
     }
+
+    public CouponList findFirstCouponList(String user_id, int coupon_id){
+        TypedQuery<CouponList> query = em.createQuery("SELECT u FROM CouponList u WHERE u.user.id = :user_id AND u.coupon.id = :coupon_id", CouponList.class);
+        query.setParameter("user_id", user_id);
+        query.setParameter("coupon_id", coupon_id);
+        return query.getResultList().get(0);
+    }
+
+    public boolean deleteCouponList(String user_id, int coupon_id) {
+        CouponList couponList = findFirstCouponList(user_id, coupon_id);
+        if (couponList != null) {
+            em.remove(couponList); // 엔티티 삭제
+            return true;
+        }
+        return false;
+    }
 }

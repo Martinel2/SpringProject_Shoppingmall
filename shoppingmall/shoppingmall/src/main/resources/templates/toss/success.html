@@ -22,7 +22,7 @@
   const orderId = urlParams.get("orderId");
   const amount = urlParams.get("amount");
   const cartIds = JSON.parse(sessionStorage.getItem("cartIds"));
-  const discounts = JSON.parse(sessionStorage.getItem("discounts"));
+  const couponId = JSON.parse(sessionStorage.getItem("couponId"));
   const quantity = JSON.parse(sessionStorage.getItem("quantity"));
   const paymentType = sessionStorage.getItem("paymentType");
   const price = JSON.parse(sessionStorage.getItem("price"));
@@ -32,7 +32,7 @@
       orderId: orderId,
       amount: amount,
       cartIds: cartIds,
-      discounts:discounts,
+      couponId:couponId,
       paymentType:paymentType,
       quantity:quantity,
       price:price
@@ -56,7 +56,7 @@
 
     // 결제 성공 비즈니스 로직을 구현하세요.
     sessionStorage.removeItem("cartIds");
-    sessionStorage.removeItem("discounts");
+    sessionStorage.removeItem("couponId");
     sessionStorage.removeItem("quantity");
     sessionStorage.removeItem("paymentType");
     sessionStorage.removeItem("product_name");

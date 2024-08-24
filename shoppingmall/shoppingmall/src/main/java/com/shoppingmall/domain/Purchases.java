@@ -30,8 +30,9 @@ public class Purchases {
     @Column(name = "product_cnt")
     private int product_cnt;
 
-    @Column(name = "use_coupon")
-    private int use_coupon; //쿠폰 퍼센트나 감면된 금액 저장
+    @ManyToOne
+    @JoinColumn(name = "coupon")
+    private Coupon coupon; //쿠폰 퍼센트나 감면된 금액 저장
 
     @Column(name = "price")
     private int price;
@@ -102,12 +103,12 @@ public class Purchases {
         this.product_cnt = product_cnt;
     }
 
-    public int getUse_coupon() {
-        return use_coupon;
+    public Coupon getCoupon() {
+        return coupon;
     }
 
-    public void setUse_coupon(int use_coupon) {
-        this.use_coupon = use_coupon;
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
     }
 
     public LocalDateTime getCreated() {

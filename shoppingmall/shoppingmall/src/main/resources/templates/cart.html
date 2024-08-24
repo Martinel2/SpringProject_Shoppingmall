@@ -34,7 +34,7 @@
         <td class="coupon-apply-cell"><button class="coupon-button" id="coupon">쿠폰 적용</button>
         <td class="discounted-price-cell" style="display: none;">
             <div class="discount_box">
-                <span class="discounted-price" data-discount="0" style="margin-top: 23px; margin-right: 10px;"></span>
+                <span class="discounted-price" data-discount="0" data-couponId="0" style="margin-top: 23px; margin-right: 10px;"></span>
                 <div class="mod_but_box">
                     <button class="change-button">변경</button>
                     <button class="cancel-button">해제</button>
@@ -47,24 +47,5 @@
 </table>
 <h3>총 합계: <span id="totalAmount" th:text="${total}"></span></h3>
 <button type="button" id="buy">결제하기</button>
-
-
-<!-- 팝업 -->
-<div id="coupon-popup" class="popup hidden">
-    <div class="popup-header">
-        <span>쿠폰 적용</span>
-    </div>
-    <button id="close-popup" class="close-btn">×</button>
-    <div class="popup-body">
-        <div id="coupon-list">
-            <!-- 쿠폰 리스트가 여기에 동적으로 삽입됩니다. -->
-        </div>
-        <div id="discounted-price">
-            할인된 가격: <span id="price" class="discounted-price-value"></span>
-        </div>
-        <button class="apply-coupon">적용하기</button>
-    </div>
-</div>
-
 </body>
 </html>
