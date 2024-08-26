@@ -75,6 +75,7 @@ public class PurchasesRepository {
 
     public boolean deletePurchases(Purchases purchases) {
         if(purchases != null) {
+            purchases = em.merge(purchases);
             em.remove(purchases);
             return true;
         }

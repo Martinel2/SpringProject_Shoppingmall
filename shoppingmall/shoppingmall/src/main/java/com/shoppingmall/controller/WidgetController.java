@@ -1,5 +1,7 @@
 package com.shoppingmall.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shoppingmall.domain.Coupon;
 import com.shoppingmall.domain.Products;
 import com.shoppingmall.domain.Purchases;
 import com.shoppingmall.domain.Users;
@@ -14,15 +16,13 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Map;
 
 @Controller
 public class WidgetController {
@@ -144,6 +145,7 @@ public class WidgetController {
         int len = cartIds.length;
         String userId = userDetails.getUsername();
         for(int i = 0; i<len; i++){
+            Coupon coupon = couponService.findCouponById(couponIds[i]);
             Purchases purchases = new Purchases();
             purchases.setUser_id(userId);
             purchases.setUsers(userService.findById(userId));
@@ -151,13 +153,15 @@ public class WidgetController {
             purchases.setProduct_id(p.getId());
             purchases.setPurchase_type(paymentType);
             purchases.setProducts(p);
-            purchases.setCoupon(couponService.findCouponById(couponIds[i]));
+            purchases.setCoupon(coupon);
             purchases.setProduct_cnt(quantity[i]);
             purchases.setPrice(price[i]);
             purchases.setOrder_id(orderId);
             purchaseService.addPurchase(purchases);
-            couponService.deleteFirstCouponList(userId,couponIds[i]);
             cartService.deleteCartItem(cartIds[i]);
+            if(coupon.getId() != 0)
+                couponService.deleteFirstCouponList(userId,couponIds[i]);
+
         }
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -168,10 +172,9 @@ public class WidgetController {
 
     @Transactional
     @GetMapping("/researchOrder")
-    public ResponseEntity<JSONObject> research(@RequestParam(name = "purchase_id") int purchase_id,
-                                               @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+    public String research(@RequestParam(name = "purchase_id") int purchase_id,
+                                               Model model) throws Exception {
 
-        JSONParser parser = new JSONParser();
         Purchases purchases = purchaseService.findById(purchase_id);
 
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
@@ -192,10 +195,66 @@ public class WidgetController {
 
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
-        Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
-        JSONObject jsonObject = (JSONObject) parser.parse(reader);
-        responseStream.close();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> paymentData = objectMapper.readValue(responseStream, Map.class);
 
-        return ResponseEntity.status(code).body(jsonObject);
+        model.addAttribute("paymentData", paymentData);
+        model.addAttribute("purchase", purchases);
+        return "/toss/withdrawal";  // 타임리프 템플릿 이름
+    }
+
+    @PostMapping("/refund")
+    public ResponseEntity<String> quitUser( @RequestParam(name = "cancelReason") String cancelReason,
+                                            @RequestParam(name = "cancelAmount") String cancelAmount,
+                                            @RequestParam(name = "taxFreeAmount") String taxFreeAmount,
+                                            @RequestParam(name = "paymentKey") String paymentKey,
+                                            @RequestParam(name = "purchase_id") int purchase_id) {
+        ResponseEntity response;
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("cancelReason", cancelReason);
+            obj.put("cancelAmount", cancelAmount);
+            obj.put("taxFreeAmount", taxFreeAmount);
+
+            // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
+            // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
+            String widgetSecretKey = "결제 연동 시크릿 키";
+            Base64.Encoder encoder = Base64.getEncoder();
+            byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
+            String authorizations = "Basic " + new String(encodedBytes);
+
+            // 결제를 승인하면 결제수단에서 금액이 차감돼요.
+            URL url = new URL("https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", authorizations);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(obj.toString().getBytes("UTF-8"));
+
+            int code = connection.getResponseCode();
+            boolean isSuccess = code == 200;
+
+            if(isSuccess){
+                Purchases purchases = purchaseService.findById(purchase_id);
+                purchaseService.deletePurchase(purchases);
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("환불 완료");
+            }
+            else {
+                response = ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body("환불 실패");
+
+            }
+        } catch (Exception ex) {
+            response = ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An exception occured due to " + ex.getMessage());
+        }
+        return response;
     }
 }

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>환불 요청</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0px;
+            background-color: #333;
+            color: #cccccc;
+            height: 100vh;
+        }
+
+        /*상단 바*/
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            height: 130px;
+            display: flex;
+            position: relative;
+            min-width: 1200px;
+        }
+
+        /*로고가 좌측 상단에 위치하도록 조정*/
+        #home_logo {
+            display: inline-block;
+            width: 270px;
+            height: 90px;
+        }
+
+        /*선택자를 이용해 로고의 크기 조정*/
+        #home_logo > img {
+            width: 270px;
+            height: 90px;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+            color: #222222;
+            background-color: #ffffff;
+            padding: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin: 0 auto;
+        }
+        .photo, .product_name, .product_info, .but_box{
+            display: inline-block;
+            padding: 7px 40px 0px 16px;
+        }
+
+        .product_name, .product_info, .but_box{
+            position: relative;;
+        }
+
+        .product_name{
+            text-decoration: none;
+            width: 200px;
+            white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+            overflow: hidden; /* 넘치는 텍스트를 숨김 */
+            text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
+            top: 63px;
+        }
+
+        .product_info{
+            width: 200px;
+            top: 60px
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        select{
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(86, 132, 203, 0.98);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #31b0d5;
+        }
+    </style>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 방지
+            const form = event.target;
+
+            // 폼 데이터를 객체로 생성
+            const formData = new FormData(form);
+
+            // Fetch API를 사용하여 비동기 요청 보내기
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('네트워크 응답이 올바르지 않습니다.');
+                }
+            }).then(data => {
+                alert(data);
+                if(data === "환불 완료"){
+                    window.location.href = "/user/status";
+                }
+            })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if(error === 'Network response was not ok.')
+                        alert('네트워크 오류.');
+                });
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
+    </a>
+</div>
+<div class="container">
+    <h2>환불 요청</h2>
+    <form th:action="@{/refund}" method="post" onsubmit="handleSubmit(event)">
+        <input type="hidden" id="paymentKey" name="paymentKey" th:value="${paymentData[paymentKey]}"/>
+        <input type="hidden" id="taxFreeAmount" name="taxFreeAmount" th:value="${paymentData[taxExemptionAmount]}"/>
+        <input type="hidden" id="cancelAmount" name="cancelAmount" th:value="${purchase.price}"/>
+        <input type="hidden" id="purchase_id" name="purchase_id" th:value="${purchase.id}"/>
+
+        <div class="order_box" style="display: flex">
+            <div class="photo">
+                <img id="image" th:src="@{'/images/uploads/' + ${purchase.products.photo}}" alt="Product Image" width="150" height="150">
+            </div>
+            <div class="product_name">
+                <label th:text="${purchase.products.product_name}"></label>
+            </div>
+            <div class="product_info">
+                <span th:text="'결제가격: ' + ${purchase.price} + '원'"></span>
+                <span th:text="${purchase.product_cnt} + '개'"></span>
+            </div>
+        </div>
+        <label for="cancelReason">환불 사유</label>
+        <select id="cancelReason" name="cancelReason">
+            <option value="" disabled selected>환불 사유를 선택하세요</option>
+            <option value="상품이 파손되었습니다">상품이 파손되었습니다</option>
+            <option value="잘못된 상품을 받았습니다">잘못된 상품을 받았습니다</option>
+            <option value="중복된 주문이었습니다">중복된 주문이었습니다</option>
+            <option value="마음이 바뀌었습니다">마음이 바뀌었습니다</option>
+            <option value="기타">기타</option>
+        </select>
+
+        <button type="submit">환불 하기</button>
+    </form>
+</div>
+</body>
+</html>

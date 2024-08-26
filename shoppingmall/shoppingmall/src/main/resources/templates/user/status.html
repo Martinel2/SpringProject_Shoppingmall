@@ -48,7 +48,7 @@
                         <a  class="product_name" th:href="'/products/'+${item.purchases.product_id}" th:text="${item.purchases.products.product_name}"></a>
                     </div>
                     <div class="product_info">
-                        <span th:text="${item.purchases.price} + '원'"></span>
+                        <span th:text="'결제가격: ' + ${item.purchases.price} + '원'"></span>
                         <span th:text="${item.purchases.product_cnt} + '개'"></span>
                     </div>
                     <div class="but_box">
@@ -61,7 +61,10 @@
                               th:if="${item.canReview == false}"
                               th:text="'리뷰 작성 완료'">
                         </span>
-                        <button class="cancel" onclick="cancelOrder()">주문 취소</button>
+                        <button class="cancel"
+                                th:text="'주문 취소'"
+                                th:attr="data-purchase-id=${item.purchases.id}"
+                                onclick="cancelOrder(this.getAttribute('data-purchase-id'))">주문 취소</button>
                     </div>
                 </div>
             </li>
@@ -77,9 +80,9 @@
     }
 
 
-    function cancelOrder(itemId) {
-        // 주문 취소 로직을 여기에 추가
-        alert("Cancel order for item: " + itemId);
+    function cancelOrder(purchase_id) {
+        const url = '/researchOrder?purchase_id=' + encodeURIComponent(purchase_id);
+        window.location.href = url;
     }
 
     function info() {
