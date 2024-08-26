@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -158,6 +159,39 @@ public class WidgetController {
             couponService.deleteFirstCouponList(userId,couponIds[i]);
             cartService.deleteCartItem(cartIds[i]);
         }
+        Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
+        JSONObject jsonObject = (JSONObject) parser.parse(reader);
+        responseStream.close();
+
+        return ResponseEntity.status(code).body(jsonObject);
+    }
+
+    @Transactional
+    @GetMapping("/researchOrder")
+    public ResponseEntity<JSONObject> research(@RequestParam(name = "purchase_id") int purchase_id,
+                                               @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+
+        JSONParser parser = new JSONParser();
+        Purchases purchases = purchaseService.findById(purchase_id);
+
+        // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
+        // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
+        String widgetSecretKey = "결제 연동 시크릿 키";
+        Base64.Encoder encoder = Base64.getEncoder();
+        byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
+        String authorizations = "Basic " + new String(encodedBytes);
+
+        // 결제를 승인하면 결제수단에서 금액이 차감돼요.
+        URL url = new URL("https://api.tosspayments.com/v1/payments/orders/" + purchases.getOrder_id());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("Authorization", authorizations);
+        connection.setRequestMethod("GET");
+
+        int code = connection.getResponseCode();
+        boolean isSuccess = code == 200;
+
+        InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
+
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
         responseStream.close();

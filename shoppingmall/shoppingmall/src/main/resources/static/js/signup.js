@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const email = document.getElementById("email").value;
         const place = document.getElementById("place").value;
         const enabled = "T";
-        const role = "user";
+        const role = "BASIC";
         const data = {
             id: id,
             password: password,
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
             success: function(response) {
                 // 성공적인 응답 처리
                 if (response.message === "success") { // HTTP Created status
-                    window.location.href = "/user/complete?id="+encodeURIComponent(id); // 성공 후 리다이렉트할 경로
+                    window.location.href = "/newUserComplete?id="+encodeURIComponent(id); // 성공 후 리다이렉트할 경로
                 }
                 },
             error: function(jqXHR, textStatus, errorThrown) {

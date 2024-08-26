@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 탈퇴</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0px;
+            background-color: #333;
+            color: #cccccc;
+        }
+        /*상단 바*/
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            height: 130px;
+            display: flex;
+            position: relative;
+            min-width: 1200px;
+        }
+
+        /*로고가 좌측 상단에 위치하도록 조정*/
+        #home_logo {
+            display: inline-block;
+            width: 270px;
+            height: 90px;
+        }
+
+        /*선택자를 이용해 로고의 크기 조정*/
+        #home_logo > img {
+            width: 270px;
+            height: 90px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #222222;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #d9534f;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 방지
+            const form = event.target;
+
+            // 폼 데이터를 객체로 생성
+            const formData = new FormData(form);
+
+            // Fetch API를 사용하여 비동기 요청 보내기
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('네트워크 응답이 올바르지 않습니다.');
+                }
+            }).then(data => {
+                alert(data);
+                if(data === "탈퇴가 완료되었습니다."){
+                    window.location.href = "/quitComplete";
+                }
+            })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if(error === 'Network response was not ok.')
+                        alert('네트워크 오류.');
+                });
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" alt="Home Logo"/>
+    </a>
+</div>
+<div class="container">
+    <h2>회원 탈퇴</h2>
+    <form action="/quitUser" method="POST" onsubmit="handleSubmit(event)">
+        <label for="reason">탈퇴 사유를 선택해 주세요:</label>
+        <select id="reason" name="reason" required>
+            <option value="">사유를 선택해 주세요</option>
+            <option value="서비스가 불만족스러움">서비스가 불만족스러움</option>
+            <option value="기능 부족">기능 부족</option>
+            <option value="개인정보 보호 우려">개인정보 보호 우려</option>
+            <option value="이용 빈도 낮음">이용 빈도 낮음</option>
+            <option value="기타">기타</option>
+        </select>
+
+        <label for="additional-comments">추가적인 의견을 작성해 주세요:</label>
+        <textarea id="additional-comments" name="additional_comments" rows="4" placeholder="여기에 의견을 작성해 주세요..."></textarea>
+
+        <button type="submit">탈퇴하기</button>
+    </form>
+</div>
+</body>
+</html>

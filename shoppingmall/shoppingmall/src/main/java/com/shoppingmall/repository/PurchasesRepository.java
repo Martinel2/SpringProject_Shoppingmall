@@ -21,6 +21,10 @@ public class PurchasesRepository {
         return purchases;
     }
 
+    public Purchases findById(int id){
+        return em.find(Purchases.class, id);
+    }
+
     public List<Purchases> getPurchasesByUserId(String user_id){
         TypedQuery<Purchases> query = em.createQuery("SELECT u FROM Purchases u WHERE u.user_id = :user_id", Purchases.class);
         query.setParameter("user_id",  user_id);
@@ -69,4 +73,11 @@ public class PurchasesRepository {
         return query.getSingleResult();
     }
 
+    public boolean deletePurchases(Purchases purchases) {
+        if(purchases != null) {
+            em.remove(purchases);
+            return true;
+        }
+        else return false;
+    }
 }

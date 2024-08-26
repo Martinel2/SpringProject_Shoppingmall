@@ -88,12 +88,18 @@ public class SpringConfig {
     public ReviewService reviewService() { return new ReviewService(reviewRepository(), fileStorageService()); }
 
     @Bean
+    public ComplaintRepository complaintRepository() { return new ComplaintRepository(em); }
+
+    @Bean
+    public ComplaintService complaintService() { return new ComplaintService(complaintRepository()); }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/json/**").permitAll() // CSS 파일에 대한 접근을 허용
-                        .requestMatchers("/user/status", "/products/add", "/cart/**", "/seller**", "/**Coupon","/pay", "/**Wishlist").authenticated()
+                        .requestMatchers("/user/**", "/products/add", "/cart", "/seller**", "/**Coupon","/pay", "/**Wishlist").authenticated()
                         .requestMatchers("/admin/**").hasRole("admin")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex

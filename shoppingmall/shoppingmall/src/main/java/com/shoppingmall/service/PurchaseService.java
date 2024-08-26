@@ -36,4 +36,6 @@ public class PurchaseService {
     }
 
     public Purchases findByThreeId(String user_id, int product_id, String order_id){ return purchasesRepository.findByThreeId(user_id, product_id, order_id); }
+
+    public Purchases findById(int id) { return purchasesRepository.findById(id); }
 }

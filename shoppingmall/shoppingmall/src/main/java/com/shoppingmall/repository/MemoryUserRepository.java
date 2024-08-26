@@ -43,4 +43,14 @@ public class MemoryUserRepository implements UserRepository {
         query.setParameter("email", email);
         return query.getSingleResult();
     }
+
+    @Override
+    public boolean deleteUser(Users users) {
+        if(users != null) {
+            users = em.merge(users);
+            em.remove(users);
+            return true;
+        }
+        else return false;
+    }
 }

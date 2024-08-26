@@ -54,4 +54,6 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
+    public boolean delete(Users users) { return userRepository.deleteUser(users); }
+
 }
