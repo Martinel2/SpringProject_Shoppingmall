@@ -1,10 +1,298 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/statusTemplate.css">
+    <link rel="stylesheet" href="/css/status.css">
+    <title>주문 내역 조회</title>
+    <style>
+        .order-history {
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .order-history h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .period-buttons {
+            margin-bottom: 20px;
+        }
+        .period-buttons button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .period-buttons button:hover {
+            background-color: #d5d5d5;
+        }
+        .date-selectors {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .date-selectors select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            margin-right: 10px;
+            appearance: none;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        .search-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-section input {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        .search-section button {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .search-section button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
+<div class="header">
+    <a href="/" id="home_logo">
+        <img src="/images/icons/logo.png" />
+    </a>
+</div>
+<div id="body_container">
+    <div class="aside">
+        <div id="profile">
+            <div style="display: grid">
+                <label th:text="${user.id}" style="padding-bottom: 12px"></label>
+                <label th:text="${user.role} + ' 등급'" style="padding-bottom: 12px"></label>
+            </div>
+            <button id="status" onclick="info()">회원정보</button>
+            <form th:action="@{/logout}" method="post">
+                <button id="logout" type="submit">로그아웃</button>
+            </form>
+        </div>
+        <div id="link_box">
+            <button class="link" id="coupon" onclick="myCoupon()">쿠폰함</button>
+            <button class="link" id="order" onclick="orderHistory()">주문내역</button>
+            <button class="link" id="wishlist">내가 찜한 상품</button>
+            <button class="link" id="quit" onclick="quit()">회원탈퇴</button>
+        </div>
+    </div>
+    <div id="content" style="border-left: #e0e6eb solid 1px">
+        <div class="order-history">
+            <h1>주문 내역</h1>
+            <div class="period-buttons" id="periodButtons">
+                <!-- 기간 버튼들이 동적으로 생성됩니다 -->
+            </div>
+            <div class="date-selectors">
+                <select id="startDateSelect"></select>
+                <span>~</span>
+                <select id="endDateSelect"></select>
+            </div>
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="주문 상품의 정보를 입력하세요">
+                <button onclick="searchOrders()">조회하기</button>
+            </div>
+        </div>
+
+        <ul>
+            <li th:each="purchase : ${purchases}">
+                <h3 th:text="${#temporals.format(purchase.created, 'yyyy-MM-dd')}"></h3>
+                <div class="order_box" style="display: flex">
+                    <div class="photo">
+                        <a th:href="'/products/'+${purchase.product_id}">
+                            <img id="image" th:src="@{'/images/uploads/' + ${purchase.products.photo}}" alt="Product Image" width="150" height="150">
+                        </a>
+                    </div>
+                    <div class="product_name">
+                        <a  class="product_name" th:href="'/products/'+${purchase.product_id}" th:text="${purchase.products.product_name}"></a>
+                    </div>
+                    <div class="product_info">
+                        <span th:text="'결제가격: ' + ${purchase.price} + '원'"></span>
+                        <span th:text="${purchase.product_cnt} + '개'"></span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        initializeDateSelectors();
+        initializePeriodButtons();
+        setDefaultDatesFromURL();
+    });
+
+    // 년도와 월을 하나의 콤보박스로 초기화 (현재 월을 기준으로 역순 정렬)
+    function initializeDateSelectors() {
+        const startDateSelect = document.getElementById('startDateSelect');
+        const endDateSelect = document.getElementById('endDateSelect');
+
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1;
+
+        // 현재 달부터 과거 5년 전까지의 월을 역순으로 추가
+        for (let year = currentYear; year >= currentYear - 5; year--) {
+            for (let month = (year === currentYear ? currentMonth : 12); month >= 1; month--) {
+                const optionValue = `${year}-${month.toString().padStart(2, '0')}`;
+                const optionText = `${year}년 ${month}월`;
+
+                const startOption = document.createElement('option');
+                startOption.value = optionValue;
+                startOption.text = optionText;
+                startDateSelect.appendChild(startOption);
+
+                const endOption = document.createElement('option');
+                endOption.value = optionValue;
+                endOption.text = optionText;
+                endDateSelect.appendChild(endOption);
+            }
+        }
+
+        startDateSelect.value = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+        endDateSelect.value = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+    }
+
+    // 기간 버튼 초기화
+    function initializePeriodButtons() {
+        const periodButtonsContainer = document.getElementById('periodButtons');
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1;
+
+        // 최대(5년) 버튼 생성
+        const maxButton = document.createElement('button');
+        maxButton.textContent = '최대(5년)';
+        maxButton.onclick = function() {
+            setPeriod('5y');
+            searchOrders();
+        };
+        periodButtonsContainer.appendChild(maxButton);
+
+        // 최근 3개월 버튼 생성
+        for (let i = 1; i <= 3; i++) {
+            const date = new Date(currentYear, currentMonth - i, 1);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1; // 1월 = 0이므로 +1
+            const button = document.createElement('button');
+            button.textContent = month + '월';
+            button.onclick = function() {
+                setPeriodMonth(year, month);
+                searchOrders();
+            };
+            periodButtonsContainer.appendChild(button);
+        }
+    }
+
+    // URL에서 전달된 시작 날짜와 종료 날짜로 기본값 설정
+    function setDefaultDatesFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const startDateParam = urlParams.get('startDate');
+        const endDateParam = urlParams.get('endDate');
+
+        if (startDateParam && endDateParam) {
+            document.getElementById('startDateSelect').value = startDateParam.slice(0, 7);
+            document.getElementById('endDateSelect').value = endDateParam.slice(0, 7);
+        }
+    }
+
+    // 기간 설정 함수: 최대(5년)
+    function setPeriod(period) {
+        if (period === '5y') {
+            const currentDate = new Date();
+            const endYear = currentDate.getFullYear();
+            const endMonth = currentDate.getMonth() + 1;
+
+            const startYear = endYear - 5;
+            const startMonth = endMonth;
+
+            document.getElementById('startDateSelect').value = `${startYear}-${startMonth.toString().padStart(2, '0')}`;
+            document.getElementById('endDateSelect').value = `${endYear}-${endMonth.toString().padStart(2, '0')}`;
+        }
+    }
+
+    // 기간 설정 함수: 특정 월
+    function setPeriodMonth(year, month) {
+        const dateValue = `${year}-${month.toString().padStart(2, '0')}`;
+        document.getElementById('startDateSelect').value = dateValue;
+        document.getElementById('endDateSelect').value = dateValue;
+    }
+
+    // 검색 함수
+    function searchOrders() {
+        const startDate = document.getElementById('startDateSelect').value + "-01";
+        const endDate = document.getElementById('endDateSelect').value + "-" + getLastDayOfMonth(startDate);
+
+        const searchInput = document.getElementById('searchInput').value;
+
+        // 예시로 쿼리 스트링을 생성하여 GET 요청을 보낼 수 있습니다.
+        const queryString = `?startDate=${startDate}&endDate=${endDate}&keyword=${encodeURIComponent(searchInput)}`;
+        window.location.href = '/user/orderHistory' + queryString;
+    }
+
+    // 특정 년월의 마지막 날 계산
+    function getLastDayOfMonth(date) {
+        const [year, month] = date.split('-');
+        return new Date(year, month, 0).getDate();
+    }
+
+    function orderHistory() {
+        // 현재 날짜
+        const today = new Date();
+
+        // 5년 전 날짜
+        const fiveYearsAgo = new Date();
+        fiveYearsAgo.setFullYear(today.getFullYear() - 5);
+
+        // 포맷된 날짜
+        const startDate = formatDate(fiveYearsAgo);
+        const endDate = formatDate(today);
+
+        // 예시로 쿼리 스트링을 생성하여 GET 요청을 보낼 수 있습니다.
+        const queryString = `?startDate=${startDate}&endDate=${endDate}`;
+        window.location.href = '/user/orderHistory' + queryString;
+    }
+    // 날짜를 YYYY-MM-DD 포맷으로 변환하는 함수
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    function info() {
+        window.location.href = "/user/info";
+    }
+    function myCoupon() {
+        window.location.href = "/myCoupon";
+    }
+
+    function quit() {
+        window.location.href = "/user/quit";
+    }
+</script>
 
 </body>
 </html>

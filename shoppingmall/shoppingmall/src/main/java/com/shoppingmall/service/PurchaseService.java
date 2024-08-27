@@ -4,6 +4,7 @@ import com.shoppingmall.domain.Purchases;
 import com.shoppingmall.repository.PurchasesRepository;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
@@ -23,9 +24,14 @@ public class PurchaseService {
         return purchasesRepository.getPurchasesByUserId(user_id);
     }
 
-    public List<Purchases> getPurchaseWithinOneMonth(String user_id) {
-        return purchasesRepository.getPurchaseWithinOneMonth(user_id);
+    public List<Purchases> getPurchaseTerm(String user_id, LocalDateTime start, LocalDateTime end) {
+        return purchasesRepository.getPurchaseTerm(user_id, start, end);
     }
+
+    public List<Purchases> getPurchaseTermPlusKeyword(String user_id, LocalDateTime start, LocalDateTime end, String keyword) {
+        return purchasesRepository.getPurchaseTermPlusKeyword(user_id, start, end, keyword);
+    }
+
 
     public List<Purchases> findByUserIdAndOrderId(String user_id, String order_id) {
         return purchasesRepository.findByUserIdAndOrderId(user_id, order_id);

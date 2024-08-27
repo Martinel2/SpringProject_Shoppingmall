@@ -23,7 +23,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -59,7 +63,17 @@ public class UserController {
     @GetMapping("/user/status")
     public String profilePage(@AuthenticationPrincipal User user, Model model) {
         Users users = userService.findById(user.getUsername());
-        List<Purchases> purchases = purchaseService.getPurchaseWithinOneMonth(users.getId());
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime bef = LocalDate.now().atTime(00,00,00).minusMonths(1);
+        List<Purchases> purchases = purchaseService.getPurchaseTerm(users.getId(), bef, now);
+        // 날짜 기준으로 역순 정렬
+        Collections.sort(purchases, new Comparator<Purchases>() {
+            @Override
+            public int compare(Purchases o1, Purchases o2) {
+                return o2.getCreated().compareTo(o1.getCreated()); // 역순 정렬
+            }
+        });
+
         List<Review> reviews = reviewService.findReviewByUserId(users.getId());
         List<PurchaseDto> purchaseDtos= new ArrayList<>();
         for(Purchases p : purchases){

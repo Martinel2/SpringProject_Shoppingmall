@@ -31,16 +31,25 @@ public class PurchasesRepository {
         return query.getResultList();
     }
 
-    public List<Purchases> getPurchaseWithinOneMonth(String user_id) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime oneMonthBef = now.minusMonths(1);
+    public List<Purchases> getPurchaseTerm(String user_id, LocalDateTime startDateTime, LocalDateTime endDateTime) {
 
-        String jpql = "SELECT p FROM Purchases p WHERE p.users.id = :user_id AND p.created BETWEEN :oneMonthBef AND :now";
+        String jpql = "SELECT p FROM Purchases p WHERE p.users.id = :user_id AND p.created BETWEEN :startDateTime AND :endDateTime";
         TypedQuery<Purchases> query = em.createQuery(jpql, Purchases.class);
         query.setParameter("user_id", user_id);
-        query.setParameter("now", now);
-        query.setParameter("oneMonthBef", oneMonthBef);
+        query.setParameter("startDateTime", startDateTime);
+        query.setParameter("endDateTime", endDateTime);
 
+        return query.getResultList();
+    }
+
+    public List<Purchases> getPurchaseTermPlusKeyword(String user_id, LocalDateTime startDateTime, LocalDateTime endDateTime, String keyword) {
+
+        String jpql = "SELECT p FROM Purchases p WHERE p.users.id = :user_id AND p.products.product_name like :keyword AND p.created BETWEEN :startDateTime AND :endDateTime";
+        TypedQuery<Purchases> query = em.createQuery(jpql, Purchases.class);
+        query.setParameter("user_id", user_id);
+        query.setParameter("startDateTime", startDateTime);
+        query.setParameter("endDateTime", endDateTime);
+        query.setParameter("keyword", "%" + keyword + "%");
         return query.getResultList();
     }
 

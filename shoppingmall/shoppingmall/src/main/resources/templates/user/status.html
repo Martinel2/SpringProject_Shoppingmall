@@ -27,7 +27,7 @@
         </div>
         <div id="link_box">
             <button class="link" id="coupon" onclick="myCoupon()">쿠폰함</button>
-            <button class="link" id="order">주문내역</button>
+            <button class="link" id="order" onclick="orderHistory()">주문내역</button>
             <button class="link" id="wishlist">내가 찜한 상품</button>
             <button class="link" id="quit" onclick="quit()">회원탈퇴</button>
         </div>
@@ -38,6 +38,7 @@
         </div>
         <ul>
             <li th:each="item : ${purchaseDto}">
+                <h3 th:text="${#temporals.format(item.purchases.created, 'yyyy-MM-dd')}"></h3>
                 <div class="order_box" style="display: flex">
                     <div class="photo">
                         <a th:href="'/products/'+${item.purchases.product_id}">
@@ -84,7 +85,29 @@
         const url = '/researchOrder?purchase_id=' + encodeURIComponent(purchase_id);
         window.location.href = url;
     }
+    function orderHistory() {
+        // 현재 날짜
+        const today = new Date();
 
+        // 5년 전 날짜
+        const fiveYearsAgo = new Date();
+        fiveYearsAgo.setFullYear(today.getFullYear() - 5);
+
+        // 포맷된 날짜
+        const startDate = formatDate(fiveYearsAgo);
+        const endDate = formatDate(today);
+
+        // 예시로 쿼리 스트링을 생성하여 GET 요청을 보낼 수 있습니다.
+        const queryString = `?startDate=${startDate}&endDate=${endDate}`;
+        window.location.href = '/user/orderHistory' + queryString;
+    }
+    // 날짜를 YYYY-MM-DD 포맷으로 변환하는 함수
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
     function info() {
         window.location.href = "/user/info";
     }
