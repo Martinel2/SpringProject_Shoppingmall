@@ -7,12 +7,67 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // 모든 테이블 행에 대해 클릭 이벤트를 추가
-            const rows = document.querySelectorAll('.clickable-row');
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
+            document.querySelectorAll('.clickable-row').forEach(row => {
+                row.addEventListener('click', function (event) {
+                    const target = event.target;
+
+                    // 행 안의 버튼 클릭 시 이동 방지
+                    if (target.classList.contains('wish')) {
+                        return;
+                    }
                     const productId = this.dataset.productId;
                     // 상품 상세 페이지로 이동
                     window.location.href = `/products/${productId}`;
+                });
+            });
+
+            document.querySelectorAll('.wish').forEach(image => {
+                image.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const isWishlist = this.src.includes('wishlist-wish');
+                    const countSpan = this.nextElementSibling;
+                    const url = new URL(isWishlist ? 'http://localhost:8080/delWishlist' : 'http://localhost:8080/addWishlist');
+                    url.searchParams.append('productId', productId);
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => {
+                            if (response.status === 401) {
+                                // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
+                                const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+                                if (shouldRedirect) {
+                                    window.location.href = '/login'; // 로그인 페이지로 이동
+                                }
+                                throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
+                            } else {
+                                return response.text();
+                            }
+                        })
+                        .then(data => {
+                            if(data === "success"){
+                                // 성공적으로 처리된 경우 이미지 경로를 업데이트
+                                if (isWishlist) {
+                                    this.src = '/images/icons/wishlist-nowish.png';
+                                    countSpan.textContent = "(" + (parseInt(countSpan.innerText.replace("(", "").replace(")", "")) - 1).toFixed(0) + ")";
+                                } else {
+                                    this.src = '/images/icons/wishlist-wish.png';
+                                    countSpan.textContent = "(" + (parseInt(countSpan.innerText.replace("(", "").replace(")", "")) + 1).toFixed(0) + ")";
+                                }
+                            }
+
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            if (error.message === 'Unauthorized') {
+                                // 이미 처리된 경우 예외 처리
+                            } else {
+                                alert('네트워크 오류.');
+                            }
+                        });
                 });
             });
         });
@@ -38,6 +93,30 @@
                         <span id="percent" th:if="${product.percent > 0}" th:text="${product.percent} + '%'"></span>
                         <span id="price" th:if="${product.products.price != product.discountPrice}"  th:text="${product.products.price} + '원'"></span>
                         <span id="discount_price" th:text="${product.discountPrice} + '원'"></span>
+                    </div>
+                    <div class="prefer_box">
+                        <!-- 별점 표시 -->
+                        <div class="rating">
+                            <!-- 평균 평점 가져오기 -->
+                            <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                  th:classappend="${product.products.getAverageRating() >= i ? 'filled' : 'empty'}">&#9733;</span>
+                            <span class="average-rating" th:text="${product.products.getAverageRating()}">0.0</span>
+                        </div>
+                        <div class="wishlist">
+                            <!-- 위시리스트 이미지와 버튼, 각 제품의 ID를 사용하여 고유하게 설정 -->
+                            <img id="wish_image"
+                                 th:src="${product.isWishlist} ? '/images/icons/wishlist-wish.png' : '/images/icons/wishlist-nowish.png'"
+                                 alt="Wishlist"
+                                 class="wish"
+                                 th:data-product-id="${product.products.id}"
+                                 style="cursor: pointer;"
+                                 width="14"
+                                 height="14"/>
+                            <span class="wish_count"
+                                  id="wishlist_count"
+                                  th:text="'(' + ${product.wishlistCnt} + ')'">
+                            </span>
+                        </div>
                     </div>
                 </div></td>
         </tr>

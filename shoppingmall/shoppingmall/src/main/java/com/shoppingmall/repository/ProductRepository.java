@@ -1,6 +1,6 @@
 package com.shoppingmall.repository;
+
 import com.shoppingmall.domain.Products;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface ProductRepository {
 
     Products findById(int productId);
 
-    boolean updatePrice(int id, int price);
+    boolean updateProduct(Products products);
 
     boolean discount(int id, int discount);
 

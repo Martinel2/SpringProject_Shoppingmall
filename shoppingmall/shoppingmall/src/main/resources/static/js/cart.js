@@ -60,7 +60,7 @@ $(document).ready(function() {
 
             if (id) {
                 const url = new URL('http://localhost:8080/cart/delete');
-                url.searchParams.append('product_id', id);
+                url.searchParams.append('cartItemId', id);
 
                 fetch(url, {
                     method: 'POST',
@@ -71,7 +71,10 @@ $(document).ready(function() {
                 })
                     .then(response => response.text())
                     .then(data => {
-                        if(data === "success") updatePriceAndTotal();
+                        if(data === "success"){
+                            row.remove();
+                            updatePriceAndTotal();
+                        }
                     })
                     .catch(error => {
                         console.error('Error:', error);

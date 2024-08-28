@@ -93,3 +93,30 @@ tr.clickable-row {
 td{
     display: flex;
 }
+
+.prefer_box{
+    margin-left: 18px;
+}
+
+.rating, .wishlist{
+    display: inline-block;
+}
+
+.wishlist{
+    margin-left: 18px;
+}
+.rating-container {
+    display: flex;
+    align-items: center;
+}
+.rating {
+    margin-top: 11px;
+    font-size: 1.1em;
+    margin-right: 10px;
+}
+.rating span.filled {
+    color: #e8423d; /* 채워진 별 색상 */
+}
+.rating span.empty {
+    color: #e0e0e0; /* 빈 별 색상 */
+}

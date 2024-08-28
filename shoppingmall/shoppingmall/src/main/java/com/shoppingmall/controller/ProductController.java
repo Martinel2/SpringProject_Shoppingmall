@@ -71,16 +71,16 @@ public class ProductController {
         int price = products.getPrice();
         int discountPrice = (int) (price * (1-products.getDiscount()/100));
         boolean isWishlist = false;
+        int wishlistCnt = wishlistService.getAllWishlistByProductId(id).size();
         if(userDetails !=null) {
             Wishlist wishlist = wishlistService.findByTwoId(userDetails.getUsername(), id);
             if (wishlist != null) isWishlist = true;
         }
-        ProductDto productDtos = new ProductDto(products,discountPrice);
+        ProductDto productDtos = new ProductDto(products,(int)products.getDiscount(),discountPrice,isWishlist,wishlistCnt);
         model.addAttribute("productDto", productDtos);
         model.addAttribute("query", keyword); // 검색 쿼리를 모델에 추가
         model.addAttribute("category", category); // 검색 쿼리를 모델에 추가
         model.addAttribute("sellerId", sellerId); // 검색 쿼리를 모델에 추가
-        model.addAttribute("isWishlist", isWishlist);
         return "product/productDetail"; // 상세 페이지의 템플릿 이름
     }
 
@@ -88,7 +88,9 @@ public class ProductController {
     public ResponseEntity<String> modPrice(@RequestParam(name = "product_id") int product_id, @RequestParam(name = "modPrice") int modPrice){
         ResponseEntity response = null;
         try {
-            if(productService.updatePrice(product_id, modPrice)) {
+            Products products = productService.findById(product_id);
+            products.setPrice(modPrice);
+            if(productService.updateProduct(products)) {
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
                         .body("가격이 변경되었습니다.");

@@ -3,6 +3,7 @@ package com.shoppingmall.controller;
 import com.shoppingmall.domain.Products;
 import com.shoppingmall.domain.Purchases;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.service.ProductService;
 import com.shoppingmall.service.PurchaseService;
 import com.shoppingmall.service.ReviewService;
 import com.shoppingmall.service.UserService;
@@ -25,11 +26,13 @@ public class ReviewController {
     private final UserService userService;
     private final PurchaseService purchaseService;
     private final ReviewService reviewService;
+    private final ProductService productService;
 
-    public ReviewController(UserService userService, PurchaseService purchaseService, ReviewService reviewService) {
+    public ReviewController(UserService userService, PurchaseService purchaseService, ReviewService reviewService, ProductService productService) {
         this.userService = userService;
         this.purchaseService = purchaseService;
         this.reviewService = reviewService;
+        this.productService = productService;
     }
 
     @GetMapping("/reviewPopup")
@@ -59,6 +62,9 @@ public class ReviewController {
             if(purchases.size() > 0){
                 Purchases pur = purchaseService.findByThreeId(users.getId(),product_id,orderId);
                 Products p = pur.getProducts();
+                p.setRatingSum(p.getRatingSum() + rating);
+                p.setRatingCnt(p.getRatingCnt()+1);
+                productService.updateProduct(p);
                 reviewService.writeReview(users, p, title, content, rating, photo, pur);
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)

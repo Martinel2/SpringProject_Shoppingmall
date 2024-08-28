@@ -97,7 +97,7 @@
         <div id="link_box">
             <button class="link" id="coupon" onclick="myCoupon()">쿠폰함</button>
             <button class="link" id="order" onclick="orderHistory()">주문내역</button>
-            <button class="link" id="wishlist">내가 찜한 상품</button>
+            <button class="link" id="wishlist" onclick="myWishlist()">내가 찜한 상품</button>
             <button class="link" id="quit" onclick="quit()">회원탈퇴</button>
         </div>
     </div>
@@ -288,7 +288,9 @@
     function myCoupon() {
         window.location.href = "/myCoupon";
     }
-
+    function myWishlist() {
+        window.location.href = "/user/wishlist"
+    }
     function quit() {
         window.location.href = "/user/quit";
     }

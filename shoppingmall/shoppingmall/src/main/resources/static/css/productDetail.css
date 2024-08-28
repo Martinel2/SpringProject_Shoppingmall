@@ -24,10 +24,9 @@ body{
 }
 #info{
     display: grid;
+    margin-left: 16px;
 }
 #title{
-    position: relative;
-    bottom: 40px;
     word-break: break-all;
     width: 500px;
     font-size: 34px;
@@ -37,8 +36,6 @@ body{
     margin-right: 6px;
 }
 #price_box{
-    position: relative;
-    bottom: 100px;
     font-size: 36px;
 }
 #percent{
@@ -67,8 +64,6 @@ body{
     display: block;
 }
 #seller_id{
-    position: relative;
-    bottom: 163px;
     font-size: 26px;
 }
 .val{
@@ -98,34 +93,45 @@ body{
     margin-left: 100px;
 }
 #cart{
-    border: #2d6eaf solid 5px;
+    border: #cccccc solid 1px;
+    border-right: 0px;
     background-color: #2d6eaf;
     color: #e0e6eb;
-    border-radius: 8px;
     font-size: 18px;
+    width: 50%;
+    display: inline-block;
 }
 #buy{
     position: relative;
-    left: 50px;
-    border: #2d6eaf solid 5px;
+    border: #cccccc solid 1px;
     background-color: #2d6eaf;
     color: #e0e6eb;
-    border-radius: 8px;
     font-size: 18px;
+    width: 50%;
+    display: inline-block;
 }
 #description{
     text-align: center;
 }
 #but_box{
-    text-align: center;
+    display: flex;
 }
 
-#wish{
-    background: transparent;
-    border: none;
+.rating-container {
+    display: flex;
+    align-items: center;
 }
-#wish_box{
-    position: relative;
-    left: 576px;
-    bottom: 50px;
+.rating {
+    margin-top: 11px;
+    font-size: 1.1em;
+    margin-right: 10px;
+}
+.rating span.filled {
+    color: #e8423d; /* 채워진 별 색상 */
+}
+.rating span.empty {
+    color: #e0e0e0; /* 빈 별 색상 */
+}
+.wishlist{
+    margin-top: 26px;
 }

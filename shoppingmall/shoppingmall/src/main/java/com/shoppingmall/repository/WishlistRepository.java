@@ -39,6 +39,7 @@ public class WishlistRepository {
     public boolean deleteWishlist(int id){
         Wishlist wishlist = em.find(Wishlist.class, id);
         if(wishlist != null) {
+            em.merge(wishlist);
             em.remove(wishlist);
             return true;
         }

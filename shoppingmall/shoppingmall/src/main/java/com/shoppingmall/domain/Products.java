@@ -30,6 +30,12 @@ public class Products {
     @Column(name = "discount")
     private double discount;
 
+    @Column(name = "rating_sum")
+    private int ratingSum;
+
+    @Column(name = "rating_cnt")
+    private int ratingCnt;
+
     @Lob  // 대용량 데이터를 저장할 때 사용
 
     @Column(name = "description")
@@ -115,5 +121,25 @@ public class Products {
 
     public void setDiscount(double discount) {
         this.discount = discount;
+    }
+
+    public int getRatingSum() {
+        return ratingSum;
+    }
+
+    public void setRatingSum(int ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public int getRatingCnt() {
+        return ratingCnt;
+    }
+
+    public void setRatingCnt(int ratingCnt) {
+        this.ratingCnt = ratingCnt;
+    }
+
+    public double getAverageRating() {
+        return ratingCnt > 0 ? ratingSum / ratingCnt : 0;
     }
 }

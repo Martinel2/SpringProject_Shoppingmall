@@ -26,11 +26,11 @@
             <div class="quantity-controls">
                 <button type="button" class="decrease-quantity" th:data-cart-item-id="${cart.id}">-</button>
                 <span class="quantity" th:text="${cart.quantity}"></span>
-                <span class="origin-price" style="display: none" th:text="${cart.products.price}"></span>
+                <span class="origin-price" style="display: none" th:text="${(cart.products.price * (1 - (cart.products.discount / 100)))}"></span>
                 <button type="button" class="increase-quantity" th:data-cart-item-id="${cart.id}">+</button>
             </div>
         </td>
-        <td class="total-price" th:text="${cart.products.price * cart.quantity} + '원'"></td>
+        <td class="total-price" th:text="${#numbers.formatDecimal(cart.products.price * (1 - (cart.products.discount / 100)) * cart.quantity, 0,0,'COMMA')} + '원'"></td>
         <td class="coupon-apply-cell"><button class="coupon-button" id="coupon">쿠폰 적용</button>
         <td class="discounted-price-cell" style="display: none;">
             <div class="discount_box">

@@ -47,12 +47,9 @@ public class MemoryProductRepository implements ProductRepository{
     }
 
     @Override
-    public boolean updatePrice(int id, int price) {
-        Products product = em.find(Products.class, id);
-        if (product != null) {
-            product.setPrice(price);
-            // `merge` 메서드를 사용하여 업데이트 수행
-            em.merge(product);
+    public boolean updateProduct(Products products) {
+        if (products != null) {
+            em.merge(products);
             return true;
         }
         return false;

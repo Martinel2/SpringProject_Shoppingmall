@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>회원정보</title>
   <link rel="stylesheet" href="/css/statusTemplate.css">
-  <link href="/css/coupon.css" rel="stylesheet" />
+  <link href="/css/status.css" rel="stylesheet" />
 </head>
 <body>
 <div class="header">
@@ -34,22 +34,61 @@
   </div>
   <div id="content" style="border-left: #e0e6eb solid 1px">
     <div>
-      <h2 style="text-align: center">쿠폰함</h2>
+      <h2 style="text-align: center">내가 찜한 상품</h2>
     </div>
-    <table>
-      <tbody>
-      <tr class="clickable-row" th:each="coupons : ${couponDto}" th:data-product-id="${coupons.coupon.id}">
-        <td th:text="${coupons.coupon.percent} + '% 할인 쿠폰'"></td>
-        <td>
-          <div style="padding-bottom: 12px">유효기간</div>
-          <label th:text="'~' + ${coupons.expired}"></label>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <ul>
+      <li th:each="wishlist : ${wishlists}">
+        <div class="order_box" style="display: flex">
+          <div class="photo">
+            <a th:href="'/products/'+${wishlist.product_id}">
+              <img id="image" th:src="@{'/images/uploads/' + ${wishlist.product.photo}}" alt="Product Image" width="150" height="150">
+            </a>
+          </div>
+          <div class="product_name">
+            <a  class="product_name" th:href="'/products/'+${wishlist.product_id}" th:text="${wishlist.product.product_name}"></a>
+          </div>
+          <div class="product_info">
+            <span th:text="${#numbers.formatDecimal(wishlist.product.price * (1 - (wishlist.product.discount / 100)),0,0,'COMMA')} + '원'"></span>
+          </div>
+          <div class="but_box">
+            <button class="cancel" th:text="'삭제'"
+                    th:attr="data-product-id=${wishlist.product_id}">
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const cancel = document.querySelectorAll(".cancel");
+    cancel.forEach(button => {
+      button.addEventListener("click", function () {
+        const li = button.closest('li');
+        const productId = button.getAttribute('data-product-id');
+        const url = new URL('http://localhost:8080/delWishlist');
+        url.searchParams.append('productId', productId);
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        }).then(response => {
+          return response.text();
+        }).then(data => {
+          if (data === "success") {
+            li.remove();
+          }
+        }).catch(error => {
+          console.error('Error:', error);
+          if (error === 'Network response was not ok.')
+            alert('네트워크 오류.');
+        });
+      });
+    });
+  });
   function orderHistory() {
     // 현재 날짜
     const today = new Date();

@@ -11,8 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class WishlistController {
@@ -42,7 +47,7 @@ public class WishlistController {
                 wishlistService.save(user,products);
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
-                        .body("상품이 위시리스트에 추가되었습니다.");
+                        .body("success");
             }
             else{
                 response = ResponseEntity
@@ -58,8 +63,8 @@ public class WishlistController {
     }
 
     @PostMapping("/delWishlist")
-    public ResponseEntity<String> delToWishlist(@RequestParam("productId") int productId,
-                                                @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Map<String, Object>> delToWishlist(@RequestParam("productId") int productId,
+                                                             @AuthenticationPrincipal UserDetails userDetails) {
         ResponseEntity response;
         try {
             String userId = userDetails.getUsername();
@@ -68,7 +73,7 @@ public class WishlistController {
                 wishlistService.deleteWishlist(wishlist.getId());
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
-                        .body("상품이 삭제되었습니다.");
+                        .body("success");
             }
             else{
                 response = ResponseEntity
@@ -81,5 +86,16 @@ public class WishlistController {
                     .body("An exception occured due to " + ex.getMessage());
         }
         return response;
+    }
+
+    @GetMapping("/user/wishlist")
+    public String wishlistPage(@AuthenticationPrincipal UserDetails userDetails,
+                               Model model){
+        Users users = userService.findById(userDetails.getUsername());
+        List<Wishlist> wishlists = wishlistService.getAllWishlistByUserId(users.getId());
+        model.addAttribute("user", users);
+        model.addAttribute("wishlists", wishlists);
+
+        return "/user/wishlist";
     }
 }

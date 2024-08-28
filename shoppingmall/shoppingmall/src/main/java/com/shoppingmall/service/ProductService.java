@@ -70,7 +70,7 @@ public class ProductService {
 
     public Products findById(int id) { return productRepository.findById(id); }
 
-    public boolean updatePrice(int id, int price) { return productRepository.updatePrice(id, price); };
+    public boolean updateProduct(Products products) { return productRepository.updateProduct(products); };
 
     public boolean discount(int id, int discount) { return productRepository.discount(id, discount); }
 
