@@ -22,5 +22,9 @@ public interface ProductRepository {
     boolean deleteProduct(int id);
 
     List<Products> getAllProduct();
+
+    List<Products> getDiscountProduct();
+
+    List<Products> getProductsByUserInfo(int age, String sex);
 }
 

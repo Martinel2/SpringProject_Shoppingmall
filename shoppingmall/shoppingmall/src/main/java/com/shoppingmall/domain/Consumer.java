@@ -2,32 +2,34 @@ package com.shoppingmall.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 public class Consumer {
     @Id
     @OneToOne
     @JoinColumn(name = "userId")
-    private Users userId;
+    private Users user;
 
     @Column(name = "birth")
-    private String birth;
+    private LocalDate birth;
 
     @Column(name = "sex")
     private String sex;
 
-    public Users getUserId() {
-        return userId;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUserId(Users userId) {
-        this.userId = userId;
+    public void setUser(Users user) {
+        this.user = user;
     }
 
-    public String getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(String birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 

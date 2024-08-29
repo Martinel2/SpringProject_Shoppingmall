@@ -1,24 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Dummy product data
-    const products = [
-        {
-            name: "상품 1",
-            price: 1000,
-            image: "https://via.placeholder.com/150"
-        },
-        {
-            name: "상품 2",
-            price: 1500,
-            image: "https://via.placeholder.com/150"
-        },
-        {
-            name: "상품 3",
-            price: 2000,
-            image: "https://via.placeholder.com/150"
-        }
-    ];
 
-    const productsSection = document.getElementById("products");
     const category_box = document.getElementById("category_box");
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");
@@ -51,20 +32,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.getElementById("search_button").addEventListener("click", submitSearch());
-
-    // Render products
-    products.forEach((product, index) => {
-        const productElement = document.createElement("section");
-        productElement.classList.add("product");
-        productElement.dataset.index = index;
-        productElement.innerHTML = `
-      <img src="${product.image}" alt="${product.name}">
-      <h2>${product.name}</h2>
-      <p>${product.price}원</p>
-      <button class="add-to-cart">장바구니 담기</button>
-    `;
-        productsSection.appendChild(productElement);
-    });
 
     function fetchCategories() {
         // AJAX를 사용하여 서버에서 카테고리 데이터를 가져오는 요청을 보냅니다.
@@ -179,4 +146,68 @@ document.addEventListener("DOMContentLoaded", function() {
     function redirectSearchCategory(category) {
         window.location.href = "/search?category=" + encodeURIComponent(category);
     }
+        // 모든 테이블 행에 대해 클릭 이벤트를 추가
+        document.querySelectorAll('.product').forEach(row => {
+            row.addEventListener('click', function (event) {
+                const target = event.target;
+
+                // 행 안의 버튼 클릭 시 이동 방지
+                if (target.classList.contains('wish')) {
+                    return;
+                }
+                const productId = this.dataset.productId;
+                // 상품 상세 페이지로 이동
+                window.location.href = `/products/${productId}`;
+            });
+        });
+
+        document.querySelectorAll('.wish').forEach(image => {
+            image.addEventListener('click', function () {
+                const productId = this.getAttribute('data-product-id');
+                const isWishlist = this.src.includes('wishlist-wish');
+                const countSpan = this.nextElementSibling;
+                const url = new URL(isWishlist ? 'http://localhost:8080/delWishlist' : 'http://localhost:8080/addWishlist');
+                url.searchParams.append('productId', productId);
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 401) {
+                            // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
+                            const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+                            if (shouldRedirect) {
+                                window.location.href = '/login'; // 로그인 페이지로 이동
+                            }
+                            throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
+                        } else {
+                            return response.text();
+                        }
+                    })
+                    .then(data => {
+                        if(data === "success"){
+                            // 성공적으로 처리된 경우 이미지 경로를 업데이트
+                            if (isWishlist) {
+                                this.src = '/images/icons/wishlist-nowish.png';
+                                countSpan.textContent = "(" + (parseInt(countSpan.innerText.replace("(", "").replace(")", "")) - 1).toFixed(0) + ")";
+                            } else {
+                                this.src = '/images/icons/wishlist-wish.png';
+                                countSpan.textContent = "(" + (parseInt(countSpan.innerText.replace("(", "").replace(")", "")) + 1).toFixed(0) + ")";
+                            }
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (error.message === 'Unauthorized') {
+                            // 이미 처리된 경우 예외 처리
+                        } else {
+                            alert('네트워크 오류.');
+                        }
+                    });
+            });
+        });
 });

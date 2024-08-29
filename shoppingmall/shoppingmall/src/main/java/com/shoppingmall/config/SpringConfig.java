@@ -94,6 +94,12 @@ public class SpringConfig {
     public ComplaintService complaintService() { return new ComplaintService(complaintRepository()); }
 
     @Bean
+    public ConsumerRepository consumerRepository() { return new ConsumerRepository(em); }
+
+    @Bean
+    public ConsumerService consumerService() { return new ConsumerService(consumerRepository()); }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)

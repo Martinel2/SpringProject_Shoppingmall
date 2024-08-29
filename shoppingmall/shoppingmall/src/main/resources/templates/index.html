@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Fast Mall</title>
     <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -34,14 +35,84 @@
         </div>
         <div id="banner_margin"> <a id="event" href="/event"> <img src="/images/banners/banner1.jpg" /> </a>
         </div>
-        <article>
-                <h1>할인하는 상품들</h1>
-            <div id="product_list">
-                <div id="products">
-                    <!-- Product items will be dynamically added here -->
+        <div style="display: grid">
+            <div class="product_list" th:if="${discountProductDtos.size()} > 0">
+                    <h2>할인하는 상품들</h2>
+                <div id="discount_product_list">
+                    <div class="product_container" id="discount_products">
+                        <li th:each="product : ${discountProductDtos}"  th:data-product-id="${product.products.id}" class="product">
+                            <img class="product_img" th:src="@{'/images/uploads/' + ${product.products.photo}}" alt="Product Image">
+                            <div>
+                                <span class="price" th:text="${product.products.price} + '원'"></span>
+                                <span class="percent" th:text="${product.percent} + '%'"></span>
+                                <span class="discount_price" th:text="${product.discountPrice} + '원'"></span>
+                            </div>
+                            <label th:text="${product.products.product_name}"></label>
+                            <div class="prefer_box">
+                                <!-- 별점 표시 -->
+                                <div class="rating">
+                                    <!-- 평균 평점 가져오기 -->
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                          th:classappend="${product.products.getAverageRating() >= i ? 'filled' : 'empty'}">&#9733;</span>
+                                    <span class="average-rating" th:text="${product.products.getAverageRating()}">0.0</span>
+                                </div>
+                                <div class="wishlist">
+                                    <!-- 위시리스트 이미지와 버튼, 각 제품의 ID를 사용하여 고유하게 설정 -->
+                                    <img th:src="${product.isWishlist} ? '/images/icons/wishlist-wish.png' : '/images/icons/wishlist-nowish.png'"
+                                         alt="Wishlist"
+                                         class="wish"
+                                         th:data-product-id="${product.products.id}"
+                                         style="cursor: pointer;"
+                                         width="14"
+                                         height="14"/>
+                                    <span class="wish_count"
+                                          th:text="'(' + ${product.wishlistCnt} + ')'">
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
                 </div>
             </div>
-        </article>
+            <div class="product_list" th:if="${recommendProductDtos.size()} > 0">
+                <h2 th:text="${age} + '대 ' + ${sex} + '이 많이 구매한 상품'"></h2>
+                <div id="recommend_product_list">
+                    <div class="product_container" id="recommend_products">
+                        <li th:each="product : ${recommendProductDtos}" th:data-product-id="${product.products.id}" class="product">
+                            <img class="product_img" th:src="@{'/images/uploads/' + ${product.products.photo}}" alt="Product Image">
+                            <div>
+                                <span class="price" th:if="${product.products.price != product.discountPrice}" th:text="${product.products.price} + '원'"></span>
+                                <span class="percent" th:if="${product.percent > 0}" th:text="${product.percent} + '%'"></span>
+                                <span class="discount_price" th:text="${product.discountPrice} + '원'"></span>
+                            </div>
+                            <label th:text="${product.products.product_name}"></label>
+                            <div class="prefer_box">
+                                <!-- 별점 표시 -->
+                                <div class="rating">
+                                    <!-- 평균 평점 가져오기 -->
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                          th:classappend="${product.products.getAverageRating() >= i ? 'filled' : 'empty'}">&#9733;</span>
+                                    <span class="average-rating" th:text="${product.products.getAverageRating()}">0.0</span>
+                                </div>
+                                <div class="wishlist">
+                                    <!-- 위시리스트 이미지와 버튼, 각 제품의 ID를 사용하여 고유하게 설정 -->
+                                    <img th:src="${product.isWishlist} ? '/images/icons/wishlist-wish.png' : '/images/icons/wishlist-nowish.png'"
+                                         alt="Wishlist"
+                                         class="wish"
+                                         th:data-product-id="${product.products.id}"
+                                         style="cursor: pointer;"
+                                         width="14"
+                                         height="14"/>
+                                    <span class="wish_count"
+                                          th:text="'(' + ${product.wishlistCnt} + ')'">
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/js/script.js"></script>
 </body>

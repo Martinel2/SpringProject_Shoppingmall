@@ -1,9 +1,10 @@
 package com.shoppingmall.domain;
 
-import com.shoppingmall.dto.Level;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+
+import java.time.LocalDate;
 
 @Entity
 public class Users {
@@ -22,7 +23,7 @@ public class Users {
     private String phone;
 
     @Column(name = "birth")
-    private String birth;
+    private LocalDate birth;
 
     @Column(name = "role")
     private String role;
@@ -33,6 +34,8 @@ public class Users {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "sex")
+    private String sex;
 
     public String getEnabled() {
         return enabled;
@@ -50,7 +53,7 @@ public class Users {
         this.role = role;
     }
 
-    private Users(String id, String password, String name, String place, String phone, String birth, String email, String enabled, String role){
+    public Users(String id, String password, String name, String place, String phone, LocalDate birth, String email, String enabled, String role, String sex){
         this.id = id;
         this.password = password;
         this.name = name;
@@ -60,6 +63,7 @@ public class Users {
         this.email = email;
         this.enabled = enabled;
         this.role = role;
+        this.sex = sex;
     }
 
     /*public static Users createUser(String userId, String pw, PasswordEncoder passwordEncoder) {
@@ -96,12 +100,12 @@ public class Users {
         this.place = place;
     }
 
-    public String getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(String birthday) {
-        this.birth = birthday;
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
     }
 
     public String getPhone() {
@@ -120,6 +124,13 @@ public class Users {
         this.email = email;
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public Users(){}
 

@@ -5,7 +5,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MemoryProductRepository implements ProductRepository{
     @PersistenceContext
@@ -56,6 +58,12 @@ public class MemoryProductRepository implements ProductRepository{
     }
 
     @Override
+    public List<Products> getDiscountProduct(){
+        TypedQuery<Products> query = em.createQuery("SELECT u FROM Products u WHERE u.discount > 0", Products.class);
+        return query.getResultList();
+    }
+
+    @Override
     public boolean discount(int id, int discount) {
         Products product = em.find(Products.class, id);
         if (product != null) {
@@ -81,5 +89,33 @@ public class MemoryProductRepository implements ProductRepository{
     public List<Products> getAllProduct() {
         String query = "SELECT c FROM Products c";
         return em.createQuery(query, Products.class).getResultList();
+    }
+
+    @Override
+    public List<Products> getProductsByUserInfo(int age, String sex){
+        // 20년 전과 30년 전의 날짜를 계산하여 birth 조건으로 사용
+        LocalDate startDate = LocalDate.now().minusYears(age+10); // age+10년 전
+        LocalDate endDate = LocalDate.now().minusYears(age);   // age년 전
+
+        TypedQuery<Object[]> query = em.createQuery(
+                "SELECT p, COUNT(p) as cnt FROM Purchases r " +
+                        "JOIN r.products p " +
+                        "WHERE r.users.birth BETWEEN :startDate AND :endDate AND r.users.sex = :sex " +
+                        "GROUP BY p " +
+                        "ORDER BY cnt DESC",
+                Object[].class
+        );
+
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        query.setParameter("sex", sex);
+
+        List<Object[]> results = query.getResultList();
+
+        // 가장 많이 등장한 순서대로 Products 리스트 추출
+        List<Products> products = results.stream()
+                .map(result -> (Products) result[0])
+                .collect(Collectors.toList());
+        return products;
     }
 }

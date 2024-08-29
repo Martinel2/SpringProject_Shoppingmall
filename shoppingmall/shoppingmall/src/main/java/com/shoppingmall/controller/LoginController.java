@@ -6,27 +6,30 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Slf4j
 @Controller
 public class LoginController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public LoginController(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping("/login")
     public String login() {
@@ -45,14 +48,24 @@ public class LoginController {
     }
 
     @PostMapping("/user/new")
-    public ResponseEntity<String> registerUser(@RequestBody Users users) {
-        Users savedUser = null;
+    public ResponseEntity<String> registerUser(@RequestParam(name = "id") String id,
+                                               @RequestParam(name = "password") String password,
+                                               @RequestParam(name = "name") String name,
+                                               @RequestParam(name = "birth") String birth,
+                                               @RequestParam(name = "email") String email,
+                                               @RequestParam(name = "phone") String phone,
+                                               @RequestParam(name = "place") String place,
+                                               @RequestParam(name = "enabled") String enabled,
+                                               @RequestParam(name = "role") String role,
+                                               @RequestParam(name = "sex") String sex) {
         ResponseEntity response = null;
         try {
-            String hashPwd = passwordEncoder.encode(users.getPassword());
-            users.setPassword(hashPwd);
-            if(userService.findById(users.getId()) == null) {
-                savedUser = userService.join(users);
+            String hashPwd = passwordEncoder.encode(password);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate birthdate = LocalDate.parse(birth, formatter);
+            Users savedUser = new Users(id,hashPwd,name,place,phone,birthdate,email,enabled,role,sex);
+            if(userService.findById(id) == null) {
+                userService.join(savedUser);
                 if (savedUser.getId() != null) {
                     response = ResponseEntity
                             .status(HttpStatus.CREATED)

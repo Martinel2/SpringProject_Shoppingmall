@@ -77,4 +77,8 @@ public class ProductService {
     public boolean deleteProduct(int id) { return productRepository.deleteProduct(id); }
 
     public List<Products> getAllProduct() { return productRepository.getAllProduct(); }
+
+    public List<Products> getDiscountProduct() { return productRepository.getDiscountProduct(); }
+
+    public List<Products> getProductsByUserInfo(int age, String sex) { return productRepository.getProductsByUserInfo(age,sex); }
 }

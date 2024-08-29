@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("phone3").value ;
         const email = document.getElementById("email").value;
         const place = document.getElementById("place").value;
+        const sex = document.querySelector('input[name="sex"]:checked').value;
         const enabled = "T";
         const role = "BASIC";
         const data = {
@@ -157,7 +158,8 @@ document.addEventListener("DOMContentLoaded", function() {
             email: email,
             place: place,
             enabled:enabled,
-            role:role
+            role:role,
+            sex:sex
         };
         $.ajax({
             url: '/user/new',
