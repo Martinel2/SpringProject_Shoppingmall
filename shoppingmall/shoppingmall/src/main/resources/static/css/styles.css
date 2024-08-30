@@ -1,8 +1,9 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    padding: 20px;
     background-color: #333;
+    text-align: center;
+    margin: 20px 20px 20px 158px;
 }
 
 /*상단 바*/
@@ -13,7 +14,7 @@ body {
     height: 130px;
     display: flex;
     position: relative;
-    min-width: 1200px;
+    width: 1080px;
 }
 
 /*로고가 좌측 상단에 위치하도록 조정*/
@@ -29,34 +30,49 @@ body {
     height: 90px;
 }
 
+#sub_header{
+    display: flex;
+    justify-content: flex-end;
+    width: 1040px;
+    margin-bottom: 14px;
+    font-weight: bolder;
+}
+
+a{
+    text-decoration: none;
+    color: #cccccc;
+    margin: 4px;
+    font-size: 14px;
+}
+
 #search_form{
-    display: inline-block;
-    width: 700px;
+    display: flex;
+    width: 575px;
     padding-top: 20px;
-    padding-left: 50px;
+    justify-content: space-evenly;
 }
 
 #search_input{
     display: inline-block;
     width: 500px;
-    height: 44px;
+    height: 46px;
     padding-top: 3px;
-    border-radius: 10px;
+    border-radius: 40px;
     border: 3px solid #3a86b8f0;
     background-color: #333333;
     color: #fff;
+    font-size: 16px;
+    padding-left: 18px;
+    margin-top: 6px;
 }
 
 .search_button{
-    display: block;
-    position: absolute;
-    left: 835px;
-    top: 6px;
+    display: inline-block;
     width: 32px;
     height: 32px;
     padding: 5px;
-    margin-left: 22px;
-    margin-top: 27px;
+    margin-left: 15px;
+    margin-top: 10px;
     background-color: #333333;
     border: #333333;
 }
@@ -66,10 +82,11 @@ body {
     height: 32px;
 }
 
-.user-menu{
+.user_menu{
     width: 150px;
     height: 60px;
     display: flex;
+    margin: 18px 0px 0px 60px;
 }
 
 /*로그인 버튼*/
@@ -103,16 +120,14 @@ body {
     height: 50px;
 }
 
-#seller_menu{
-}
-
 #category_box{
     display: flex;
+    text-align: left;
     flex-wrap: wrap;
     gap: 10px;
     padding-left: 16px;
     box-sizing: border-box;
-    width: 1500px;
+    width: 1080px;
     height: 300px;
 }
 
@@ -136,7 +151,7 @@ body {
     position: absolute;
     top: 0;
     left: 130px;
-    width: 1200px;
+    width: 890px;
     height: 320px;
     background-color: #e0e6eb;
     color: #fff;
@@ -173,7 +188,7 @@ body {
 #banner_margin{
     display: block;
     width: 1000px;
-    margin-left: 200px;
+    margin-left: 18px;
     padding-top: 40px;
     padding-bottom: 4px;
 }
@@ -193,7 +208,6 @@ body {
 .product_list{
     width: 1080px;
     padding: 5px 10px 10px 10px;
-    margin-left: 200px;
     border: dimgray;
     font-size: 18px;
     font-weight: 700;
@@ -201,6 +215,7 @@ body {
     color: #fff;
     letter-spacing: -1px;
     border-radius: 5px;
+    text-align: left;
 }
 
 .product_container{
