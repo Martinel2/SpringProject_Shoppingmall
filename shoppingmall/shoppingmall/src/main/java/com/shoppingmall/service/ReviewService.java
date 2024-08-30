@@ -23,9 +23,6 @@ public class ReviewService {
     public Review writeReview(Users user, Products products, String title, String content, int rating, MultipartFile photo, Purchases purchases){
         String photoPath = "";
 
-        if(photo != null)
-            photoPath= fileStorageService.storeFile(photo);
-
         // 리뷰 저장 로직 구현
         Review review = new Review();
         review.setUsers(user);
@@ -34,7 +31,10 @@ public class ReviewService {
         review.setTitle(title);
         review.setRating(rating);
         review.setPurchases(purchases);
-        if(photoPath.length() > 0) review.setPhoto(photoPath);
+        if(photo.getName().contains(".")) {
+            photoPath = fileStorageService.storeFile(photo);
+            review.setPhoto(photoPath);
+        }
 
         return reviewRepository.writeReview(review);
     }

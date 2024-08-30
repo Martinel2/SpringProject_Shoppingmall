@@ -4,89 +4,85 @@
     <meta charset="UTF-8">
     <title>Fast Mall - 검색결과</title>
     <link rel="stylesheet" href="/css/searchResult.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 모든 테이블 행에 대해 클릭 이벤트를 추가
-            document.querySelectorAll('.clickable-row').forEach(row => {
-                row.addEventListener('click', function (event) {
-                    const target = event.target;
-
-                    // 행 안의 버튼 클릭 시 이동 방지
-                    if (target.classList.contains('wish')) {
-                        return;
-                    }
-                    const productId = this.dataset.productId;
-                    // 상품 상세 페이지로 이동
-                    window.location.href = `/products/${productId}`;
-                });
-            });
-
-            document.querySelectorAll('.wish').forEach(image => {
-                image.addEventListener('click', function () {
-                    const productId = this.getAttribute('data-product-id');
-                    const isWishlist = this.src.includes('wishlist-wish');
-                    const countSpan = this.nextElementSibling;
-                    const url = new URL(isWishlist ? 'http://localhost:8080/delWishlist' : 'http://localhost:8080/addWishlist');
-                    url.searchParams.append('productId', productId);
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                        .then(response => {
-                            if (response.status === 401) {
-                                // 401 상태 코드인 경우 로그인 창으로 이동할지 물어보는 prompt 표시
-                                const shouldRedirect = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
-                                if (shouldRedirect) {
-                                    window.location.href = '/login'; // 로그인 페이지로 이동
-                                }
-                                throw new Error('Unauthorized'); // 에러를 throw하여 나머지 then 블록이 실행되지 않도록 함
-                            } else {
-                                return response.text();
-                            }
-                        })
-                        .then(data => {
-                            if(data === "success"){
-                                // 성공적으로 처리된 경우 이미지 경로를 업데이트
-                                if (isWishlist) {
-                                    this.src = '/images/icons/wishlist-nowish.png';
-                                    countSpan.textContent = "(" + (parseInt(countSpan.innerText.replace("(", "").replace(")", "")) - 1).toFixed(0) + ")";
-                                } else {
-                                    this.src = '/images/icons/wishlist-wish.png';
-                                    countSpan.textContent = "(" + (parseInt(countSpan.innerText.replace("(", "").replace(")", "")) + 1).toFixed(0) + ")";
-                                }
-                            }
-
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            if (error.message === 'Unauthorized') {
-                                // 이미 처리된 경우 예외 처리
-                            } else {
-                                alert('네트워크 오류.');
-                            }
-                        });
-                });
-            });
-        });
-    </script>
+    <script src="/js/searchResult.js"></script>
 </head>
 <body>
 <div class="header">
     <a href="/" id="home_logo">
-        <img src="/images/icons/logo.png" alt="Home Logo"/>
+        <img src="/images/icons/logo.png" />
     </a>
+    <!-- 입력창과 검색 버튼 -->
+    <form id="search_form" action="/search" method="get">
+        <input type="text" id="search_input" th:value="${query}" th:data-query="${query != null ? query:'default'}">
+        <button type="submit" class="search_button" id="search_button">
+            <img src="/images/icons/search.png"/>
+        </button>
+    </form>
+    <div id="user_menu" class="user_menu">
+        <button id="status"> <img src="/images/icons/login.png"/> </button>
+        <button id="cart"> <img src="/images/icons/cart.png"/> </button>
+    </div>
 </div>
-<form action="/search">
-    <!-- 타임리프를 통해 query값을 매핑해서 화면에 보여주기 -->
-    <h1><span style="color: #3180d1" th:text="${query}">
+<div id="sub_header">
+    <div id="login_menu">
+        <a href="/login">로그인</a>
+        <a href="/newUser">회원가입</a>
+    </div>
+    <div id="seller_menu">
+        <a href="/products/add">판매하기</a>
+        <a href="/sellerStatus">내가 올린 상품 보기</a>
+    </div>
+</div>
+<!-- 타임리프를 통해 query값을 매핑해서 화면에 보여주기 -->
+<h1><span style="color: #3180d1" th:text="${query}">
     </span><span style="color: #3180d1" th:text="${category}">
     </span><span style="color: #3180d1" th:text="${sellerId}"></span> 검색결과</h1>
+<div id="sort_list" th:data-view="${view != null ? view:'0'}" th:data-sort="${sort != null ? sort:'0'}">
+    <select id="sort" name="sort">
+        <option value="0" th:selected="${sort == 0}">할인율 높은순</option>
+        <option value="1" th:selected="${sort == 1}">리뷰 많은순</option>
+        <option value="2" th:selected="${sort == 2}">리뷰 좋은순</option>
+        <option value="3" th:selected="${sort == 3}">낮은 가격순</option>
+        <option value="4" th:selected="${sort == 4}">높은 가격순</option>
+    </select>
+    <div id="view_control">
+        <button id="vertical_button" class="vertical_button">
+                <span th:style="${view} == 0? 'background:#3180d1;':'background:black'"></span>
+                <span th:style="${view} == 0? 'background:#3180d1;':'background:black'"></span>
+                <span th:style="${view} == 0? 'background:#3180d1;':'background:black'"></span>
+        </button>
+        <button id="card_button" class="card_button">
+                <span th:style="${view} != 0? 'background:#3180d1;':'background:black'"></span>
+                <span th:style="${view} != 0? 'background:#3180d1;':'background:black'"></span>
+                <span th:style="${view} != 0? 'background:#3180d1;':'background:black'"></span>
+                <span th:style="${view} != 0? 'background:#3180d1;':'background:black'"></span>
+        </button>
+    </div>
+</div>
+<div id="body_container">
+    <div class="aside">
+        <ul class="category_list" id="category_list" th:data-category="${category != null ? category : 'default'}">
+            <!-- 상위 카테고리 순회 -->
+            <li th:each="parentCategory : ${categoryTree.keySet()}">
+                <a  class="parentCategory" th:href="@{/search(category=${parentCategory})}">
+                    <span class="parentCategory"
+                          th:text="${parentCategory}">상위 카테고리</span>
+                </a>
+                <ul>
+                    <!-- 하위 카테고리 순회 -->
+                    <li th:each="subCategory : ${categoryTree.get(parentCategory)}">
+                        <a class="subCategory" th:href="@{/search(category=${subCategory})}">
+                            <span class="subCategory"
+                                  th:text="${subCategory}">하위 카테고리</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     <table>
         <tbody>
-        <tr class="clickable-row" th:each="product : ${productDto}" th:data-product-id="${product.products.id}">
+        <tr class="clickable-row"  th:style="${view} == 0? 'display:inline;':'display:inline-block;'" th:each="product : ${productDto}" th:data-product-id="${product.products.id}">
             <td><img id="image" th:src="@{'/images/uploads/' + ${product.products.photo}}" alt="Product Image">
                 <div id="box"><span id="name" th:text="${product.products.product_name}"></span>
                     <div>
@@ -101,6 +97,9 @@
                             <span th:each="i : ${#numbers.sequence(1, 5)}"
                                   th:classappend="${product.products.getAverageRating() >= i ? 'filled' : 'empty'}">&#9733;</span>
                             <span class="average-rating" th:text="${product.products.getAverageRating()}">0.0</span>
+                            <span class="rating_count"
+                                  th:text="'(' + ${product.products.ratingCnt} + ')'">
+                            </span>
                         </div>
                         <div class="wishlist">
                             <!-- 위시리스트 이미지와 버튼, 각 제품의 ID를 사용하여 고유하게 설정 -->
@@ -122,6 +121,6 @@
         </tr>
         </tbody>
     </table>
-</form>
+</div>
 </body>
 </html>

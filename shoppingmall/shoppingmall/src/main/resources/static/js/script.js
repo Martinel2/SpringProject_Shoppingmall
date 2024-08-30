@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "/cart";
     })
 
-    function submitSearch() {
+    document.getElementById("search_button").addEventListener("click", function () {
         // 입력된 검색어 가져오기
-        document.getElementById("search_form").addEventListener("submit", function(event) {
+        document.getElementById("search_form").addEventListener("submit", function (event) {
             event.preventDefault(); // 기본 폼 제출 동작 방지
 
             // 입력된 검색어 가져오기
@@ -27,12 +27,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // 검색 결과 페이지로 이동
-            redirectSearchResult(searchQuery);
+            window.location.href = "/search?query=" + encodeURIComponent(searchQuery);
         });
-    }
-
-    document.getElementById("search_button").addEventListener("click", submitSearch());
-
+    });
     function fetchCategories() {
         // AJAX를 사용하여 서버에서 카테고리 데이터를 가져오는 요청을 보냅니다.
         const xhr = new XMLHttpRequest();
@@ -138,10 +135,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     */
-
-    function redirectSearchResult(search) {
-        window.location.href = "/search?query=" + encodeURIComponent(search);
-    }
 
     function redirectSearchCategory(category) {
         window.location.href = "/search?category=" + encodeURIComponent(category);

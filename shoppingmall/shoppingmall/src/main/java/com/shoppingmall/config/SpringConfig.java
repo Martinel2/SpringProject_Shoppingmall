@@ -23,13 +23,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SpringConfig {
+
     @PersistenceContext
     public EntityManager em;
     @Bean
     public FileStorageService fileStorageService() { return new FileStorageService(); };
-
-    @Bean
-    public CategoryRepository categoryRepository() { return  new CategoryRepository(em); };
 
     @Bean
     public UserRepository userRepository(){
@@ -39,6 +37,12 @@ public class SpringConfig {
     public UserService userService(){
         return new UserService(userRepository());
     }
+
+    @Bean
+    public CategoryRepository categoryRepository() { return new CategoryRepository(em); }
+
+    @Bean
+    public CategoryService categoryService() { return new CategoryService(categoryRepository()); }
 
     @Bean
     public ProductRepository productRepository() { return new MemoryProductRepository(em); };

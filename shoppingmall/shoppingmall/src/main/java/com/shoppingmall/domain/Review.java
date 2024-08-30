@@ -6,13 +6,16 @@ import jakarta.persistence.*;
 public class Review {
 
     @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", updatable = false, insertable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "product_id", updatable = false, insertable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Products products;
 
     @Column(name = "title")
@@ -32,6 +35,14 @@ public class Review {
     @Lob
     @Column(name = "photo")
     private String photo;  // 사진 파일 경로 또는 URL
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Users getUsers() {
         return users;

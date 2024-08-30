@@ -16,6 +16,7 @@ public class CategoryRepository {
     public CategoryRepository(EntityManager em) {
         this.em = em;
     }
+
     public List<Integer> findIdByTitle(String title){
         TypedQuery<Category> query = em.createQuery("SELECT u FROM Category u WHERE u.title LIKE :title", Category.class);
         query.setParameter("title", "%" + title + "%");
@@ -25,5 +26,11 @@ public class CategoryRepository {
             id.add(value.getId());
         }
         return id;
+    }
+
+    public List<Category> findAll() {
+        String jpql = "SELECT c FROM Category c";
+        TypedQuery<Category> query = em.createQuery(jpql, Category.class);
+        return query.getResultList();
     }
 }

@@ -62,10 +62,10 @@ public class ReviewController {
             if(purchases.size() > 0){
                 Purchases pur = purchaseService.findByThreeId(users.getId(),product_id,orderId);
                 Products p = pur.getProducts();
+                reviewService.writeReview(users, p, title, content, rating, photo, pur);
                 p.setRatingSum(p.getRatingSum() + rating);
                 p.setRatingCnt(p.getRatingCnt()+1);
                 productService.updateProduct(p);
-                reviewService.writeReview(users, p, title, content, rating, photo, pur);
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
                         .body("리뷰가 등록되었습니다!");
