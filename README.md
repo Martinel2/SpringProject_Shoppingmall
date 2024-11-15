@@ -6,11 +6,11 @@ Spring을 사용해보면서 Spring이 실제로 어떻게 동작하는지를 �
 첫 개인 프로젝트라 부족한 부분이 많이 존재합니다. (다음 프로젝트 시에는 이를 개선하여 프로젝트를 진행하도록 노력할 예정)
 
 ## 버전
-Java 17
-Springboot 3.2.3
-Spring Security 6.3.1.2
-MySQL 8.0
-Toss API 2022.11.16
+- Java 17
+- Springboot 3.2.3
+- Spring Security 6.3.1.2
+- MySQL 8.0
+- Toss API 2022.11.16
 
 ##  추가해본 기능
 
