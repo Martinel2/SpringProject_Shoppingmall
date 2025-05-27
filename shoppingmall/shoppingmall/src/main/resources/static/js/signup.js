@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //회원가입 정보 받아서 서버로 보낸 후 결과에 따라 가입 성공 실패 코드
     const signup=document.getElementById("signB");
-    signup.addEventListener("click", function(event) {
+    signup.addEventListener("click", function() {
         if(!checkId){
             document.getElementById("label1").style.color = "red";
             document.getElementById("label1").innerText = "아이디를 작성해주세요.";
