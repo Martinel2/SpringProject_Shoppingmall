@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 
+
     const category_box = document.getElementById("category_box");
     const category_1depth = document.getElementById("category_1depth");
     const category_div = document.createElement("div");

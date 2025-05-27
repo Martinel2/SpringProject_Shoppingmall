@@ -120,7 +120,7 @@ public class WidgetController {
 
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
         // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-        String widgetSecretKey = "결제 연동 시크릿 키";
+        String widgetSecretKey = "test_sk_ma60RZblrqJGQ2DYAbpe8wzYWBn1";
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
@@ -159,7 +159,7 @@ public class WidgetController {
             purchases.setOrder_id(orderId);
             purchaseService.addPurchase(purchases);
             cartService.deleteCartItem(cartIds[i]);
-            if(coupon.getId() != 0)
+            if(coupon != null)
                 couponService.deleteFirstCouponList(userId,couponIds[i]);
 
         }
@@ -179,7 +179,7 @@ public class WidgetController {
 
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
         // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-        String widgetSecretKey = "결제 연동 시크릿 키";
+        String widgetSecretKey = "test_sk_ma60RZblrqJGQ2DYAbpe8wzYWBn1";
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
@@ -218,7 +218,7 @@ public class WidgetController {
 
             // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
             // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-            String widgetSecretKey = "결제 연동 시크릿 키";
+            String widgetSecretKey = "test_sk_ma60RZblrqJGQ2DYAbpe8wzYWBn1";
             Base64.Encoder encoder = Base64.getEncoder();
             byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
             String authorizations = "Basic " + new String(encodedBytes);

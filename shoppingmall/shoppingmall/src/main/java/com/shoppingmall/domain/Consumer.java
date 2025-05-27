@@ -1,10 +1,14 @@
 package com.shoppingmall.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
 public class Consumer {
     @Id
     @OneToOne
@@ -17,27 +21,4 @@ public class Consumer {
     @Column(name = "sex")
     private String sex;
 
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
-
-    public LocalDate getBirth() {
-        return birth;
-    }
-
-    public void setBirth(LocalDate birth) {
-        this.birth = birth;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
 }
