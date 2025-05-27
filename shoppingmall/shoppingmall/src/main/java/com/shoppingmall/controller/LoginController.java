@@ -1,6 +1,7 @@
 package com.shoppingmall.controller;
 
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.dto.SignupDto;
 import com.shoppingmall.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -47,24 +49,16 @@ public class LoginController {
         return "redirect:/login";  // 로그인 페이지로 리다이렉트
     }
 
-    @PostMapping("/user/new")
-    public ResponseEntity<String> registerUser(@RequestParam(name = "id") String id,
-                                               @RequestParam(name = "password") String password,
-                                               @RequestParam(name = "name") String name,
-                                               @RequestParam(name = "birth") String birth,
-                                               @RequestParam(name = "email") String email,
-                                               @RequestParam(name = "phone") String phone,
-                                               @RequestParam(name = "place") String place,
-                                               @RequestParam(name = "enabled") String enabled,
-                                               @RequestParam(name = "role") String role,
-                                               @RequestParam(name = "sex") String sex) {
+    @PostMapping("/usernew")
+    public ResponseEntity<String> registerUser(@RequestBody SignupDto signupDto) {
         ResponseEntity response = null;
         try {
-            String hashPwd = passwordEncoder.encode(password);
+            String hashPwd = passwordEncoder.encode(signupDto.getPassword());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            LocalDate birthdate = LocalDate.parse(birth, formatter);
-            Users savedUser = new Users(id,hashPwd,name,place,phone,birthdate,email,enabled,role,sex);
-            if(userService.findById(id) == null) {
+            LocalDate birthdate = LocalDate.parse(signupDto.getBirth(), formatter);
+            Users savedUser = new Users(signupDto.getId(), hashPwd, signupDto.getName(), signupDto.getPlace(),
+                    signupDto.getPhone(), birthdate, signupDto.getEmail(), signupDto.getEnabled(), signupDto.getRole(), signupDto.getSex());
+            if(userService.findById(signupDto.getId()) == null) {
                 userService.join(savedUser);
                 if (savedUser.getId() != null) {
                     response = ResponseEntity

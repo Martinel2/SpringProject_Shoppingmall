@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
             sex:sex
         };
         $.ajax({
-            url: '/user/new',
+            url: '/usernew',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify(data),

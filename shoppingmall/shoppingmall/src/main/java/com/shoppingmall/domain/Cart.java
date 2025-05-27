@@ -1,8 +1,12 @@
 package com.shoppingmall.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "cart")
 public class Cart {
 
@@ -18,28 +22,4 @@ public class Cart {
     private Products products;
 
     private int quantity;
-    public int getId() {
-        return id;
-    }
-    public Users getUser() {
-        return user;
-    }
-    public void setUser(Users user) {
-        this.user = user;
-    }
-    public Products getProducts() {
-        return products;
-    }
-
-    public void setProducts(Products products) {
-        this.products = products;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }

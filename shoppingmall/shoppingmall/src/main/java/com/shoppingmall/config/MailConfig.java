@@ -1,5 +1,6 @@
 package com.shoppingmall.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,13 +10,20 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
+
+    @Value("${smtp.pw}")
+    private String pw;
+
+    @Value("${smtp.id}")
+    private String id;
+
     @Bean
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost("smtp.naver.com");
-        javaMailSender.setUsername("kkuldangi3@naver.com");
-        javaMailSender.setPassword("tpzkdlalfkdl");
+        javaMailSender.setUsername(id);
+        javaMailSender.setPassword(pw);
 
         javaMailSender.setPort(465);
 
