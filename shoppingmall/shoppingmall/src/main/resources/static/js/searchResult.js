@@ -37,8 +37,28 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function redirectSearchCategory(category) {
-        window.location.href = "/search?category=" + encodeURIComponent(category);
+        // 주소창은 바꾸되 새로고침은 하지 않음
+        const newUrl = "/search?category=" + encodeURIComponent(category);
+        window.history.pushState({category}, '', newUrl);
+
+        // 비동기로 데이터 요청
+        fetch(newUrl)
+            .then(res => res.text())
+            .then(html => {
+                // 서버에서 해당 카테고리 HTML 조각을 받아서 일부만 갱신
+                document.querySelector('.category_list').innerHTML = extractProductHtml(html);
+            });
     }
+
+    function extractProductHtml(fullHtml) {
+        // 임시 DOM에 넣고 필요한 부분만 가져오기
+        const temp = document.createElement('div');
+        temp.innerHTML = fullHtml;
+
+        const productSection = temp.querySelector('.category_list');
+        return productSection ? productSection.innerHTML : '';
+    }
+
 
     document.getElementById('sort').addEventListener('change', function () {
         const query = document.getElementById('search_input').dataset.query;

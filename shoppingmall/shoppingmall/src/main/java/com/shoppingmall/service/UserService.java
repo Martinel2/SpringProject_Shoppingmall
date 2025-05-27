@@ -1,22 +1,29 @@
 package com.shoppingmall.service;
 
+import com.shoppingmall.Global.Exception.EmailDuplicationException;
 import com.shoppingmall.domain.Users;
+import com.shoppingmall.dto.SignupDto;
 import com.shoppingmall.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Transactional
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -55,5 +62,24 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean delete(Users users) { return userRepository.deleteUser(users); }
+
+    public boolean dupCheck(String id) {
+        if(userRepository.findById(id) == null) return true;
+        else throw new EmailDuplicationException();
+    }
+
+    public Users signUp(SignupDto signupDto) {
+        if(dupCheck(signupDto.getId())) {
+            String hashPwd = passwordEncoder.encode(signupDto.getPassword());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate birthdate = LocalDate.parse(signupDto.getBirth(), formatter);
+            Users savedUser = new Users(signupDto.getId(), hashPwd, signupDto.getName(), signupDto.getPlace(),
+                    signupDto.getPhone(), birthdate, signupDto.getEmail(), signupDto.getEnabled(), signupDto.getRole(), signupDto.getSex());
+
+            if (findById(signupDto.getId()) == null) return join(savedUser);
+            else throw new UsernameNotFoundException("회원가입 오류");
+        }
+        else throw new EmailDuplicationException();
+    }
 
 }

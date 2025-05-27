@@ -1,5 +1,7 @@
 package com.shoppingmall.controller;
 
+import com.shoppingmall.Global.Response.Result.ResultCode;
+import com.shoppingmall.Global.Response.Result.ResultResponse;
 import com.shoppingmall.domain.Users;
 import com.shoppingmall.dto.SignupDto;
 import com.shoppingmall.service.UserService;
@@ -16,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Slf4j
@@ -50,33 +50,17 @@ public class LoginController {
     }
 
     @PostMapping("/usernew")
-    public ResponseEntity<String> registerUser(@RequestBody SignupDto signupDto) {
-        ResponseEntity response = null;
-        try {
-            String hashPwd = passwordEncoder.encode(signupDto.getPassword());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            LocalDate birthdate = LocalDate.parse(signupDto.getBirth(), formatter);
-            Users savedUser = new Users(signupDto.getId(), hashPwd, signupDto.getName(), signupDto.getPlace(),
-                    signupDto.getPhone(), birthdate, signupDto.getEmail(), signupDto.getEnabled(), signupDto.getRole(), signupDto.getSex());
-            if(userService.findById(signupDto.getId()) == null) {
-                userService.join(savedUser);
-                if (savedUser.getId() != null) {
-                    response = ResponseEntity
-                            .status(HttpStatus.CREATED)
-                            .body(Map.of("message", "success"));
-                }
-            }
-            else{
-                response = ResponseEntity
-                        .status(HttpStatus.CREATED)
-                        .body("중복된 ID입니다");
-            }
-        } catch (Exception ex) {
-            response = ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An exception occured due to " + ex.getMessage());
-        }
-        return response;
+    public ResponseEntity<ResultResponse> registerUser(@RequestBody SignupDto signupDto) {
+        Users users = userService.signUp(signupDto);
+        final ResultResponse response = new ResultResponse(ResultCode.REGISTER_SUCCESS,users);
+        return new ResponseEntity<>(response,response.getStatus());
+    }
+
+    @PostMapping("/dup_check")
+    public ResponseEntity<ResultResponse> dupCheck(@RequestBody Map<String, String> body) {
+        userService.dupCheck(body.get("id"));
+        final ResultResponse response = new ResultResponse(ResultCode.DUP_CHECK_SUCCESS,body.get("id"));
+        return new ResponseEntity<>(response,response.getStatus());
     }
 
     @GetMapping("/find_id")
@@ -96,7 +80,7 @@ public class LoginController {
 
         } catch (Exception ex) {
             response = ResponseEntity
-                    .status(HttpStatus.CREATED)
+                    .status(HttpStatus.FORBIDDEN)
                     .body("아이디가 존재하지 않습니다.");
         }
         return response;
@@ -120,7 +104,7 @@ public class LoginController {
 
         } catch (Exception ex) {
             response = ResponseEntity
-                    .status(HttpStatus.CREATED)
+                    .status(HttpStatus.FORBIDDEN)
                     .body("아이디가 존재하지 않습니다.");
         }
         return response;

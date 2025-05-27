@@ -28,7 +28,7 @@
             <a href="/login">로그인</a>
             <a href="/newUser">회원가입</a>
         </div>
-        <div th:if="${#authorization.expression('!isAnonymous()')}">
+        <div id="auth_menu" th:if="${#authorization.expression('!isAnonymous()')}">
             <span>환영합니다, <span th:text="${#authentication.name}"></span>님</span>
             <a href="/logout">로그아웃</a>
         </div>
