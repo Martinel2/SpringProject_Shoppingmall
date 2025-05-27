@@ -35,11 +35,11 @@ body {
     border: #2d6eaf solid 5px;
     border-radius: 8px;
     padding: 36px;
-    width: 1085px;
+    width: 930px;
     height: 600px;
     text-align: center;
     position: relative;
-    left: 405px;
+    left: 253px;
     top: 62px;
     color: #e0e6eb;
 }
@@ -62,7 +62,7 @@ body {
 
 #newPw-box{
     position: relative;
-    right: 190px;
+    right: 85px;
 }
 
 #label2, #label3{
@@ -75,7 +75,7 @@ body {
 
 #check-box{
     margin: 80px;
-    right: 202px;
+    right: 100px;
     position: relative;
 }
 

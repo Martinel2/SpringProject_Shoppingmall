@@ -1,6 +1,6 @@
 package com.shoppingmall.policy;
 
-import com.shoppingmall.domain.Users;
+import com.shoppingmall.User.Domain.Users;
 
 public class FixDiscountPolicy implements DiscountPolicy{
     @Override
