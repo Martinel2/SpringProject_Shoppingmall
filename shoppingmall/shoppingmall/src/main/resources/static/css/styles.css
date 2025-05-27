@@ -66,6 +66,10 @@ a{
     margin-top: 6px;
 }
 
+#auth_menu{
+    color: #cccccc;
+}
+
 .search_button{
     display: inline-block;
     width: 32px;
